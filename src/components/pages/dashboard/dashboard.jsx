@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../../../service/auth';
 import Loading from '../../loading/loading';
+import urls from '../../../../src/constants/urls';
 
 const Dashboard = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -22,7 +23,7 @@ const Dashboard = () => {
 
                 if (!userData || !userData.isAdmin || !userData.roles.includes('ROLE_ADMIN')) {
                     // No data, not admin, or no ADMIN role: Redirect to main site
-                    window.location.href = 'http://localhost:3000'; // Replace with your main site URL
+                    window.location.href = urls.mainSiteUrl; // Replace with your main site URL
                     return;
                 }
 
@@ -31,7 +32,7 @@ const Dashboard = () => {
             } catch (error) {
                 console.error('Admin verification failed:', error);
                 // On error, redirect to main site
-                window.location.href = 'http://localhost:3000'; // Replace with your main site URL
+                window.location.href = urls.mainSiteUrl; // Replace with your main site URL
             } finally {
                 setIsLoading(false);
             }
