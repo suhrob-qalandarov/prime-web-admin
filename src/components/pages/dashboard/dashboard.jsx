@@ -11,8 +11,8 @@ const Dashboard = () => {
     useEffect(() => {
         const checkAdmin = async () => {
             try {
-                // Create a 5-second delay Promise
-                const delay = new Promise(resolve => setTimeout(resolve, 5000));
+                // Create a 3-second delay Promise
+                const delay = new Promise(resolve => setTimeout(resolve, 3000));
 
                 // Run API call and delay concurrently
                 const [userData] = await Promise.all([
@@ -20,9 +20,9 @@ const Dashboard = () => {
                     delay
                 ]);
 
-                if (!userData || !userData.isAdmin || !userData.roles.includes('ADMIN')) {
+                if (!userData || !userData.isAdmin || !userData.roles.includes('ROLE_ADMIN')) {
                     // No data, not admin, or no ADMIN role: Redirect to main site
-                    window.location.href = 'https://prime.howdy.uz'; // Replace with your main site URL
+                    window.location.href = 'http://localhost:3000'; // Replace with your main site URL
                     return;
                 }
 
@@ -31,7 +31,7 @@ const Dashboard = () => {
             } catch (error) {
                 console.error('Admin verification failed:', error);
                 // On error, redirect to main site
-                window.location.href = 'https://prime.howdy.uz'; // Replace with your main site URL
+                window.location.href = 'http://localhost:3000'; // Replace with your main site URL
             } finally {
                 setIsLoading(false);
             }
