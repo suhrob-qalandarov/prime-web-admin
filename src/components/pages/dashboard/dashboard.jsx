@@ -42,7 +42,7 @@ const Dashboard = () => {
     }, []);
 
     if (isLoading) {
-        return <Loading message="Verifying admin access..." />; // Use your loading animation
+        return <Loading message="Verifying access..." />; // Use your loading animation
     }
 
     if (!isAdmin) {
