@@ -1,13 +1,39 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/*
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+*/
+
+/* ======================================================
+   GLOBAL STYLES
+====================================================== */
+:root {
+    --primary-color: #232526;
+    --secondary-color: #3b3f41;
+    --accent-color: #f8f9fb;
+    --text-color: #232526;
+    --light-color: #f5f5dc;
+    --border-color: #e9ecef;
+    --hover-color: #3b3f41;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --transition: all 0.3s ease;
+    --border-radius: 12px;
+    --box_shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    --hover_shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    --gradient_primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    --gradient_accent: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --burgundy-color: #8b1538;
+    --burgundy-light: #a01b47;
+    --burgundy-dark: #6b0f2a;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
