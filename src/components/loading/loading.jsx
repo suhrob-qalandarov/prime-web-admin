@@ -3,7 +3,6 @@ import "./loading.css";
 const Loading = ({ message = "Loading..." }) => (
     <div className="loading-overlay">
         <div className="loader-wrap">
-            <div className="logo-anim">🛒</div>
             <div className="bars">
                 <div></div><div></div><div></div><div></div>
             </div>
