@@ -11,6 +11,7 @@ const App = () => {
             <Navbar />
             <Routes>
                 <Route path="/" element={<Dashboard />}/>
+                <Route path="/dashboard" element={<Dashboard />}/>
             </Routes>
             {!hideFooterPages.includes(location.pathname) && <Footer />}
         </div>
