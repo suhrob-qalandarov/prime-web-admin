@@ -51,7 +51,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             {/* Sidebar Header */}
             <Box
                 sx={{
-                    padding: isOpen ? "2rem" : "1rem",
+                    padding: isOpen ? "2rem" : "0.60rem",
                     textAlign: "center",
                     borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
                     background: "rgba(255, 255, 255, 0.05)",
@@ -77,7 +77,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     }}
                 >
                     <img
-                        src="/modern-tech-logo.png"
+                        src="/logo.jpeg"
                         alt="Logo"
                         style={{
                             width: "100%",
