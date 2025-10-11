@@ -99,11 +99,9 @@ const Sidebar = () => {
                                 fontSize: '0.95rem',
                                 fontWeight: 500,
                                 background: item.active ? 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))' : 'none',
-                                boxShadow: item.active ? '0 4px 15px rgba(102, 126, 234, 0.3)' : 'none',
-                                '&:hover': {
+                                '&:hover': item.active ? 'none' : {
                                     background: 'rgba(255, 255, 255, 0.1)',
                                     color: 'white',
-                                    transform: 'translateX(5px)',
                                 },
                             },
                         }}
