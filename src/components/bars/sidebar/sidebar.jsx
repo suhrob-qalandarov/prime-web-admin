@@ -175,40 +175,41 @@ const Sidebar = () => {
                     whiteSpace: 'nowrap',
                 }}
             >
-                {isOpen && (
-                    <Box
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        marginBottom: '1rem',
+                        padding: isOpen ? '1rem' : '0.5rem',
+                        background: isOpen ? 'rgba(255, 255, 255, 0.05)' : 'none',
+                        borderRadius: 'var(--border-radius-sm)',
+                        backdropFilter: 'blur(10px)',
+                        justifyContent: isOpen ? 'flex-start' : 'center',
+                    }}
+                >
+                    <Avatar
                         sx={{
+                            width: '40px',
+                            height: '40px',
+                            background: 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))',
+                            borderRadius: '50%',
                             display: 'flex',
                             alignItems: 'center',
-                            marginBottom: '1rem',
-                            padding: '1rem',
-                            background: 'rgba(255, 255, 255, 0.05)',
-                            borderRadius: 'var(--border-radius-sm)',
-                            backdropFilter: 'blur(10px)',
+                            justifyContent: 'center',
+                            marginRight: isOpen ? '0.75rem' : 0,
                         }}
                     >
-                        <Avatar
-                            sx={{
-                                width: '40px',
-                                height: '40px',
-                                background: 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))',
-                                borderRadius: '50%',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                marginRight: '0.75rem',
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faUser} style={{ fontSize: '20px' }} />
-                        </Avatar>
+                        <FontAwesomeIcon icon={faUser} style={{ fontSize: '20px' }} />
+                    </Avatar>
+                    {isOpen && (
                         <Box sx={{ flex: 1 }}>
                             <Typography sx={{ fontWeight: 600, fontSize: '0.9rem' }}>Admin</Typography>
                             <Typography sx={{ fontSize: '0.75rem', color: 'var(--gray-400)' }}>
                                 Super Admin
                             </Typography>
                         </Box>
-                    </Box>
-                )}
+                    )}
+                </Box>
                 <Button
                     sx={{
                         width: '100%',
@@ -225,7 +226,6 @@ const Sidebar = () => {
                         gap: isOpen ? '0.5rem' : 0,
                         '&:hover': {
                             background: 'rgba(245, 101, 101, 0.2)',
-                            transform: 'translateY(-2px)',
                         },
                     }}
                     onClick={(e) => {
