@@ -1,5 +1,5 @@
 import {Route, Routes, useLocation} from "react-router-dom";
-import {Navbar, Footer, Dashboard} from "./components/index";
+import {Navbar, Footer, Dashboard, Sidebar} from "./components";
 
 const App = () => {
     const location = useLocation();
@@ -7,6 +7,7 @@ const App = () => {
 
     return (
         <div>
+            <Sidebar />
             <Navbar />
             <Routes>
                 <Route path="/" element={<Dashboard />}/>
