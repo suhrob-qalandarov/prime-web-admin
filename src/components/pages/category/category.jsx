@@ -4,7 +4,7 @@ import Loading from "../../loading/loading";
 const Category = () => {
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
+    /*useEffect(() => {
         const fetchData = async () => {
             try {
                 // 2 soniya kutish (delay)
@@ -24,10 +24,10 @@ const Category = () => {
 
     if (isLoading) {
         return <Loading message="Loading..." />;
-    }
+    }*/
 
     return (
-        <div style={{ padding: '20px', marginLeft: 'var(--sidebar-width)' }}>
+        <div style={{ padding: '20px', }}>
             <h1>Categorys Page</h1>
             {/* Add your admin dashboard content here */}
         </div>
