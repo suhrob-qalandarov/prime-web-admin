@@ -87,29 +87,20 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                         }}
                     />
                 </Box>
-                <Box
-                    sx={{
-                        opacity: isOpen ? 1 : 0,
-                        transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                        visibility: isOpen ? "visible" : "hidden",
-                    }}
-                >
+                <Box>
                     <Typography
                         variant="h4"
                         sx={{
-                            fontSize: "1.5rem",
+                            fontSize: isOpen ? "1.5rem" : "1.2rem",
                             fontWeight: 700,
-                            marginBottom: "0.25rem",
+                            marginBottom: isOpen ? "0.25rem" : 0,
                             background: "linear-gradient(135deg, var(--primary-color), var(--secondary-color))",
                             WebkitBackgroundClip: "text",
                             WebkitTextFillColor: "transparent",
                             backgroundClip: "text",
                         }}
                     >
-                        PRIME77
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontSize: "0.875rem", color: "var(--gray-400)", margin: 0 }}>
-                        Control Panel
+                        {isOpen ? "PRIME77" : "P77"}
                     </Typography>
                 </Box>
             </Box>
