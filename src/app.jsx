@@ -22,7 +22,7 @@ const App = () => {
                 sx={{
                     position: "fixed",
                     top: "50%",
-                    left: isOpen ? "calc(var(--sidebar-width) - 20px)" : "40px",
+                    left: isOpen ? "calc(var(--sidebar-width) + 5px)" : "65px",
                     transform: "translateY(-50%)",
                     minWidth: "40px",
                     width: "40px",
