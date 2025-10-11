@@ -1,5 +1,9 @@
 export {default as Home} from "./pages/home/home";
+export {default as Sidebar} from "./bars/sidebar/sidebar";
 export {default as Navbar} from "./bars/navbar/navbar";
 export {default as Footer} from "./bars/footer/footer";
 export {default as Dashboard} from "./pages/dashboard/dashboard";
-export {default as Sidebar} from "./bars/sidebar/sidebar";
+export {default as Category} from "./pages/category/category";
+export {default as Product} from "./pages/product/product";
+export {default as Order} from "./pages/order/order";
+export {default as User} from "./pages/user/user";
