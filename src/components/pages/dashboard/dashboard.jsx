@@ -37,10 +37,10 @@ const revenueData = [
 ]
 
 const categoryData = [
-    { name: "Electronics", value: 400 },
-    { name: "Clothing", value: 300 },
-    { name: "Food", value: 200 },
-    { name: "Books", value: 100 },
+    { name: "Kiyimlar", value: 400 },
+    { name: "Aksessuarlar", value: 300 },
+    { name: "Oyoq kiyimlar", value: 200 },
+    { name: "Duvoykalar", value: 100 },
 ]
 
 const COLORS = ["#4F46E5", "#10B981", "#F59E0B", "#EF4444"]
@@ -54,24 +54,12 @@ const recentActivities = [
 
 const Dashboard = () => {
     return (
-        <Container className="min-h-screen bg-gray-50 py-8">
+        <Container className="min-h-screen  py-8">
             <div className="space-y-6">
-                <Box className="flex justify-between items-center bg-white p-6 rounded-lg shadow">
+                <Box className="flex justify-between items-center ">
                     <Typography variant="h4" className="font-bold text-gray-800">
-                        Dashboard Overview
+                        Overview
                     </Typography>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            background: "var(--primary-color)",
-                            textTransform: "none",
-                            fontWeight: 600,
-                            padding: "0.75rem 1.5rem",
-                            borderRadius: "var(--border-radius-sm)",
-                        }}
-                    >
-                        Add New
-                    </Button>
                 </Box>
 
                 <Grid container spacing={3}>
