@@ -12,7 +12,7 @@ import {
     Avatar,
 } from "@mui/material"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCrown, faSignOutAlt, faUser } from "@fortawesome/free-solid-svg-icons"
+import { faSignOutAlt, faUser } from "@fortawesome/free-solid-svg-icons"
 import { links } from "../../../constants/page-links"
 
 const MINI_WIDTH = "60px"
@@ -20,6 +20,13 @@ const FULL_WIDTH = "var(--sidebar-width)"
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
     const currentPath = window.location.pathname
+
+    const handleMenuClick = (e) => {
+        // Allow navigation to happen
+        setTimeout(() => {
+            setIsOpen(false)
+        }, 200)
+    }
 
     return (
         <Drawer
@@ -57,8 +64,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     sx={{
                         width: isOpen ? "60px" : "40px",
                         height: isOpen ? "60px" : "40px",
-                        background: "linear-gradient(135deg, var(--primary-color), var(--secondary-color))",
-                        borderRadius: "16px",
+                        borderRadius: "50%",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -67,50 +73,45 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                         position: "relative",
                         overflow: "hidden",
                         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                        "&::before": {
-                            content: '""',
-                            position: "absolute",
-                            top: "-50%",
-                            left: "-50%",
-                            width: "200%",
-                            height: "200%",
-                            background: "linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent)",
-                            transform: "rotate(45deg)",
-                            animation: "shine 3s infinite",
-                        },
+                        background: "linear-gradient(135deg, var(--primary-color), var(--secondary-color))",
                     }}
                 >
-                    <FontAwesomeIcon
-                        icon={faCrown}
+                    <img
+                        src="/modern-tech-logo.png"
+                        alt="Logo"
                         style={{
-                            fontSize: isOpen ? "24px" : "18px",
-                            position: "relative",
-                            zIndex: 2,
-                            transition: "font-size 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            borderRadius: "50%",
                         }}
                     />
                 </Box>
-                {isOpen && (
-                    <>
-                        <Typography
-                            variant="h4"
-                            sx={{
-                                fontSize: "1.5rem",
-                                fontWeight: 700,
-                                marginBottom: "0.25rem",
-                                background: "linear-gradient(135deg, var(--primary-color), var(--secondary-color))",
-                                WebkitBackgroundClip: "text",
-                                WebkitTextFillColor: "transparent",
-                                backgroundClip: "text",
-                            }}
-                        >
-                            PRIME77
-                        </Typography>
-                        <Typography variant="body2" sx={{ fontSize: "0.875rem", color: "var(--gray-400)", margin: 0 }}>
-                            Control Panel
-                        </Typography>
-                    </>
-                )}
+                <Box
+                    sx={{
+                        opacity: isOpen ? 1 : 0,
+                        transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                        visibility: isOpen ? "visible" : "hidden",
+                    }}
+                >
+                    <Typography
+                        variant="h4"
+                        sx={{
+                            fontSize: "1.5rem",
+                            fontWeight: 700,
+                            marginBottom: "0.25rem",
+                            background: "linear-gradient(135deg, var(--primary-color), var(--secondary-color))",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
+                            backgroundClip: "text",
+                        }}
+                    >
+                        PRIME77
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontSize: "0.875rem", color: "var(--gray-400)", margin: 0 }}>
+                        Control Panel
+                    </Typography>
+                </Box>
             </Box>
 
             {/* Sidebar Navigation */}
@@ -142,7 +143,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                 },
                             }}
                         >
-                            <ListItemButton component="a" href={item.href} onClick={(e) => e.stopPropagation()}>
+                            <ListItemButton component="a" href={item.href} onClick={handleMenuClick}>
                                 <ListItemIcon
                                     sx={{
                                         width: "20px",
@@ -157,7 +158,14 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                 >
                                     <FontAwesomeIcon icon={item.icon} style={{ fontSize: "20px" }} />
                                 </ListItemIcon>
-                                {isOpen && <ListItemText primary={item.text} />}
+                                <ListItemText
+                                    primary={item.text}
+                                    sx={{
+                                        opacity: isOpen ? 1 : 0,
+                                        transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                                        visibility: isOpen ? "visible" : "hidden",
+                                    }}
+                                />
                                 <Box
                                     sx={{
                                         position: "absolute",
@@ -228,42 +236,51 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                         </Box>
                     )}
                 </Box>
-                <Button
-                    sx={{
-                        width: "100%",
-                        padding: isOpen ? "0.75rem 1rem" : "0.75rem",
-                        background: "rgba(245, 101, 101, 0.1)",
-                        border: isOpen ? "1px solid rgba(245, 101, 101, 0.3)" : "none",
-                        borderRadius: "var(--border-radius-sm)",
-                        color: "#ff6b6b",
-                        fontWeight: 500,
-                        textTransform: "none",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: isOpen ? "0.5rem" : 0,
-                        boxShadow: isOpen ? "none" : "0 4px 10px rgba(245, 101, 101, 0.2)",
-                        "&:hover": {
-                            background: "rgba(245, 101, 101, 0.2)",
-                            boxShadow: isOpen ? "none" : "0 6px 15px rgba(245, 101, 101, 0.3)",
-                            transform: "translateY(-2px)",
-                        },
-                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                    }}
-                    onClick={(e) => {
-                        e.stopPropagation()
-                        console.log("Logout clicked")
-                    }}
-                >
-                    <FontAwesomeIcon
-                        icon={faSignOutAlt}
-                        style={{
-                            fontSize: isOpen ? "18px" : "16px",
-                            transition: "font-size 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                {isOpen ? (
+                    // Open state: Full button with text
+                    <Button
+                        sx={{
+                            width: "100%",
+                            padding: "0.75rem 1rem",
+                            background: "rgba(245, 101, 101, 0.1)",
+                            border: "1px solid rgba(245, 101, 101, 0.3)",
+                            borderRadius: "var(--border-radius-sm)",
+                            color: "#ff6b6b",
+                            fontWeight: 500,
+                            textTransform: "none",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
                         }}
-                    />
-                    {isOpen && <span>Chiqish</span>}
-                </Button>
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            console.log("Logout clicked")
+                        }}
+                    >
+                        <FontAwesomeIcon icon={faSignOutAlt} style={{ fontSize: "18px" }} />
+                        <span>Chiqish</span>
+                    </Button>
+                ) : (
+                    // Closed state: Icon only button
+                    <Button
+                        sx={{
+                            width: "100%",
+                            minWidth: "unset",
+                            padding: "0.75rem",
+                            border: "none",
+                            color: "#ff6b6b",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            console.log("Logout clicked")
+                        }}
+                    >
+                        <FontAwesomeIcon icon={faSignOutAlt} style={{ fontSize: "18px" }} />
+                    </Button>
+                )}
             </Box>
         </Drawer>
     )
