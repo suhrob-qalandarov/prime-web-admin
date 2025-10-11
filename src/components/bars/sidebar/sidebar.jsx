@@ -25,7 +25,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         // Allow navigation to happen
         setTimeout(() => {
             setIsOpen(false)
-        }, 200)
+        }, 100)
     }
 
     return (
