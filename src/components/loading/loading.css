@@ -1,7 +1,8 @@
 .loading-overlay {
     position: fixed;
     inset: 0;
-    background: linear-gradient(135deg, rgba(0,0,0,0.35), rgba(255,255,255,0.03));
+    background: var(--gray-400);
+    backdrop-filter: blur(6px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,7 +11,6 @@
 
 .loader-wrap {
     padding: 28px;
-    backdrop-filter: blur(6px);
     text-align: center;
 }
 
