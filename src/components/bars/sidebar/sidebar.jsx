@@ -15,8 +15,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCrown, faSignOutAlt, faUser } from "@fortawesome/free-solid-svg-icons"
 import { links } from "../../../constants/page-links"
 
-const MINI_WIDTH = "60px" // Mini sidebar width for icons only
-const FULL_WIDTH = "var(--sidebar-width)" // Assume var(--sidebar-width) is defined, e.g., 240px
+const MINI_WIDTH = "60px"
+const FULL_WIDTH = "var(--sidebar-width)"
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
     const currentPath = window.location.pathname
@@ -33,11 +33,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     background: "linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 100%)",
                     color: "white",
                     zIndex: 1000,
-                    transition: "width var(--transition)",
+                    transition: "width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                     display: "flex",
                     flexDirection: "column",
                     boxShadow: "var(--box-shadow-lg)",
-                    overflowX: "hidden", // Prevent horizontal scroll in mini mode
+                    overflowX: "hidden",
                 },
             }}
         >
@@ -50,12 +50,13 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     background: "rgba(255, 255, 255, 0.05)",
                     backdropFilter: "blur(10px)",
                     whiteSpace: "nowrap",
+                    transition: "padding 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 }}
             >
                 <Box
                     sx={{
-                        width: "60px",
-                        height: "60px",
+                        width: isOpen ? "60px" : "40px",
+                        height: isOpen ? "60px" : "40px",
                         background: "linear-gradient(135deg, var(--primary-color), var(--secondary-color))",
                         borderRadius: "16px",
                         display: "flex",
@@ -65,6 +66,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                         boxShadow: "0 8px 25px rgba(102, 126, 234, 0.3)",
                         position: "relative",
                         overflow: "hidden",
+                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                         "&::before": {
                             content: '""',
                             position: "absolute",
@@ -78,7 +80,15 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                         },
                     }}
                 >
-                    <FontAwesomeIcon icon={faCrown} style={{ fontSize: "24px", position: "relative", zIndex: 2 }} />
+                    <FontAwesomeIcon
+                        icon={faCrown}
+                        style={{
+                            fontSize: isOpen ? "24px" : "18px",
+                            position: "relative",
+                            zIndex: 2,
+                            transition: "font-size 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                        }}
+                    />
                 </Box>
                 {isOpen && (
                     <>
@@ -115,7 +125,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                 "& .MuiListItemButton-root": {
                                     padding: isOpen ? "1rem 2rem" : "1rem",
                                     color: "rgba(255, 255, 255, 0.8)",
-                                    transition: "var(--transition)",
+                                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                                     position: "relative",
                                     fontSize: "0.95rem",
                                     fontWeight: 500,
@@ -132,11 +142,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                 },
                             }}
                         >
-                            <ListItemButton
-                                component="a"
-                                href={item.href}
-                                onClick={(e) => e.stopPropagation()} // Prevent toggle on menu item click
-                            >
+                            <ListItemButton component="a" href={item.href} onClick={(e) => e.stopPropagation()}>
                                 <ListItemIcon
                                     sx={{
                                         width: "20px",
@@ -146,6 +152,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                         justifyContent: "center",
                                         color: "inherit",
                                         minWidth: "unset",
+                                        transition: "margin 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                                     }}
                                 >
                                     <FontAwesomeIcon icon={item.icon} style={{ fontSize: "20px" }} />
@@ -162,7 +169,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                         background: "linear-gradient(135deg, var(--primary-color), var(--secondary-color))",
                                         borderRadius: "2px 0 0 2px",
                                         opacity: isActive ? 1 : 0,
-                                        transition: "var(--transition)",
+                                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                                     }}
                                 />
                             </ListItemButton>
@@ -177,6 +184,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     padding: isOpen ? "1.5rem" : "1rem",
                     borderTop: "1px solid rgba(255, 255, 255, 0.1)",
                     whiteSpace: "nowrap",
+                    transition: "padding 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 }}
             >
                 <Box
@@ -189,21 +197,29 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                         borderRadius: "var(--border-radius-sm)",
                         backdropFilter: isOpen ? "blur(10px)" : "none",
                         justifyContent: isOpen ? "flex-start" : "center",
+                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                 >
                     <Avatar
                         sx={{
-                            width: "40px",
-                            height: "40px",
+                            width: isOpen ? "40px" : "32px",
+                            height: isOpen ? "40px" : "32px",
                             background: "linear-gradient(135deg, var(--primary-color), var(--secondary-color))",
                             borderRadius: "50%",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
                             marginRight: isOpen ? "0.75rem" : 0,
+                            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                         }}
                     >
-                        <FontAwesomeIcon icon={faUser} style={{ fontSize: "20px" }} />
+                        <FontAwesomeIcon
+                            icon={faUser}
+                            style={{
+                                fontSize: isOpen ? "18px" : "14px",
+                                transition: "font-size 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                            }}
+                        />
                     </Avatar>
                     {isOpen && (
                         <Box sx={{ flex: 1 }}>
@@ -224,7 +240,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                         textTransform: "none",
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: isOpen ? "center" : "center",
+                        justifyContent: "center",
                         gap: isOpen ? "0.5rem" : 0,
                         boxShadow: isOpen ? "none" : "0 4px 10px rgba(245, 101, 101, 0.2)",
                         "&:hover": {
@@ -232,14 +248,20 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                             boxShadow: isOpen ? "none" : "0 6px 15px rgba(245, 101, 101, 0.3)",
                             transform: "translateY(-2px)",
                         },
-                        transition: "all var(--transition)",
+                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                     onClick={(e) => {
-                        e.stopPropagation() // Prevent sidebar toggle on logout click
-                        console.log("Logout clicked") // Replace with actual logout function
+                        e.stopPropagation()
+                        console.log("Logout clicked")
                     }}
                 >
-                    <FontAwesomeIcon icon={faSignOutAlt} style={{ fontSize: "20px" }} />
+                    <FontAwesomeIcon
+                        icon={faSignOutAlt}
+                        style={{
+                            fontSize: isOpen ? "18px" : "16px",
+                            transition: "font-size 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                        }}
+                    />
                     {isOpen && <span>Chiqish</span>}
                 </Button>
             </Box>
