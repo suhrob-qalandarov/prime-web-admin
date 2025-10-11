@@ -21,11 +21,11 @@ const FULL_WIDTH = "var(--sidebar-width)"
 const Sidebar = ({ isOpen, setIsOpen }) => {
     const currentPath = window.location.pathname
 
-    const handleMenuClick = (e) => {
+    const handleMenuClick = () => {
         // Allow navigation to happen
         setTimeout(() => {
             setIsOpen(false)
-        }, 200)
+        }, 100)
     }
 
     return (
