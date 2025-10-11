@@ -4,8 +4,8 @@ const Dashboard = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     return (
-        <div>
-            <h1>Dashboard</h1>
+        <div style={{ padding: '20px', marginLeft: 'var(--sidebar-width)' }}>
+            <h1>Dashboard Page</h1>
             {/* Add your admin dashboard content here */}
         </div>
     );
