@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react"
 import {
     Box,
     Button,
@@ -19,109 +19,113 @@ import {
     Alert,
     CircularProgress,
     Chip,
-} from '@mui/material';
-import {
-    Add as AddIcon,
-    Edit as EditIcon,
-    Visibility as VisibilityIcon,
-} from '@mui/icons-material';
-import ProductEditMenuModal from './modals/edit-menu';
+} from "@mui/material"
+import { Add as AddIcon, Edit as EditIcon, Visibility as VisibilityIcon } from "@mui/icons-material"
+import { EditMenuModal, AddModal, ViewModal } from "./modals"
+import ProductService from "../../../service/product"
 
 const Product = () => {
-    const [allProducts, setAllProducts] = useState([]);
-    const [filteredProducts, setFilteredProducts] = useState([
-        {id: 1, name: 'Product 1', brandName: null, attachmentCount: 0, categoryName: 'Category 1', price: 100000, status: 'NEW', active: true, discount: 0, createdAt: '2025-10-04 18:07:33.000000'},
-        {id: 2, name: 'Long Product Name 2', brandName: 'Brand 1', attachmentCount: 3, categoryName: 'Category 2', price: 202000, status: 'HOT', active: false, discount: 0, createdAt: '2025-10-04 18:07:33.000000'},
-        {id: 3, name: 'Product 3', brandName: 'Long Name Brand 3', attachmentCount: null, categoryName: 'Category 3', price: 330000, status: 'SALE', active: true, discount: 10, createdAt: ''},
-    ]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [openAddModal, setOpenAddModal] = useState(false);
-    const [openEditMenuModal, setOpenEditMenuModal] = useState(false);
-    const [openViewModal, setOpenViewModal] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState(null);
-    const [productForm, setProductForm] = useState({
-        id: null,
-        name: '',
-        description: '',
-        price: '',
-        categoryId: '',
-        status: 'NEW',
-        collection: '',
-        active: true,
-        sizes: [],
-        attachments: [],
-    });
-    const [newSize, setNewSize] = useState({ size: '', amount: '' });
-    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [allProducts, setAllProducts] = useState([
+        {
+            id: 1,
+            name: "Product 1",
+            brandName: null,
+            attachmentCount: 0,
+            categoryName: "Category 1",
+            price: 100000,
+            status: "NEW",
+            active: true,
+            discount: 0,
+            createdAt: "2025-10-04 18:07:33.000000",
+        },
+        {
+            id: 2,
+            name: "Long Product Name 2",
+            brandName: "Brand 1",
+            attachmentCount: 3,
+            categoryName: "Category 2",
+            price: 202000,
+            status: "HOT",
+            active: false,
+            discount: 0,
+            createdAt: "2025-10-04 18:07:33.000000",
+        },
+        {
+            id: 3,
+            name: "Product 3",
+            brandName: "Long Name Brand 3",
+            attachmentCount: null,
+            categoryName: "Category 3",
+            price: 330000,
+            status: "SALE",
+            active: true,
+            discount: 10,
+            createdAt: "",
+        },
+    ])
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState(null)
+    const [openAddModal, setOpenAddModal] = useState(false)
+    const [openEditMenuModal, setOpenEditMenuModal] = useState(false)
+    const [openViewModal, setOpenViewModal] = useState(false)
+    const [selectedProduct, setSelectedProduct] = useState(null)
 
     useEffect(() => {
+        loadProducts()
+    }, [])
 
-    }, []);
+    const loadProducts = async () => {
+        try {
+            setIsLoading(true)
+            //const data = await ProductService.getAll()
+            //setAllProducts(data)
+        } catch (err) {
+            setError("Mahsulotlarni yuklashda xatolik yuz berdi")
+            console.error(err)
+        } finally {
+            setIsLoading(false)
+        }
+    }
 
     const handleOpenEditMenuModal = (product) => {
-        setOpenEditMenuModal(true);
-    };
+        setSelectedProduct(product)
+        setOpenEditMenuModal(true)
+    }
 
     const handleCloseEditMenuModal = () => {
-        setOpenEditMenuModal(false);
-    };
+        setOpenEditMenuModal(false)
+        setSelectedProduct(null)
+    }
 
     const handleOpenAddEditModal = (product = null) => {
-        setOpenAddModal(true);
-    };
+        setSelectedProduct(product)
+        setOpenAddModal(true)
+    }
 
     const handleCloseAddEditModal = () => {
-        setOpenAddModal(false);
-    };
-
-    const handleFileChange = (e) => {
-
-    };
-
-    const handleRemoveAttachment = (index) => {
-        setProductForm(prev => ({
-            ...prev,
-            attachments: prev.attachments.filter((_, i) => i !== index),
-        }));
-    };
-
-    const handleAddSize = () => {
-        if (newSize.size && newSize.amount) {
-            setProductForm(prev => ({
-                ...prev,
-                sizes: [...prev.sizes, { ...newSize }],
-            }));
-            setNewSize({ size: '', amount: '' });
-        }
-    };
-
-    const handleRemoveSize = (index) => {
-        setProductForm(prev => ({
-            ...prev,
-            sizes: prev.sizes.filter((_, i) => i !== index),
-        }));
-    };
-
-    const uploadAttachments = async (files) => {
-
-    };
-
-    const handleSaveProduct = async () => {
-
-    };
-
-    const handleToggleProduct = async (id) => {
-
-    };
+        setOpenAddModal(false)
+        setSelectedProduct(null)
+    }
 
     const handleOpenViewModal = (product) => {
-
-    };
+        setSelectedProduct(product)
+        setOpenViewModal(true)
+    }
 
     const handleCloseViewModal = () => {
-        setOpenViewModal(false);
-    };
+        setOpenViewModal(false)
+        setSelectedProduct(null)
+    }
+
+    const handleProductUpdated = () => {
+        loadProducts()
+        handleCloseEditMenuModal()
+    }
+
+    const handleProductSaved = () => {
+        loadProducts()
+        handleCloseAddEditModal()
+    }
 
     if (isLoading) {
         return (
@@ -138,7 +142,7 @@ const Product = () => {
 
     return (
         <Container maxWidth="xl" className="py-8">
-            <Grid container spacing={3} className="mb-8">
+            {/*<Grid container spacing={3} className="mb-8">
                 <Grid item xs={12} md={4}>
                     <Card className="shadow-lg rounded-xl bg-indigo-100">
                         <CardContent className="flex items-center">
@@ -152,7 +156,7 @@ const Product = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                {/*<Grid item xs={12} md={4}>
+                <Grid item xs={12} md={4}>
                     <Card className="shadow-lg rounded-xl bg-green-100">
                         <CardContent className="flex items-center">
                             <Box className="p-4 bg-green-500 text-white rounded-lg mr-4">
@@ -177,8 +181,8 @@ const Product = () => {
                             </Box>
                         </CardContent>
                     </Card>
-                </Grid>*/}
-            </Grid>
+                </Grid>
+            </Grid>*/}
             <Card className="shadow-lg rounded-xl overflow-hidden">
                 <CardHeader
                     title="Mahsulotlar ro'yxati"
@@ -212,7 +216,7 @@ const Product = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {filteredProducts.map((prod) => (
+                                {allProducts.map((prod) => (
                                     <TableRow key={prod.id} className="hover:bg-gray-50">
                                         <TableCell>{prod.id}</TableCell>
                                         <TableCell>{prod.attachmentCount == null ? '---' : `${prod.attachmentCount} ta`}</TableCell>
@@ -267,7 +271,7 @@ const Product = () => {
                                                     {/* ASL NARX */}
                                                     <Typography
                                                         variant="body2"
-                                                        sx={{ textDecoration: 'line-through', color: 'gray', fontSize: 12 }}
+                                                        sx={{ textDecoration: 'line-through', color: '#1976d2', fontSize: 12 }}
                                                     >
                                                         {Intl.NumberFormat('uz-UZ').format(prod.price)} so'm
                                                     </Typography>
@@ -275,7 +279,7 @@ const Product = () => {
                                                     {/* CHEGIRMADAN KEYINGI NARX */}
                                                     <Typography
                                                         variant="body2"
-                                                        sx={{ color: '#1976d2', fontWeight: 600, fontSize: 13 }}
+                                                        sx={{ color: '#f57c00', fontWeight: 600, fontSize: 13 }}
                                                     >
                                                         {Intl.NumberFormat('uz-UZ').format(
                                                             prod.price - (prod.price * prod.discount) / 100
@@ -286,9 +290,12 @@ const Product = () => {
                                             ) : (
                                                 <Typography
                                                     variant="body2"
-                                                    sx={{ color: '#333', fontWeight: 500, fontSize: 13 }}
+                                                    sx={{ color: '#1976d2', fontWeight: 600, fontSize: 13 }}
                                                 >
-                                                    {Intl.NumberFormat('uz-UZ').format(prod.price)} so'm
+                                                    {Intl.NumberFormat('uz-UZ').format(
+                                                        prod.price - (prod.price * prod.discount) / 100
+                                                    )}{' '}
+                                                    so'm
                                                 </Typography>
                                             )}
                                         </TableCell>
@@ -330,15 +337,24 @@ const Product = () => {
                 </CardContent>
             </Card>
 
-            <ProductEditMenuModal
+            {/* Modals */}
+            <EditMenuModal
                 open={openEditMenuModal}
                 onClose={handleCloseEditMenuModal}
                 product={selectedProduct}
-                onToggleActive={handleToggleProduct}
-                onDelete={(id) => console.log('Delete product', id)}
+                onProductUpdated={handleProductUpdated}
+            />
+
+            <ViewModal open={openViewModal} onClose={handleCloseViewModal} product={selectedProduct} />
+
+            <AddModal
+                open={openAddModal}
+                onClose={handleCloseAddEditModal}
+                product={selectedProduct}
+                onProductSaved={handleProductSaved}
             />
         </Container>
-    );
-};
+    )
+}
 
-export default Product;
+export default Product
