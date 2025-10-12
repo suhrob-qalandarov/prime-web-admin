@@ -85,6 +85,9 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
 
     const handleAddSize = () => {
         if (newSize.size && newSize.amount) {
+            // agar bu o‘lcham allaqachon mavjud bo‘lsa, qaytmaydi
+            const exists = productForm.sizes.some((s) => s.size === newSize.size)
+            if (exists) return
             setProductForm((prev) => ({
                 ...prev,
                 sizes: [...prev.sizes, { ...newSize }],
@@ -121,6 +124,11 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
             setLoading(false)
         }
     }
+
+    // mavjud o‘lchamlarni filterlab, Select’da faqat tanlanmaganlarini ko‘rsatish
+    const availableSizes = sizes.filter(
+        (s) => !productForm.sizes.some((sel) => sel.size === s.value)
+    )
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -189,13 +197,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                         Rasmlar va O‘lchamlar
                     </Typography>
 
-                    <Box
-                        className="flex flex-col md:flex-row gap-4"
-                        sx={{
-                            maxHeight: 400,
-                            overflow: "hidden",
-                        }}
-                    >
+                    <Box className="flex flex-col md:flex-row gap-4" sx={{ maxHeight: 400, overflow: "hidden" }}>
                         {/* ==== CHAP: RASMLAR ==== */}
                         <Box className="flex-1 flex flex-col">
                             <Typography variant="subtitle2" sx={{ mb: 1 }}>
@@ -223,7 +225,8 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                         <img
                                             src={att.url || "/placeholder.svg"}
                                             alt="preview"
-                                            className="w-full h-32 object-cover rounded-lg"
+                                            className="w-full object-cover rounded-lg"
+                                            style={{ height: "16rem" }}
                                         />
                                         <IconButton
                                             sx={{
@@ -265,7 +268,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                             onChange={(e) => setNewSize({ ...newSize, size: e.target.value })}
                                             label="O‘lcham"
                                         >
-                                            {sizes.map((s) => (
+                                            {availableSizes.map((s) => (
                                                 <MenuItem key={s.value} value={s.value}>
                                                     {s.label}
                                                 </MenuItem>
