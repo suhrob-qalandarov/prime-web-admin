@@ -64,15 +64,17 @@ const StatusEditModal = ({ open, onClose, product, onProductUpdated }) => {
                     </Select>
                 </FormControl>
 
-                <TextField
-                    fullWidth
-                    type="number"
-                    label="Discount (%)"
-                    value={formData.discount}
-                    onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
-                    margin="normal"
-                    inputProps={{ min: 0, max: 100 }}
-                />
+                {formData.status === "SALE" && (
+                    <TextField
+                        fullWidth
+                        type="number"
+                        label="Discount (%)"
+                        value={formData.discount}
+                        onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
+                        margin="normal"
+                        inputProps={{ min: 0, max: 100 }}
+                    />
+                )}
 
                 <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
                     <Switch
