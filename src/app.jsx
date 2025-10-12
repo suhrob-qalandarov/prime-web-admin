@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Route, Routes, useLocation } from "react-router-dom"
-import { Home, Sidebar, Navbar, Footer, Dashboard, Category, Product, Order, User } from "./components"
+import { Home, Sidebar, Navbar, Footer, Dashboard, Category, Product, Order, User, Warehouse } from "./components"
 import ToggleButton from "./components/bars/sidebar/toggle-button"
 import { Box } from "@mui/material"
 
@@ -38,6 +38,7 @@ const App = () => {
                         <Route path="/categories" element={<Category />} />
                         <Route path="/products" element={<Product />} />
                         <Route path="/orders" element={<Order />} />
+                        <Route path="/warehouse" element={<Warehouse />} />
                         <Route path="/users" element={<User />} />
                         <Route path="/files" element={<Home />} />
                         <Route path="*" element={<h1>404 Not Found</h1>} />
