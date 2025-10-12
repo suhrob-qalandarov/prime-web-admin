@@ -1,16 +1,17 @@
 import { useState } from "react"
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Stack, Typography } from "@mui/material"
-import { AddModal, ViewModal, PicturesEditModal, StatusEditModal } from './index'
+import {EditModal, AddSizeModal, PicturesEditModal, StatusEditModal } from './index'
 
 const ProductEditMenuModal = ({ open, onClose, product, onProductUpdated }) => {
-    const [openFullEdit, setOpenFullEdit] = useState(false)
+    const [openEdit, setOpenEdit] = useState(false)
     const [openPicturesEdit, setOpenPicturesEdit] = useState(false)
     const [openStatusEdit, setOpenStatusEdit] = useState(false)
+    const [openAddSize, setOpenAddSize] = useState(false)
 
     if (!product) return null
 
-    const handleOpenFullEdit = () => {
-        setOpenFullEdit(true)
+    const handleOpenEdit = () => {
+        setOpenEdit(true)
     }
 
     const handleOpenPicturesEdit = () => {
@@ -21,8 +22,12 @@ const ProductEditMenuModal = ({ open, onClose, product, onProductUpdated }) => {
         setOpenStatusEdit(true)
     }
 
-    const handleCloseFullEdit = () => {
-        setOpenFullEdit(false)
+    const handleOpenAddSize = () => {
+        setOpenAddSize(true)
+    }
+
+    const handleCloseEdit = () => {
+        setOpenEdit(false)
     }
 
     const handleClosePicturesEdit = () => {
@@ -31,6 +36,10 @@ const ProductEditMenuModal = ({ open, onClose, product, onProductUpdated }) => {
 
     const handleCloseStatusEdit = () => {
         setOpenStatusEdit(false)
+    }
+
+    const handleCloseAddSize = () => {
+        setOpenAddSize(false)
     }
 
     const handleProductUpdated = () => {
@@ -52,8 +61,8 @@ const ProductEditMenuModal = ({ open, onClose, product, onProductUpdated }) => {
                 </DialogContent>
 
                 <DialogActions sx={{ flexDirection: "column", alignItems: "stretch", gap: 2, p: 2 }}>
-                    <Button variant="contained" color="primary" fullWidth onClick={handleOpenFullEdit}>
-                        To'liq o'zgartirish
+                    <Button variant="contained" color="primary" fullWidth onClick={handleOpenEdit}>
+                        Tahrirlash
                     </Button>
 
                     <Stack direction="row" spacing={2} justifyContent="space-between">
@@ -64,16 +73,20 @@ const ProductEditMenuModal = ({ open, onClose, product, onProductUpdated }) => {
                             Rasmlarni o'zgartirish
                         </Button>
                     </Stack>
+
+                    <Button variant="outlined" color="success" fullWidth onClick={handleOpenAddSize}>
+                        O'lcham qo'shish
+                    </Button>
                 </DialogActions>
             </Dialog>
 
             {/* Sub-modals */}
-            {/*<EditModal
-                open={openFullEdit}
-                onClose={handleCloseFullEdit}
+            <EditModal
+                open={openEdit}
+                onClose={handleCloseEdit}
                 product={product}
                 onProductUpdated={handleProductUpdated}
-            />*/}
+            />
 
             <PicturesEditModal
                 open={openPicturesEdit}
@@ -85,6 +98,13 @@ const ProductEditMenuModal = ({ open, onClose, product, onProductUpdated }) => {
             <StatusEditModal
                 open={openStatusEdit}
                 onClose={handleCloseStatusEdit}
+                product={product}
+                onProductUpdated={handleProductUpdated}
+            />
+
+            <AddSizeModal
+                open={openAddSize}
+                onClose={handleCloseAddSize}
                 product={product}
                 onProductUpdated={handleProductUpdated}
             />
