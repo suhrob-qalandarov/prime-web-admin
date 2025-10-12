@@ -5,6 +5,7 @@ export const links = [
     { text: 'Buyurtmalar', icon: faShoppingBag, href: '/orders' },
     { text: 'Kategoriyalar', icon: faFolder, href: '/categories' },
     { text: 'Mahsulotlar', icon: faBoxOpen, href: '/products' },
+    { text: 'Ombor', icon: faBoxOpen, href: '/warehouse' },
     { text: 'Foydalanuvchilar', icon: faUsers, href: '/users' },
     { text: 'Fayllar', icon: faCloudUploadAlt, href: '/files' },
 ];
