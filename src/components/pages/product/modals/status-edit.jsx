@@ -10,9 +10,6 @@ import {
     Select,
     MenuItem,
     TextField,
-    Switch,
-    Typography,
-    Box,
 } from "@mui/material"
 import ProductService from "../../../../service/product"
 
@@ -20,7 +17,6 @@ const StatusEditModal = ({ open, onClose, product, onProductUpdated }) => {
     const [formData, setFormData] = useState({
         status: "NEW",
         discount: 0,
-        active: true,
     })
     const [loading, setLoading] = useState(false)
 
@@ -29,7 +25,6 @@ const StatusEditModal = ({ open, onClose, product, onProductUpdated }) => {
             setFormData({
                 status: product.status || "NEW",
                 discount: product.discount || 0,
-                active: product.active ?? true,
             })
         }
     }, [product])
@@ -75,15 +70,6 @@ const StatusEditModal = ({ open, onClose, product, onProductUpdated }) => {
                         inputProps={{ min: 0, max: 100 }}
                     />
                 )}
-
-                <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-                    <Switch
-                        checked={formData.active}
-                        onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                        color="primary"
-                    />
-                    <Typography>Faol</Typography>
-                </Box>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} variant="outlined">
