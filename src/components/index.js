@@ -7,3 +7,4 @@ export {default as Category} from "./pages/category/category";
 export {default as Product} from "./pages/product/product";
 export {default as Order} from "./pages/order/order";
 export {default as User} from "./pages/user/user";
+export {default as Warehouse} from "./pages/warehouse/warehouse";
