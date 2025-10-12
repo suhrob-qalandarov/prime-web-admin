@@ -10,7 +10,6 @@ import {
     MenuItem,
     Modal,
     Select,
-    Switch,
     TextField,
     Typography,
 } from "@mui/material"
@@ -23,15 +22,15 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
     const [productForm, setProductForm] = useState({
         id: null,
         name: "",
+        brand: "",
         description: "",
         price: "",
         categoryId: "",
         status: "NEW",
-        collection: "",
-        active: true,
         sizes: [],
         attachments: [],
     })
+
     const [newSize, setNewSize] = useState({ size: "", amount: "" })
     const [selectedFiles, setSelectedFiles] = useState([])
     const [loading, setLoading] = useState(false)
@@ -41,12 +40,11 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
             setProductForm({
                 id: product.id,
                 name: product.name || "",
+                brand: product.brand || "",
                 description: product.description || "",
                 price: product.price || "",
                 categoryId: product.categoryId || "",
                 status: product.status || "NEW",
-                collection: product.collection || "",
-                active: product.active ?? true,
                 sizes: product.sizes || [],
                 attachments: product.attachments || [],
             })
@@ -54,12 +52,11 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
             setProductForm({
                 id: null,
                 name: "",
+                brand: "",
                 description: "",
                 price: "",
                 categoryId: "",
                 status: "NEW",
-                collection: "",
-                active: true,
                 sizes: [],
                 attachments: [],
             })
@@ -69,8 +66,6 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files)
         setSelectedFiles(files)
-
-        // Preview images
         const previews = files.map((file) => ({
             url: URL.createObjectURL(file),
             file: file,
@@ -108,29 +103,20 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
     const handleSaveProduct = async () => {
         try {
             setLoading(true)
-
-            // Upload attachments if any
             let attachmentUrls = productForm.attachments.filter((a) => !a.file)
             if (selectedFiles.length > 0) {
                 const uploaded = await AttachmentService.uploadFiles(selectedFiles)
                 attachmentUrls = [...attachmentUrls, ...uploaded]
             }
+            const dataToSave = { ...productForm, attachments: attachmentUrls }
 
-            const dataToSave = {
-                ...productForm,
-                attachments: attachmentUrls,
-            }
-
-            if (productForm.id) {
-                await ProductService.update(productForm.id, dataToSave)
-            } else {
-                await ProductService.create(dataToSave)
-            }
+            if (productForm.id) await ProductService.update(productForm.id, dataToSave)
+            else await ProductService.create(dataToSave)
 
             if (onProductSaved) onProductSaved()
             onClose()
-        } catch (error) {
-            console.error("Error saving product:", error)
+        } catch (err) {
+            console.error("Error saving product:", err)
         } finally {
             setLoading(false)
         }
@@ -151,85 +137,93 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                     width: "100%",
                     maxWidth: 1000,
                     maxHeight: "90vh",
-                    overflowY: "auto",
+                    overflow: "hidden",
                 }}
             >
                 <Typography variant="h6" sx={{ mb: 4 }}>
-                    {productForm.id ? "Mahsulotni tahrirlash" : "Mahsulot qo'shish"}
+                    {productForm.id ? "Mahsulotni tahrirlash" : "Mahsulot qo‘shish"}
                 </Typography>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} md={6}>
+
+                {/* === FORM USTI QISMI === */}
+                <Grid container spacing={2} sx={{ mb: 3 }}>
+                    <Grid item xs={12} md={4}>
                         <TextField
                             fullWidth
                             label="Nomi"
                             value={productForm.name}
                             onChange={(e) => setProductForm({ ...productForm, name: e.target.value })}
-                            sx={{ mb: 2 }}
                         />
+                    </Grid>
+                    <Grid item xs={12} md={4}>
                         <TextField
                             fullWidth
-                            multiline
-                            rows={4}
-                            label="Tavsif"
-                            value={productForm.description}
-                            onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}
-                            sx={{ mb: 2 }}
+                            label="Brend"
+                            value={productForm.brand}
+                            onChange={(e) => setProductForm({ ...productForm, brand: e.target.value })}
                         />
+                    </Grid>
+                    <Grid item xs={12} md={4}>
                         <TextField
                             fullWidth
                             type="number"
                             label="Narx"
                             value={productForm.price}
                             onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
-                            sx={{ mb: 2 }}
                         />
-                        <FormControl fullWidth sx={{ mb: 2 }}>
-                            <InputLabel>Status</InputLabel>
-                            <Select
-                                value={productForm.status}
-                                onChange={(e) => setProductForm({ ...productForm, status: e.target.value })}
-                                label="Status"
-                            >
-                                <MenuItem value="NEW">Yangi</MenuItem>
-                                <MenuItem value="HOT">Issiq</MenuItem>
-                                <MenuItem value="SALE">Sotuvda</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <TextField
-                            fullWidth
-                            label="Kolleksiya"
-                            value={productForm.collection}
-                            onChange={(e) => setProductForm({ ...productForm, collection: e.target.value })}
-                            sx={{ mb: 2 }}
-                        />
-                        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                            <Switch
-                                checked={productForm.active}
-                                onChange={(e) => setProductForm({ ...productForm, active: e.target.checked })}
-                                color="primary"
-                            />
-                            <Typography>Faol</Typography>
-                        </Box>
                     </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Typography variant="subtitle1" sx={{ mb: 2 }}>
-                            Rasmlar
-                        </Typography>
-                        <Input
-                            type="file"
-                            inputProps={{ multiple: true, accept: "image/*" }}
-                            onChange={handleFileChange}
-                            fullWidth
-                            sx={{ mb: 2 }}
-                        />
-                        <Grid container spacing={2}>
-                            {productForm.attachments.map((att, index) => (
-                                <Grid item xs={4} key={index}>
-                                    <Box sx={{ position: "relative" }}>
+                </Grid>
+
+                <TextField
+                    fullWidth
+                    multiline
+                    rows={3}
+                    label="Tavsif"
+                    value={productForm.description}
+                    onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}
+                    sx={{ mb: 3 }}
+                />
+
+                {/* === RASMLAR & O‘LCHAMLAR BLOKI === */}
+                <Grid item xs={12}>
+                    <Typography variant="subtitle1" sx={{ mb: 2 }}>
+                        Rasmlar va O‘lchamlar
+                    </Typography>
+
+                    <Box
+                        className="flex flex-col md:flex-row gap-4"
+                        sx={{
+                            maxHeight: 400,
+                            overflow: "hidden",
+                        }}
+                    >
+                        {/* ==== CHAP: RASMLAR ==== */}
+                        <Box className="flex-1 flex flex-col">
+                            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                                Rasmlar
+                            </Typography>
+
+                            <Input
+                                type="file"
+                                inputProps={{ multiple: true, accept: "image/*" }}
+                                onChange={handleFileChange}
+                                fullWidth
+                                sx={{ mb: 2 }}
+                            />
+
+                            <Box
+                                className="grid grid-cols-2 gap-3 overflow-y-auto"
+                                sx={{
+                                    flexGrow: 1,
+                                    maxHeight: 300,
+                                    pr: 1,
+                                }}
+                            >
+                                {productForm.attachments.map((att, index) => (
+                                    <Box key={index} className="relative">
                                         <img
                                             src={att.url || "/placeholder.svg"}
                                             alt="preview"
-                                            style={{ width: "100%", height: 128, objectFit: "cover", borderRadius: 8 }}
+                                            className="w-full h-32 object-cover rounded-lg"
                                         />
                                         <IconButton
                                             sx={{
@@ -246,67 +240,82 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                             <DeleteIcon fontSize="small" />
                                         </IconButton>
                                     </Box>
-                                </Grid>
-                            ))}
-                        </Grid>
-                        <Typography variant="subtitle1" sx={{ mt: 4, mb: 2 }}>
-                            O'lchamlar
-                        </Typography>
-                        <Grid container spacing={2} sx={{ mb: 2 }}>
-                            <Grid item xs={5}>
-                                <FormControl fullWidth>
-                                    <InputLabel>O'lcham</InputLabel>
-                                    <Select
-                                        value={newSize.size}
-                                        onChange={(e) => setNewSize({ ...newSize, size: e.target.value })}
-                                        label="O'lcham"
-                                    >
-                                        {sizes.map((s) => (
-                                            <MenuItem key={s.value} value={s.value}>
-                                                {s.label}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <TextField
-                                    fullWidth
-                                    type="number"
-                                    label="Miqdor"
-                                    value={newSize.amount}
-                                    onChange={(e) => setNewSize({ ...newSize, amount: e.target.value })}
-                                />
-                            </Grid>
-                            <Grid item xs={3}>
-                                <Button variant="contained" onClick={handleAddSize} fullWidth>
-                                    Qo'shish
-                                </Button>
-                            </Grid>
-                        </Grid>
-                        {productForm.sizes.map((size, index) => (
-                            <Box
-                                key={index}
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                    p: 2,
-                                    border: "1px solid #ddd",
-                                    borderRadius: 1,
-                                    mb: 2,
-                                }}
-                            >
-                                <Typography>
-                                    {size.size}: {size.amount}
-                                </Typography>
-                                <IconButton onClick={() => handleRemoveSize(index)} color="error">
-                                    <DeleteIcon />
-                                </IconButton>
+                                ))}
                             </Box>
-                        ))}
-                    </Grid>
+                        </Box>
+
+                        {/* ==== O‘NG: O‘LCHAMLAR ==== */}
+                        <Box
+                            className="flex-1 flex flex-col border-l border-gray-300 pl-4"
+                            sx={{
+                                overflowY: "auto",
+                                maxHeight: 400,
+                            }}
+                        >
+                            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                                O‘lchamlar
+                            </Typography>
+
+                            <Grid container spacing={2} sx={{ mb: 2 }}>
+                                <Grid item xs={5}>
+                                    <FormControl fullWidth>
+                                        <InputLabel>O‘lcham</InputLabel>
+                                        <Select
+                                            value={newSize.size}
+                                            onChange={(e) => setNewSize({ ...newSize, size: e.target.value })}
+                                            label="O‘lcham"
+                                        >
+                                            {sizes.map((s) => (
+                                                <MenuItem key={s.value} value={s.value}>
+                                                    {s.label}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+
+                                <Grid item xs={4}>
+                                    <TextField
+                                        fullWidth
+                                        type="number"
+                                        label="Miqdor"
+                                        value={newSize.amount}
+                                        onChange={(e) => setNewSize({ ...newSize, amount: e.target.value })}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={3}>
+                                    <Button
+                                        variant="contained"
+                                        onClick={handleAddSize}
+                                        fullWidth
+                                        sx={{ height: "100%" }}
+                                    >
+                                        Qo‘shish
+                                    </Button>
+                                </Grid>
+                            </Grid>
+
+                            <Box className="overflow-y-auto flex-grow space-y-2 pr-1">
+                                {productForm.sizes.map((size, index) => (
+                                    <Box
+                                        key={index}
+                                        className="flex justify-between items-center border border-gray-300 rounded-lg p-2"
+                                    >
+                                        <Typography>
+                                            {size.size}: {size.amount}
+                                        </Typography>
+                                        <IconButton onClick={() => handleRemoveSize(index)} color="error">
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Box>
+                                ))}
+                            </Box>
+                        </Box>
+                    </Box>
                 </Grid>
+
+                {/* === ACTIONS === */}
                 <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
                     <Button onClick={onClose} variant="outlined">
                         Bekor qilish
