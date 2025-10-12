@@ -56,6 +56,9 @@ const ProductEditMenuModal = ({ open, onClose, product, onProductUpdated }) => {
 
                 <DialogContent dividers>
                     <Typography variant="subtitle1" gutterBottom>
+                        <strong>ID:</strong> {product.id}
+                    </Typography>
+                    <Typography variant="subtitle1" gutterBottom>
                         <strong>Nomi:</strong> {product.name}
                     </Typography>
                 </DialogContent>
