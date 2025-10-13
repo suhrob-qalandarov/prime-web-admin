@@ -26,7 +26,6 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
         description: "",
         price: "",
         categoryId: "",
-        status: "NEW",
         sizes: [],
         attachments: [],
     })
@@ -107,15 +106,16 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
     const handleSaveProduct = async () => {
         try {
             setLoading(true)
-            let attachmentUrls = productForm.attachments.filter((a) => !a.file)
+            let attachmentIds = productForm.attachments.filter((a) => !a.file)
             if (selectedFiles.length > 0) {
                 const uploaded = await AttachmentService.uploadFiles(selectedFiles)
-                attachmentUrls = [...attachmentUrls, ...uploaded]
+                const uploadedIds = uploaded.map((attachment) => attachment.id);
+                attachmentIds = [...attachmentIds, ...uploadedIds];
             }
-            const dataToSave = { ...productForm, attachments: attachmentUrls }
+            const dataToSave = { ...productForm, attachments: attachmentIds }
 
-            if (productForm.id) await ProductService.update(productForm.id, dataToSave)
-            else await ProductService.create(dataToSave)
+            //if (productForm.id) await ProductService.update(productForm.id, dataToSave) else
+            await ProductService.create(dataToSave)
 
             if (onProductSaved) onProductSaved()
             onClose()
@@ -132,7 +132,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
     )
 
     const availableCategories = [
-        {id: 1, name: 'Rubashkalar'},
+        {id: 1, name: "Ko'ylaklar"},
         {id: 2, name: 'Soatlar'},
         {id: 3, name: 'Jensiylar'},
     ]
@@ -161,7 +161,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
 
                 {/* === FORM USTI QISMI === */}
                 <Grid container spacing={2} sx={{ mb: 3 }}>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={4} sx={{ width: { xs: '100%', md: '30%' }}}>
                         <TextField
                             fullWidth
                             label="Nomi"
@@ -177,7 +177,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                             onChange={(e) => setProductForm({ ...productForm, brand: e.target.value })}
                         />
                     </Grid>
-                    <Box sx={{ width: { xs: '100%', md: '20%' }, mb: 2 }}>
+                    <Box sx={{ width: { xs: '100%', md: '23%' }, mb: 2 }}>
                         <FormControl fullWidth variant="outlined">
                             <InputLabel id="category-label">Kategoriya</InputLabel>
                             <Select
@@ -202,7 +202,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                         <TextField
                             fullWidth
                             type="number"
-                            label="Narx"
+                            label="Narx so'm"
                             value={productForm.price}
                             onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
                         />
@@ -221,14 +221,10 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
 
                 {/* === RASMLAR & O‘LCHAMLAR BLOKI === */}
                 <Grid item xs={12}>
-                    <Typography variant="subtitle1" sx={{ mb: 2 }}>
-                        Rasmlar va O‘lchamlar
-                    </Typography>
-
                     <Box className="flex flex-col md:flex-row gap-4" sx={{ maxHeight: 400, overflow: "hidden" }}>
                         {/* ==== CHAP: RASMLAR ==== */}
                         <Box className="flex-1 flex flex-col">
-                            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                            <Typography variant="subtitle1" sx={{ mb: 2 }}>
                                 Rasmlar
                             </Typography>
 
@@ -276,7 +272,6 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                         </Box>
 
                         {/* ==== O‘NG: O‘LCHAMLAR ==== */}
-                        {/* ==== O‘NG: O‘LCHAMLAR ==== */}
                         <Box
                             className="flex-1 flex flex-col border-l border-gray-300 pl-4"
                             sx={{
@@ -284,7 +279,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                 maxHeight: 400,
                             }}
                         >
-                            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                            <Typography variant="subtitle1" sx={{ mb: 2 }}>
                                 O‘lchamlar
                             </Typography>
 
@@ -296,7 +291,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                     mb: 2,
                                 }}
                             >
-                                <Box sx={{ flex: { xs: '0 0 100%', sm: '0 0 30%' } }}>
+                                <Box sx={{ flex: { xs: '0 0 100%', sm: '0 0 34%' } }}>
                                     <FormControl fullWidth variant="outlined">
                                         <InputLabel id="size-label">O‘lcham</InputLabel>
                                         <Select
@@ -327,7 +322,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
 
                                 <Box sx={{ flex: { xs: '0 0 100%', sm: '0 0 25%' } }}>
                                     <Button
-                                        variant="contained"
+                                        variant="outlined"
                                         onClick={handleAddSize}
                                         fullWidth
                                         sx={{ height: "100%" }}
@@ -344,7 +339,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                         className="flex justify-between items-center border border-gray-300 rounded-lg p-2"
                                     >
                                         <Typography>
-                                            {size.size}: {size.amount}
+                                            {size.size}: {size.amount} ta
                                         </Typography>
                                         <IconButton onClick={() => handleRemoveSize(index)} color="error">
                                             <DeleteIcon />
@@ -358,10 +353,10 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
 
                 {/* === ACTIONS === */}
                 <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
-                    <Button onClick={onClose} variant="outlined">
+                    <Button onClick={onClose} variant="outlined" color="warning">
                         Bekor qilish
                     </Button>
-                    <Button onClick={handleSaveProduct} variant="contained" color="primary" disabled={loading}>
+                    <Button onClick={handleSaveProduct} variant="outlined" color="success" disabled={loading}>
                         {loading ? "Saqlanmoqda..." : "Saqlash"}
                     </Button>
                 </Box>

@@ -4,6 +4,35 @@ const AttachmentService = {
 
     // Upload multiple files
     async uploadFiles(files) {
+        try {
+            const formData = new FormData();
+            files.forEach((file) => {
+                formData.append("files", file);
+            });
+
+            const response = await axios.post(
+                "/admin/attachment/multiupload",
+                formData,
+                {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            );
+
+            if (response.status !== 200) {
+                throw new Error("Failed to upload files");
+            }
+
+            return response.data;
+        } catch (error) {
+            console.error("Error uploading files:", error);
+            throw error;
+        }
+    },
+
+    async uploadFile(file) {
         /*try {
             const formData = new FormData()
             files.forEach((file) => {
