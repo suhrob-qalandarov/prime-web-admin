@@ -177,23 +177,17 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                             onChange={(e) => setProductForm({ ...productForm, brand: e.target.value })}
                         />
                     </Grid>
-                    <Grid item xs={12} md={4}>
-                        <FormControl fullWidth>
+                    <Box sx={{ width: { xs: '100%', md: '20%' }, mb: 2 }}>
+                        <FormControl fullWidth variant="outlined">
+                            <InputLabel id="category-label">Kategoriya</InputLabel>
                             <Select
                                 labelId="category-label"
+                                id="category"
                                 value={productForm.categoryId || ""}
+                                label="Kategoriya"
                                 onChange={(e) =>
                                     setProductForm({ ...productForm, categoryId: e.target.value })
                                 }
-                                displayEmpty
-                                renderValue={(selected) => {
-                                    if (!selected) {
-                                        return <InputLabel id="category-label">Kategoriya</InputLabel>
-                                    }
-                                    const cat = availableCategories.find(c => c.id === selected);
-                                    return cat ? cat.name : '';
-                                }}
-                                sx={{ width: '100%' }}
                             >
                                 {availableCategories.map((cat) => (
                                     <MenuItem key={cat.id} value={cat.id}>
@@ -202,7 +196,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                 ))}
                             </Select>
                         </FormControl>
-                    </Grid>
+                    </Box>
 
                     <Grid item xs={12} md={4}>
                         <TextField
@@ -282,6 +276,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                         </Box>
 
                         {/* ==== O‘NG: O‘LCHAMLAR ==== */}
+                        {/* ==== O‘NG: O‘LCHAMLAR ==== */}
                         <Box
                             className="flex-1 flex flex-col border-l border-gray-300 pl-4"
                             sx={{
@@ -293,14 +288,23 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                 O‘lchamlar
                             </Typography>
 
-                            <Grid container spacing={2} sx={{ mb: 2 }}>
-                                <Grid item xs={5}>
-                                    <FormControl fullWidth>
-                                        <InputLabel>O‘lcham</InputLabel>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexWrap: 'wrap',
+                                    gap: 2,
+                                    mb: 2,
+                                }}
+                            >
+                                <Box sx={{ flex: { xs: '0 0 100%', sm: '0 0 30%' } }}>
+                                    <FormControl fullWidth variant="outlined">
+                                        <InputLabel id="size-label">O‘lcham</InputLabel>
                                         <Select
-                                            value={newSize.size}
-                                            onChange={(e) => setNewSize({ ...newSize, size: e.target.value })}
+                                            labelId="size-label"
+                                            id="size"
+                                            value={newSize.size || ""}
                                             label="O‘lcham"
+                                            onChange={(e) => setNewSize({ ...newSize, size: e.target.value })}
                                         >
                                             {availableSizes.map((s) => (
                                                 <MenuItem key={s.value} value={s.value}>
@@ -309,9 +313,9 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                             ))}
                                         </Select>
                                     </FormControl>
-                                </Grid>
+                                </Box>
 
-                                <Grid item xs={4}>
+                                <Box sx={{ flex: { xs: '0 0 100%', sm: '0 0 33.33%' } }}>
                                     <TextField
                                         fullWidth
                                         type="number"
@@ -319,9 +323,9 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                         value={newSize.amount}
                                         onChange={(e) => setNewSize({ ...newSize, amount: e.target.value })}
                                     />
-                                </Grid>
+                                </Box>
 
-                                <Grid item xs={3}>
+                                <Box sx={{ flex: { xs: '0 0 100%', sm: '0 0 25%' } }}>
                                     <Button
                                         variant="contained"
                                         onClick={handleAddSize}
@@ -330,8 +334,8 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                     >
                                         Qo‘shish
                                     </Button>
-                                </Grid>
-                            </Grid>
+                                </Box>
+                            </Box>
 
                             <Box className="overflow-y-auto flex-grow space-y-2 pr-1">
                                 {productForm.sizes.map((size, index) => (
