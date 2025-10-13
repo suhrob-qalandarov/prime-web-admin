@@ -27,18 +27,21 @@ const ProductService = {
 
     // Create new product
     async create(productData) {
-        /*try {
-            const response = await axios("/api/products", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(productData),
+        try {
+            const response = await axios.post(
+                "/admin/product", productData,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
             })
             if (!response.ok) throw new Error("Failed to create product")
             return await response.json()
         } catch (error) {
             console.error("Error creating product:", error)
             throw error
-        }*/
+        }
     },
 
     // Update product
