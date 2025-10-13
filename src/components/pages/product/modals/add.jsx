@@ -32,6 +32,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
     })
 
     const [newSize, setNewSize] = useState({ size: "", amount: "" })
+    const [newCategory, setNewCategory] = useState(null)
     const [selectedFiles, setSelectedFiles] = useState([])
     const [loading, setLoading] = useState(false)
 
@@ -130,6 +131,12 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
         (s) => !productForm.sizes.some((sel) => sel.size === s.value)
     )
 
+    const availableCategories = [
+        {id: 1, name: 'Rubashkalar'},
+        {id: 2, name: 'Soatlar'},
+        {id: 3, name: 'Jensiylar'},
+    ]
+
     return (
         <Modal open={open} onClose={onClose}>
             <Box
@@ -170,6 +177,33 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                             onChange={(e) => setProductForm({ ...productForm, brand: e.target.value })}
                         />
                     </Grid>
+                    <Grid item xs={12} md={4}>
+                        <FormControl fullWidth>
+                            <Select
+                                labelId="category-label"
+                                value={productForm.categoryId || ""}
+                                onChange={(e) =>
+                                    setProductForm({ ...productForm, categoryId: e.target.value })
+                                }
+                                displayEmpty
+                                renderValue={(selected) => {
+                                    if (!selected) {
+                                        return <InputLabel id="category-label">Kategoriya</InputLabel>
+                                    }
+                                    const cat = availableCategories.find(c => c.id === selected);
+                                    return cat ? cat.name : '';
+                                }}
+                                sx={{ width: '100%' }}
+                            >
+                                {availableCategories.map((cat) => (
+                                    <MenuItem key={cat.id} value={cat.id}>
+                                        {cat.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+
                     <Grid item xs={12} md={4}>
                         <TextField
                             fullWidth
