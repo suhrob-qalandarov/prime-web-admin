@@ -29,7 +29,7 @@ const Product = () => {
         {
             id: 1,
             name: "Product 1",
-            brandName: null,
+            brand: null,
             attachmentCount: 0,
             categoryName: "Category 1",
             price: 100000,
@@ -41,7 +41,7 @@ const Product = () => {
         {
             id: 2,
             name: "Long Product Name 2",
-            brandName: "Brand 1",
+            brand: "Brand 1",
             attachmentCount: 3,
             categoryName: "Category 2",
             price: 202000,
@@ -53,7 +53,7 @@ const Product = () => {
         {
             id: 3,
             name: "Product 3",
-            brandName: "Long Name Brand 3",
+            brand: "Long Name Brand 3",
             attachmentCount: null,
             categoryName: "Category 3",
             price: 330000,
@@ -221,7 +221,7 @@ const Product = () => {
                                         <TableCell>{prod.id}</TableCell>
                                         <TableCell>{prod.attachmentCount == null ? '---' : `${prod.attachmentCount} ta`}</TableCell>
                                         <TableCell>{prod.name}</TableCell>
-                                        <TableCell>{prod.brandName ?? '---'}</TableCell>
+                                        <TableCell>{prod.brand ?? '---'}</TableCell>
                                         <TableCell>{prod.categoryName}</TableCell>
                                         <TableCell>
                                             {prod.status === 'SALE' ? (
