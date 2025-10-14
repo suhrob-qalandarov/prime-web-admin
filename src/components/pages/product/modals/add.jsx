@@ -238,7 +238,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
 
                 {/* === RASMLAR & O‘LCHAMLAR BLOKI === */}
                 <Grid item xs={12}>
-                    <Box className="flex flex-col md:flex-row gap-4" sx={{ maxHeight: 400, overflow: "hidden" }}>
+                    <Box className="flex flex-col md:flex-row gap-4" sx={{ maxHeight: 600, overflow: "hidden", mt: 0 }}>
                         {/* ==== CHAP: RASMLAR ==== */}
                         <Box className="flex-1 flex flex-col">
                             <Typography variant="subtitle1" sx={{ mb: 2 }}>
@@ -253,38 +253,41 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                 sx={{ mb: 2 }}
                             />
 
-                            <Box
-                                className="grid grid-cols-2 gap-3 overflow-y-auto"
-                                sx={{
-                                    flexGrow: 1,
-                                    maxHeight: 300,
-                                    pr: 1,
-                                }}
-                            >
-                                {productForm.attachments.map((att, index) => (
-                                    <Box key={index} className="relative">
-                                        <img
-                                            src={att.url || "/placeholder.svg"}
-                                            alt="preview"
-                                            className="w-full object-cover rounded-lg"
-                                            style={{ height: "16rem" }}
-                                        />
-                                        <IconButton
-                                            sx={{
-                                                position: "absolute",
-                                                top: 0,
-                                                right: 0,
-                                                bgcolor: "error.main",
-                                                color: "white",
-                                                "&:hover": { bgcolor: "error.dark" },
-                                            }}
-                                            size="small"
-                                            onClick={() => handleRemoveAttachment(index)}
-                                        >
-                                            <DeleteIcon fontSize="small" />
-                                        </IconButton>
+                            <Box sx={{ flexGrow: 1, maxHeight: 400, borderRadius: '6px', overflowY: 'auto', pr: 1 }}>
+                                {productForm.attachments.length > 0 ? (
+                                    <Box className="grid grid-cols-2 gap-3">
+                                        {productForm.attachments.map((att, index) => (
+                                            <Box key={index} className="relative">
+                                                <img
+                                                    src={att.url || "/placeholder.svg"}
+                                                    alt="preview"
+                                                    className="w-full object-cover rounded-lg"
+                                                    style={{ height: "18rem" }}
+                                                />
+                                                <IconButton
+                                                    sx={{
+                                                        position: "absolute",
+                                                        top: 0,
+                                                        right: 0,
+                                                        bgcolor: "error.main",
+                                                        color: "white",
+                                                        "&:hover": { bgcolor: "error.dark" },
+                                                    }}
+                                                    size="small"
+                                                    onClick={() => handleRemoveAttachment(index)}
+                                                >
+                                                    <DeleteIcon fontSize="small" />
+                                                </IconButton>
+                                            </Box>
+                                        ))}
                                     </Box>
-                                ))}
+                                ) : (
+                                    <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
+                                        <Typography sx={{ color: 'text.secondary', textAlign: 'center' }}>
+                                            Hech qanday rasm qo‘shilmagan
+                                        </Typography>
+                                    </Box>
+                                )}
                             </Box>
                         </Box>
 
@@ -293,7 +296,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                             className="flex-1 flex flex-col border-l border-gray-300 pl-4"
                             sx={{
                                 overflowY: "auto",
-                                maxHeight: 400,
+                                maxHeight: 492,
                             }}
                         >
                             <Typography variant="subtitle1" sx={{ mb: 2 }}>
@@ -350,56 +353,62 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                             </Box>
 
                             <Box className="overflow-y-auto flex-grow space-y-2 pr-1">
-                                {productForm.sizes.map((size, index) => (
-                                    <Box
-                                        key={index}
-                                        className="flex justify-between items-center border border-gray-300 rounded-lg p-2"
-                                    >
-                                        <Typography>
-                                            {size.size}: {size.amount} ta
-                                        </Typography>
-                                        <IconButton onClick={() => handleRemoveSize(index)} color="error">
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </Box>
-                                ))}
+                                {productForm.sizes.length > 0 ? (
+                                    productForm.sizes.map((size, index) => (
+                                        <Box
+                                            key={index}
+                                            className="flex justify-between items-center border border-gray-300 rounded-lg p-2"
+                                        >
+                                            <Typography>
+                                                {size.size}: {size.amount} ta
+                                            </Typography>
+                                            <IconButton onClick={() => handleRemoveSize(index)} color="error">
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </Box>
+                                    ))
+                                ) : (
+                                    <Typography sx={{ color: 'text.secondary', textAlign: 'center', py: 2 }}>
+                                        Hech qanday o‘lcham qo‘shilmagan
+                                    </Typography>
+                                )}
+                            </Box>
+
+                            {/* === ACTIONS === */}
+                            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 3 }}>
+                                <Button
+                                    onClick={onClose}
+                                    variant="outlined"
+                                    color="warning"
+                                    sx={{
+                                        px: 3,
+                                        py: 1,
+                                        borderRadius: 3,
+                                        textTransform: "none",
+                                        fontWeight: 500,
+                                    }}
+                                >
+                                    Bekor qilish
+                                </Button>
+                                <Button
+                                    onClick={handleSaveProduct}
+                                    variant="outlined"
+                                    color="success"
+                                    disabled={loading}
+                                    sx={{
+                                        px: 3,
+                                        py: 1,
+                                        borderRadius: 3,
+                                        textTransform: "none",
+                                        fontWeight: 500,
+                                    }}
+                                >
+                                    {loading ? "Saqlanmoqda..." : "Saqlash"}
+                                </Button>
                             </Box>
                         </Box>
                     </Box>
                 </Grid>
-
-                {/* === ACTIONS === */}
-                <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
-                    <Button
-                        onClick={onClose}
-                        variant="outlined"
-                        color="warning"
-                        sx={{
-                            px: 3,
-                            py: 1,
-                            borderRadius: 3,
-                            textTransform: "none",
-                            fontWeight: 500,
-                        }}
-                    >
-                        Bekor qilish
-                    </Button>
-                    <Button
-                        onClick={handleSaveProduct}
-                        variant="outlined"
-                        color="success"
-                        disabled={loading}
-                        sx={{
-                            px: 3,
-                            py: 1,
-                            borderRadius: 3,
-                            textTransform: "none",
-                            fontWeight: 500,
-                        }}
-                    >
-                        {loading ? "Saqlanmoqda..." : "Saqlash"}
-                    </Button>
-                </Box>
             </Box>
         </Modal>
     )
