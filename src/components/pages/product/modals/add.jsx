@@ -156,7 +156,24 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                 }}
             >
                 <Typography variant="h6" sx={{ mb: 4 }}>
-                    {productForm.id ? "Mahsulotni tahrirlash" : "Mahsulot qo‘shish"}
+                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
+                        <Typography variant="h6">
+                            {productForm.id ? "Mahsulotni tahrirlash" : "Mahsulot qo‘shish"}
+                        </Typography>
+                        <Button
+                            variant="outlined"
+                            color="error"
+                            sx={{
+                                px: 3,
+                                py: 1,
+                                borderRadius: 3,
+                                textTransform: "none",
+                                fontWeight: 500,
+                            }}
+                        >
+                            Tozalash
+                        </Button>
+                    </Box>
                 </Typography>
 
                 {/* === FORM USTI QISMI === */}
@@ -353,10 +370,33 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
 
                 {/* === ACTIONS === */}
                 <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
-                    <Button onClick={onClose} variant="outlined" color="warning">
+                    <Button
+                        onClick={onClose}
+                        variant="outlined"
+                        color="warning"
+                        sx={{
+                            px: 3,
+                            py: 1,
+                            borderRadius: 3,
+                            textTransform: "none",
+                            fontWeight: 500,
+                        }}
+                    >
                         Bekor qilish
                     </Button>
-                    <Button onClick={handleSaveProduct} variant="outlined" color="success" disabled={loading}>
+                    <Button
+                        onClick={handleSaveProduct}
+                        variant="outlined"
+                        color="success"
+                        disabled={loading}
+                        sx={{
+                            px: 3,
+                            py: 1,
+                            borderRadius: 3,
+                            textTransform: "none",
+                            fontWeight: 500,
+                        }}
+                    >
                         {loading ? "Saqlanmoqda..." : "Saqlash"}
                     </Button>
                 </Box>
