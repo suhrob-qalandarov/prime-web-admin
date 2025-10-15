@@ -22,6 +22,7 @@ import {
 } from "@mui/material"
 import { Add as AddIcon, Edit as EditIcon, Visibility as VisibilityIcon } from "@mui/icons-material"
 import { EditMenuModal, AddModal, ViewModal } from "./modals"
+import CustomSnackbar from "../../bars/snackbar/snackbar"
 import ProductService from "../../../service/product"
 
 const Product = () => {
@@ -69,6 +70,12 @@ const Product = () => {
     const [openEditMenuModal, setOpenEditMenuModal] = useState(false)
     const [openViewModal, setOpenViewModal] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState(null)
+
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: "",
+        type: "success",
+    })
 
     useEffect(() => {
         loadProducts()
@@ -122,9 +129,27 @@ const Product = () => {
         handleCloseEditMenuModal()
     }
 
-    const handleProductSaved = () => {
+    const showSnackbar = (message, type) => {
+        setSnackbar({
+            open: true,
+            message,
+            type,
+        })
+    }
+
+    const handleCloseSnackbar = () => {
+        setSnackbar({
+            ...snackbar,
+            open: false,
+        })
+    }
+
+    const handleProductSaved = (message, type) => {
         loadProducts()
         handleCloseAddEditModal()
+        if (message && type) {
+            showSnackbar(message, type)
+        }
     }
 
     if (isLoading) {
@@ -352,6 +377,13 @@ const Product = () => {
                 onClose={handleCloseAddEditModal}
                 product={selectedProduct}
                 onProductSaved={handleProductSaved}
+            />
+
+            <CustomSnackbar
+                open={snackbar.open}
+                message={snackbar.message}
+                type={snackbar.type}
+                onClose={handleCloseSnackbar}
             />
         </Container>
     )
