@@ -105,22 +105,42 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
 
     const handleSaveProduct = async () => {
         try {
+            // Validatsiya
+            if (!productForm.name || !productForm.price || !productForm.categoryId) {
+                if (onProductSaved) {
+                    onProductSaved("Iltimos, barcha majburiy maydonlarni to'ldiring!", "error")
+                }
+                return
+            }
+
+            if (productForm.sizes.length === 0) {
+                if (onProductSaved) {
+                    onProductSaved("Kamida bitta o'lcham qo'shing!", "warning")
+                }
+                return
+            }
+
             setLoading(true)
             let attachmentIds = productForm.attachments.filter((a) => !a.file)
             if (selectedFiles.length > 0) {
                 const uploaded = await AttachmentService.uploadFiles(selectedFiles)
-                const uploadedIds = uploaded.map((attachment) => attachment.id);
-                attachmentIds = [...attachmentIds, ...uploadedIds];
+                const uploadedIds = uploaded.map((attachment) => attachment.id)
+                attachmentIds = [...attachmentIds, ...uploadedIds]
             }
             const dataToSave = { ...productForm, attachments: attachmentIds }
 
             //if (productForm.id) await ProductService.update(productForm.id, dataToSave) else
             await ProductService.create(dataToSave)
 
-            if (onProductSaved) onProductSaved()
+            if (onProductSaved) {
+                onProductSaved("Mahsulot muvaffaqiyatli saqlandi!", "success")
+            }
             onClose()
         } catch (err) {
             console.error("Error saving product:", err)
+            if (onProductSaved) {
+                onProductSaved("Mahsulotni saqlashda xatolik yuz berdi!", "error")
+            }
         } finally {
             setLoading(false)
         }
