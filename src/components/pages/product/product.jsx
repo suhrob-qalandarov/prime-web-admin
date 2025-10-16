@@ -84,10 +84,11 @@ const Product = () => {
     const loadProducts = async () => {
         try {
             setIsLoading(true)
-            //const data = await ProductService.getAll()
+            const data = await ProductService.getAll()
             //setAllProducts(data)
         } catch (err) {
             setError("Mahsulotlarni yuklashda xatolik yuz berdi")
+            showSnackbar("Mahsulotlarni yuklashda xatolik yuz berdi", "error")
             console.error(err)
         } finally {
             setIsLoading(false)
@@ -158,16 +159,16 @@ const Product = () => {
                 <CircularProgress />
                 <Typography className="ml-4">Loading...</Typography>
             </Box>
-        );
+        )
     }
 
     if (error) {
-        return <Alert severity="error">{error}</Alert>;
+        return <Alert severity="error">{error}</Alert>
     }
 
     return (
         <Container maxWidth="xl" className="py-8">
-            {/*<Grid container spacing={3} className="mb-8">
+            <Grid container spacing={3} className="mb-8">
                 <Grid item xs={12} md={4}>
                     <Card className="shadow-lg rounded-xl bg-indigo-100">
                         <CardContent className="flex items-center">
@@ -175,7 +176,9 @@ const Product = () => {
                                 <i className="fas fa-box-open text-3xl" />
                             </Box>
                             <Box>
-                                <Typography variant="h4" className="font-bold">{allProducts.length}</Typography>
+                                <Typography variant="h4" className="font-bold">
+                                    {allProducts.length}
+                                </Typography>
                                 <Typography>Jami mahsulotlar</Typography>
                             </Box>
                         </CardContent>
@@ -188,7 +191,9 @@ const Product = () => {
                                 <i className="fas fa-check-circle text-3xl" />
                             </Box>
                             <Box>
-                                <Typography variant="h4" className="font-bold">{activeProducts.length}</Typography>
+                                <Typography variant="h4" className="font-bold">
+                                    {allProducts.filter((prod) => prod.active).length}
+                                </Typography>
                                 <Typography>Faol mahsulotlar</Typography>
                             </Box>
                         </CardContent>
@@ -201,13 +206,15 @@ const Product = () => {
                                 <i className="fas fa-pause-circle text-3xl" />
                             </Box>
                             <Box>
-                                <Typography variant="h4" className="font-bold">{inactiveProducts.length}</Typography>
+                                <Typography variant="h4" className="font-bold">
+                                    {allProducts.filter((prod) => !prod.active).length}
+                                </Typography>
                                 <Typography>Nofaol mahsulotlar</Typography>
                             </Box>
                         </CardContent>
                     </Card>
                 </Grid>
-            </Grid>*/}
+            </Grid>
             <Card className="shadow-lg rounded-xl overflow-hidden">
                 <CardHeader
                     title="Mahsulotlar ro'yxati"
@@ -244,12 +251,12 @@ const Product = () => {
                                 {allProducts.map((prod) => (
                                     <TableRow key={prod.id} className="hover:bg-gray-50">
                                         <TableCell>{prod.id}</TableCell>
-                                        <TableCell>{prod.attachmentCount == null ? '---' : `${prod.attachmentCount} ta`}</TableCell>
+                                        <TableCell>{prod.attachmentCount == null ? "---" : `${prod.attachmentCount} ta`}</TableCell>
                                         <TableCell>{prod.name}</TableCell>
-                                        <TableCell>{prod.brand ?? '---'}</TableCell>
+                                        <TableCell>{prod.brand ?? "---"}</TableCell>
                                         <TableCell>{prod.categoryName}</TableCell>
                                         <TableCell>
-                                            {prod.status === 'SALE' ? (
+                                            {prod.status === "SALE" ? (
                                                 <Box display="flex" alignItems="center" gap={1}>
                                                     {/* STATUS */}
                                                     <Chip
@@ -257,8 +264,8 @@ const Product = () => {
                                                         color="warning"
                                                         size="small"
                                                         sx={{
-                                                            fontWeight: 'bold',
-                                                            color: '#fff',
+                                                            fontWeight: "bold",
+                                                            color: "#fff",
                                                         }}
                                                     />
 
@@ -269,8 +276,8 @@ const Product = () => {
                                                         size="small"
                                                         variant="outlined"
                                                         sx={{
-                                                            borderColor: '#ffa726',
-                                                            color: '#f57c00',
+                                                            borderColor: "#ffa726",
+                                                            color: "#f57c00",
                                                             fontWeight: 500,
                                                         }}
                                                     />
@@ -278,73 +285,56 @@ const Product = () => {
                                             ) : (
                                                 <Chip
                                                     label={prod.status}
-                                                    color={
-                                                        prod.status === 'NEW'
-                                                            ? 'success'
-                                                            : prod.status === 'HOT'
-                                                                ? 'error'
-                                                                : 'warning'
-                                                    }
+                                                    color={prod.status === "NEW" ? "success" : prod.status === "HOT" ? "error" : "warning"}
                                                     size="small"
-                                                    sx={{ fontWeight: 'bold' }}
+                                                    sx={{ fontWeight: "bold" }}
                                                 />
                                             )}
                                         </TableCell>
                                         <TableCell>
-                                            {prod.status === 'SALE' ? (
+                                            {prod.status === "SALE" ? (
                                                 <Box display="flex" flexDirection="column" alignItems="flex-start">
                                                     {/* ASL NARX */}
                                                     <Typography
                                                         variant="body2"
-                                                        sx={{ textDecoration: 'line-through', color: '#1976d2', fontSize: 12 }}
+                                                        sx={{ textDecoration: "line-through", color: "#1976d2", fontSize: 12 }}
                                                     >
-                                                        {Intl.NumberFormat('uz-UZ').format(prod.price)} so'm
+                                                        {Intl.NumberFormat("uz-UZ").format(prod.price)} so'm
                                                     </Typography>
 
                                                     {/* CHEGIRMADAN KEYINGI NARX */}
-                                                    <Typography
-                                                        variant="body2"
-                                                        sx={{ color: '#f57c00', fontWeight: 600, fontSize: 13 }}
-                                                    >
-                                                        {Intl.NumberFormat('uz-UZ').format(
-                                                            prod.price - (prod.price * prod.discount) / 100
-                                                        )}{' '}
-                                                        so'm
+                                                    <Typography variant="body2" sx={{ color: "#f57c00", fontWeight: 600, fontSize: 13 }}>
+                                                        {Intl.NumberFormat("uz-UZ").format(prod.price - (prod.price * prod.discount) / 100)} so'm
                                                     </Typography>
                                                 </Box>
                                             ) : (
-                                                <Typography
-                                                    variant="body2"
-                                                    sx={{ color: '#1976d2', fontWeight: 600, fontSize: 13 }}
-                                                >
-                                                    {Intl.NumberFormat('uz-UZ').format(
-                                                        prod.price - (prod.price * prod.discount) / 100
-                                                    )}{' '}
-                                                    so'm
+                                                <Typography variant="body2" sx={{ color: "#1976d2", fontWeight: 600, fontSize: 13 }}>
+                                                    {Intl.NumberFormat("uz-UZ").format(prod.price - (prod.price * prod.discount) / 100)} so'm
                                                 </Typography>
                                             )}
                                         </TableCell>
                                         <TableCell>
                                             <Chip
-                                                label={prod.active ? 'Faol' : 'Nofaol'}
-                                                color={prod.active ? 'success' : 'error'}
+                                                label={prod.active ? "Faol" : "Nofaol"}
+                                                color={prod.active ? "success" : "error"}
                                                 size="small"
-                                                variant='outlined'
+                                                variant="outlined"
                                             />
                                         </TableCell>
                                         <TableCell>
-                                            {prod.createdAt && !isNaN(new Date(prod.createdAt))
-                                                ? new Date(prod.createdAt).toLocaleString('uz-UZ', {
-                                                    day: '2-digit',
-                                                    month: '2-digit',
-                                                    year: 'numeric',
-                                                    hour: '2-digit',
-                                                    minute: '2-digit',
+                                            {prod.createdAt && !isNaN(new Date(prod.createdAt)) ? (
+                                                new Date(prod.createdAt).toLocaleString("uz-UZ", {
+                                                    day: "2-digit",
+                                                    month: "2-digit",
+                                                    year: "numeric",
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
                                                 })
-                                                : <Typography color="text.secondary" fontStyle="italic">
+                                            ) : (
+                                                <Typography color="text.secondary" fontStyle="italic">
                                                     Nomaʼlum
                                                 </Typography>
-                                            }
+                                            )}
                                         </TableCell>
                                         <TableCell>
                                             <IconButton onClick={() => handleOpenViewModal(prod)}>
