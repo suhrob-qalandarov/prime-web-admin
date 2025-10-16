@@ -12,6 +12,7 @@ import {
     Select,
     TextField,
     Typography,
+    FormHelperText,
 } from "@mui/material"
 import { Delete as DeleteIcon } from "@mui/icons-material"
 import ProductService from "../../../../service/product"
@@ -34,6 +35,14 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
     const [newCategory, setNewCategory] = useState(null)
     const [selectedFiles, setSelectedFiles] = useState([])
     const [loading, setLoading] = useState(false)
+
+    const [errors, setErrors] = useState({
+        name: "",
+        price: "",
+        categoryId: "",
+        sizes: "",
+        attachments: "",
+    })
 
     useEffect(() => {
         if (product) {
@@ -61,7 +70,14 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                 attachments: [],
             })
         }
-    }, [product])
+        setErrors({
+            name: "",
+            price: "",
+            categoryId: "",
+            sizes: "",
+            attachments: "",
+        })
+    }, [product, open])
 
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files)
@@ -74,6 +90,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
             ...prev,
             attachments: [...prev.attachments, ...previews],
         }))
+        setErrors((prev) => ({ ...prev, attachments: "" }))
     }
 
     const handleRemoveAttachment = (index) => {
@@ -85,7 +102,6 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
 
     const handleAddSize = () => {
         if (newSize.size && newSize.amount) {
-            // agar bu o‘lcham allaqachon mavjud bo‘lsa, qaytmaydi
             const exists = productForm.sizes.some((s) => s.size === newSize.size)
             if (exists) return
             setProductForm((prev) => ({
@@ -93,6 +109,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                 sizes: [...prev.sizes, { ...newSize }],
             }))
             setNewSize({ size: "", amount: "" })
+            setErrors((prev) => ({ ...prev, sizes: "" }))
         }
     }
 
@@ -103,23 +120,52 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
         }))
     }
 
+    const validateForm = () => {
+        const newErrors = {
+            name: "",
+            price: "",
+            categoryId: "",
+            sizes: "",
+            attachments: "",
+        }
+
+        let isValid = true
+
+        if (!productForm.name || productForm.name.trim() === "") {
+            newErrors.name = "Mahsulot nomini kiriting!"
+            isValid = false
+        }
+
+        if (!productForm.price || productForm.price <= 0) {
+            newErrors.price = "Mahsulot narxini kiriting!"
+            isValid = false
+        }
+
+        if (!productForm.categoryId) {
+            newErrors.categoryId = "Kategoriyani tanlang!"
+            isValid = false
+        }
+
+        if (productForm.sizes.length === 0) {
+            newErrors.sizes = "Kamida bitta o'lcham qo'shing!"
+            isValid = false
+        }
+
+        if (selectedFiles.length === 0 && productForm.attachments.length === 0) {
+            newErrors.attachments = "Kamida bitta rasm qo'shing!"
+            isValid = false
+        }
+
+        setErrors(newErrors)
+        return isValid
+    }
+
     const handleSaveProduct = async () => {
+        if (!validateForm()) {
+            return
+        }
+
         try {
-            // Validatsiya
-            if (!productForm.name || !productForm.price || !productForm.categoryId) {
-                if (onProductSaved) {
-                    onProductSaved("Iltimos, barcha majburiy maydonlarni to'ldiring!", "error")
-                }
-                return
-            }
-
-            if (productForm.sizes.length === 0) {
-                if (onProductSaved) {
-                    onProductSaved("Kamida bitta o'lcham qo'shing!", "warning")
-                }
-                return
-            }
-
             setLoading(true)
             let attachmentIds = productForm.attachments.filter((a) => !a.file)
             if (selectedFiles.length > 0) {
@@ -129,7 +175,6 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
             }
             const dataToSave = { ...productForm, attachments: attachmentIds }
 
-            //if (productForm.id) await ProductService.update(productForm.id, dataToSave) else
             await ProductService.create(dataToSave)
 
             if (onProductSaved) {
@@ -146,15 +191,33 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
         }
     }
 
-    // mavjud o‘lchamlarni filterlab, Select’da faqat tanlanmaganlarini ko‘rsatish
-    const availableSizes = sizes.filter(
-        (s) => !productForm.sizes.some((sel) => sel.size === s.value)
-    )
+    const handleClearData = async () => {
+        setProductForm({
+            id: null,
+            name: "",
+            brand: "",
+            description: "",
+            price: "",
+            categoryId: "",
+            status: "NEW",
+            sizes: [],
+            attachments: [],
+        })
+        setErrors({
+            name: "",
+            price: "",
+            categoryId: "",
+            sizes: "",
+            attachments: "",
+        })
+    }
+
+    const availableSizes = sizes.filter((s) => !productForm.sizes.some((sel) => sel.size === s.value))
 
     const availableCategories = [
-        {id: 1, name: "Ko'ylaklar"},
-        {id: 2, name: 'Soatlar'},
-        {id: 3, name: 'Jensiylar'},
+        { id: 1, name: "Ko'ylaklar" },
+        { id: 2, name: "Soatlar" },
+        { id: 3, name: "Jensiylar" },
     ]
 
     return (
@@ -177,10 +240,9 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
             >
                 <Typography variant="h6" sx={{ mb: 4 }}>
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
-                        <Typography variant="h6">
-                            {productForm.id ? "Mahsulotni tahrirlash" : "Mahsulot qo‘shish"}
-                        </Typography>
+                        <Typography variant="h6">{productForm.id ? "Mahsulotni tahrirlash" : "Mahsulot qo'shish"}</Typography>
                         <Button
+                            onClick={handleClearData}
                             variant="outlined"
                             color="error"
                             sx={{
@@ -198,12 +260,17 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
 
                 {/* === FORM USTI QISMI === */}
                 <Grid container spacing={2} sx={{ mb: 3 }}>
-                    <Grid item xs={12} md={4} sx={{ width: { xs: '100%', md: '30%' }}}>
+                    <Grid item xs={12} md={4} sx={{ width: { xs: "100%", md: "30%" } }}>
                         <TextField
                             fullWidth
                             label="Nomi"
                             value={productForm.name}
-                            onChange={(e) => setProductForm({ ...productForm, name: e.target.value })}
+                            onChange={(e) => {
+                                setProductForm({ ...productForm, name: e.target.value })
+                                setErrors((prev) => ({ ...prev, name: "" }))
+                            }}
+                            error={!!errors.name}
+                            helperText={errors.name}
                         />
                     </Grid>
                     <Grid item xs={12} md={4}>
@@ -222,9 +289,10 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                 id="category"
                                 value={productForm.categoryId || ""}
                                 label="Kategoriya"
-                                onChange={(e) =>
+                                onChange={(e) => {
                                     setProductForm({ ...productForm, categoryId: e.target.value })
-                                }
+                                    setErrors((prev) => ({ ...prev, categoryId: "" }))
+                                }}
                             >
                                 {availableCategories.map((cat) => (
                                     <MenuItem key={cat.id} value={cat.id}>
@@ -232,6 +300,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                     </MenuItem>
                                 ))}
                             </Select>
+                            {errors.categoryId && <FormHelperText>{errors.categoryId}</FormHelperText>}
                         </FormControl>
                     </Box>
 
@@ -241,7 +310,12 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                             type="number"
                             label="Narx so'm"
                             value={productForm.price}
-                            onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
+                            onChange={(e) => {
+                                setProductForm({ ...productForm, price: e.target.value })
+                                setErrors((prev) => ({ ...prev, price: "" }))
+                            }}
+                            error={!!errors.price}
+                            helperText={errors.price}
                         />
                     </Grid>
                 </Grid>
@@ -256,7 +330,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                     sx={{ mb: 3 }}
                 />
 
-                {/* === RASMLAR & O‘LCHAMLAR BLOKI === */}
+                {/* === RASMLAR & O'LCHAMLAR BLOKI === */}
                 <Grid item xs={12}>
                     <Box className="flex flex-col md:flex-row gap-4" sx={{ maxHeight: 600, overflow: "hidden", mt: 0 }}>
                         {/* ==== CHAP: RASMLAR ==== */}
@@ -273,7 +347,13 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                 sx={{ mb: 2 }}
                             />
 
-                            <Box sx={{ flexGrow: 1, maxHeight: 400, borderRadius: '6px', overflowY: 'auto', pr: 1 }}>
+                            {errors.attachments && (
+                                <Typography color="error" variant="caption" sx={{ mb: 1, display: "block" }}>
+                                    {errors.attachments}
+                                </Typography>
+                            )}
+
+                            <Box sx={{ flexGrow: 1, maxHeight: 400, borderRadius: "6px", overflowY: "auto", pr: 1 }}>
                                 {productForm.attachments.length > 0 ? (
                                     <Box className="grid grid-cols-2 gap-3">
                                         {productForm.attachments.map((att, index) => (
@@ -302,16 +382,16 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                         ))}
                                     </Box>
                                 ) : (
-                                    <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
-                                        <Typography sx={{ color: 'text.secondary', textAlign: 'center' }}>
-                                            Hech qanday rasm qo‘shilmagan
+                                    <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
+                                        <Typography sx={{ color: "text.secondary", textAlign: "center" }}>
+                                            Hech qanday rasm qo'shilmagan
                                         </Typography>
                                     </Box>
                                 )}
                             </Box>
                         </Box>
 
-                        {/* ==== O‘NG: O‘LCHAMLAR ==== */}
+                        {/* ==== O'NG: O'LCHAMLAR ==== */}
                         <Box
                             className="flex-1 flex flex-col border-l border-gray-300 pl-4"
                             sx={{
@@ -320,25 +400,25 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                             }}
                         >
                             <Typography variant="subtitle1" sx={{ mb: 2 }}>
-                                O‘lchamlar
+                                O'lchamlar
                             </Typography>
 
                             <Box
                                 sx={{
-                                    display: 'flex',
-                                    flexWrap: 'wrap',
+                                    display: "flex",
+                                    flexWrap: "wrap",
                                     gap: 2,
                                     mb: 2,
                                 }}
                             >
-                                <Box sx={{ flex: { xs: '0 0 100%', sm: '0 0 34%' } }}>
+                                <Box sx={{ flex: { xs: "0 0 100%", sm: "0 0 34%" } }}>
                                     <FormControl fullWidth variant="outlined">
-                                        <InputLabel id="size-label">O‘lcham</InputLabel>
+                                        <InputLabel id="size-label">O'lcham</InputLabel>
                                         <Select
                                             labelId="size-label"
                                             id="size"
                                             value={newSize.size || ""}
-                                            label="O‘lcham"
+                                            label="O'lcham"
                                             onChange={(e) => setNewSize({ ...newSize, size: e.target.value })}
                                         >
                                             {availableSizes.map((s) => (
@@ -350,7 +430,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                     </FormControl>
                                 </Box>
 
-                                <Box sx={{ flex: { xs: '0 0 100%', sm: '0 0 33.33%' } }}>
+                                <Box sx={{ flex: { xs: "0 0 100%", sm: "0 0 33.33%" } }}>
                                     <TextField
                                         fullWidth
                                         type="number"
@@ -360,17 +440,18 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                     />
                                 </Box>
 
-                                <Box sx={{ flex: { xs: '0 0 100%', sm: '0 0 25%' } }}>
-                                    <Button
-                                        variant="outlined"
-                                        onClick={handleAddSize}
-                                        fullWidth
-                                        sx={{ height: "100%" }}
-                                    >
-                                        Qo‘shish
+                                <Box sx={{ flex: { xs: "0 0 100%", sm: "0 0 25%" } }}>
+                                    <Button variant="outlined" onClick={handleAddSize} fullWidth sx={{ height: "100%" }}>
+                                        Qo'shish
                                     </Button>
                                 </Box>
                             </Box>
+
+                            {errors.sizes && (
+                                <Typography color="error" variant="caption" sx={{ mb: 1, display: "block" }}>
+                                    {errors.sizes}
+                                </Typography>
+                            )}
 
                             <Box className="overflow-y-auto flex-grow space-y-2 pr-1">
                                 {productForm.sizes.length > 0 ? (
@@ -388,8 +469,8 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                         </Box>
                                     ))
                                 ) : (
-                                    <Typography sx={{ color: 'text.secondary', textAlign: 'center', py: 2 }}>
-                                        Hech qanday o‘lcham qo‘shilmagan
+                                    <Typography sx={{ color: "text.secondary", textAlign: "center", py: 2 }}>
+                                        Hech qanday o'lcham qo'shilmagan
                                     </Typography>
                                 )}
                             </Box>
