@@ -18,7 +18,7 @@ const ProductService = {
         } catch (error) {
             console.error("Error fetching products:", error)
             throw error
-        }*/
+        }
     },
 
     // Load products from local storage if it doesn't exist call reload function
