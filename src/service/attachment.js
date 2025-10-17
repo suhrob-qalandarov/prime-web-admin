@@ -2,6 +2,15 @@ import axios from'./api'
 
 const AttachmentService = {
 
+    async loadPicture(key) {
+        try {
+            return await axios.get(`/attachment/${key}`);
+        } catch (error) {
+            console.error("Error get file:", error);
+            throw error;
+        }
+    },
+
     // Upload multiple files
     async uploadFiles(files) {
         try {
