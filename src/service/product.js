@@ -49,8 +49,8 @@ const ProductService = {
         }*/
     },
 
-    // Create new product
-    async create(productData) {
+    // Persist new product data to backend
+    async persistData(productData) {
         try {
             const response = await axios.post(
                 "/admin/product", productData,
@@ -59,12 +59,17 @@ const ProductService = {
                     headers: {
                         "Content-Type": "application/json"
                     }
-            })
-            if (!response.ok) throw new Error("Failed to create product")
-            return await response.json()
+                }
+            );
+
+            if (response.status !== 200 && response.status !== 201) {
+                throw new Error("Failed to create product");
+            }
+
+            return response.data;
         } catch (error) {
-            console.error("Error creating product:", error)
-            throw error
+            console.error("Error creating product:", error);
+            throw error;
         }
     },
 
