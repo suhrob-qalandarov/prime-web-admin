@@ -2,11 +2,19 @@ import axios from'./api'
 
 const ProductService = {
 
-    async getAll() {
-        /*try {
-            const response = await axios("/api/products")
-            if (!response.ok) throw new Error("Failed to fetch products")
-            return await response.json()
+    // Products loader from backend
+    async loadData() {
+        try {
+            const response = await axios.get(
+                "/admin/product",
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            )
+            return response.data
         } catch (error) {
             console.error("Error fetching products:", error)
             throw error
