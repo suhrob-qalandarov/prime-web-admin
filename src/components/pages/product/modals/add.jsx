@@ -123,6 +123,8 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
     const validateForm = () => {
         const newErrors = {
             name: "",
+            brand: "",
+            description: "",
             price: "",
             categoryId: "",
             sizes: "",
@@ -136,8 +138,18 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
             isValid = false
         }
 
+        if (!productForm.brand || productForm.brand.trim() === "") {
+            newErrors.brand = "Mahsulot brendini kiriting!"
+            isValid = false
+        }
+
         if (!productForm.price || productForm.price <= 0) {
             newErrors.price = "Mahsulot narxini kiriting!"
+            isValid = false
+        }
+
+        if (!productForm.description || productForm.description.trim() === "") {
+            newErrors.description = "Mahsulot tavsifini kiriting!"
             isValid = false
         }
 
@@ -204,11 +216,13 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
             attachments: [],
         })
         setErrors({
-            name: "",
-            price: "",
-            categoryId: "",
-            sizes: "",
-            attachments: "",
+            name: "Mahsulot nomini kiriting!",
+            brand: "Mahsulot brendini kiriting!",
+            description: "Mahsulot tavsifini kiriting!",
+            price: "Mahsulot narxini kiriting!",
+            categoryId: "Kategoriyani tanlang!",
+            sizes: "Kamida bitta o'lcham qo'shing!",
+            attachments: "Kamida bitta rasm qo'shing!",
         })
     }
 
@@ -278,11 +292,16 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                             fullWidth
                             label="Brend"
                             value={productForm.brand}
-                            onChange={(e) => setProductForm({ ...productForm, brand: e.target.value })}
+                            onChange={(e) => {
+                                setProductForm({...productForm, brand: e.target.value})
+                                setErrors((prev) => ({ ...prev, brand: "" }))
+                            }}
+                            error={!!errors.brand}
+                            helperText={errors.brand}
                         />
                     </Grid>
                     <Box sx={{ width: { xs: '100%', md: '23%' }, mb: 2 }}>
-                        <FormControl fullWidth variant="outlined">
+                        <FormControl fullWidth variant="outlined" error={!!errors.categoryId}>
                             <InputLabel id="category-label">Kategoriya</InputLabel>
                             <Select
                                 labelId="category-label"
@@ -326,7 +345,12 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                     rows={3}
                     label="Tavsif"
                     value={productForm.description}
-                    onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}
+                    onChange={(e) => {
+                        setProductForm({...productForm, description: e.target.value})
+                        setErrors((prev) => ({ ...prev, description: "" }))
+                    }}
+                    error={!!errors.description}
+                    helperText={errors.description}
                     sx={{ mb: 3 }}
                 />
 
