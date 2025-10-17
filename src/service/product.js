@@ -84,20 +84,6 @@ const ProductService = {
         }*/
     },
 
-    // Delete product
-    async delete(id) {
-        /*try {
-            const response = await axios(`/api/products/${id}`, {
-                method: "DELETE",
-            })
-            if (!response.ok) throw new Error("Failed to delete product")
-            return await response.json()
-        } catch (error) {
-            console.error("Error deleting product:", error)
-            throw error
-        }*/
-    },
-
     // Toggle product active status
     async toggleActive(id) {
         /*try {
