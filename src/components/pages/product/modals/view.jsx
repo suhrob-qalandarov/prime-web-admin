@@ -1,106 +1,311 @@
-import { Box, Button, Chip, Grid, Modal, Typography } from "@mui/material"
+import { useState } from "react"
+import {
+    Box,
+    Button,
+    IconButton,
+    Chip,
+    Grid,
+    Modal,
+    Typography,
+    Paper
+} from "@mui/material"
+import { Close, ChevronLeft, ChevronRight } from "@mui/icons-material"
+import AttachmentService from "../../../../service/attachment"
 
 const ViewModal = ({ open, onClose, product }) => {
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0)
+
     if (!product) return null
 
+    const images = product.picturesKeys && product.picturesKeys.length > 0 ? product.picturesKeys : []
+
+    const currentImage = images[selectedImageIndex]
+
+    const handlePrevImage = () => {
+        setSelectedImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
+    }
+
+    const handleNextImage = () => {
+        setSelectedImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
+    }
+
+    const getStatusColor = (status) => {
+        switch (status) {
+            case "NEW":
+                return "success"
+            case "HOT":
+                return "error"
+            case "SALE":
+                return "warning"
+            default:
+                return "default"
+        }
+    }
+
     return (
-        <Modal open={open} onClose={onClose}>
+        <Modal
+            open={open}
+            onClose={onClose}
+            sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+            }}
+        >
             <Box
+                className="w-full max-w-5xl max-h-[90vh] overflow-y-auto"
                 sx={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    bgcolor: "background.paper",
-                    p: 4,
-                    borderRadius: 3,
-                    boxShadow: 24,
-                    width: "100%",
-                    maxWidth: 900,
+                    backgroundColor: "background.paper",
+                    borderRadius: "16px",
+                    boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
+                    position: "relative",
                 }}
             >
-                <Typography variant="h6" sx={{ mb: 4 }}>
-                    Mahsulot ma'lumotlari
-                </Typography>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} md={5}>
-                        <Typography variant="subtitle1" sx={{ mb: 2 }}>
-                            Rasmlar
-                        </Typography>
-                        <Grid container spacing={2}>
-                            {product.attachments &&
-                                product.attachments.map((url, index) => (
-                                    <Grid item xs={6} key={index}>
+                {/* Close Button */}
+                <IconButton
+                    onClick={onClose}
+                    sx={{
+                        position: "absolute",
+                        top: 16,
+                        right: 16,
+                        backgroundColor: "rgba(255, 255, 255, 0.9)",
+                        "&:hover": {
+                            backgroundColor: "rgba(255, 255, 255, 1)",
+                        },
+                        zIndex: 10,
+                    }}
+                >
+                    <Close />
+                </IconButton>
+
+                <Box className="p-8">
+                    {/* Header */}
+                    <Typography variant="h4" className="font-bold text-gray-900 mb-8" sx={{ textAlign: "center" }}>
+                        Mahsulot ma'lumotlari
+                    </Typography>
+
+                    <Grid container spacing={6}>
+                        {/* Image Gallery Section */}
+                        <Grid item xs={12} md={5}>
+                            <Paper
+                                elevation={0}
+                                className="bg-gray-50 rounded-xl overflow-hidden"
+                                sx={{ border: "1px solid #e5e7eb" }}
+                            >
+                                {/* Main Image */}
+                                {images.length > 0 ? (
+                                    <Box className="relative bg-white">
                                         <img
-                                            src={url || "/placeholder.svg"}
-                                            alt="product"
-                                            style={{ width: "100%", height: 160, objectFit: "cover", borderRadius: 8 }}
+                                            src={AttachmentService.getImageUrl(currentImage) || "/placeholder.svg"}
+                                            alt={`Product ${selectedImageIndex + 1}`}
+                                            className="w-full h-80 object-cover"
+                                            onError={(e) => {
+                                                e.target.src = "/diverse-products-still-life.png"
+                                            }}
                                         />
-                                    </Grid>
-                                ))}
+
+                                        {/* Navigation Arrows */}
+                                        {images.length > 1 && (
+                                            <>
+                                                <IconButton
+                                                    onClick={handlePrevImage}
+                                                    sx={{
+                                                        position: "absolute",
+                                                        left: 8,
+                                                        top: "50%",
+                                                        transform: "translateY(-50%)",
+                                                        backgroundColor: "rgba(255, 255, 255, 0.8)",
+                                                        "&:hover": {
+                                                            backgroundColor: "rgba(255, 255, 255, 1)",
+                                                        },
+                                                    }}
+                                                >
+                                                    <ChevronLeft />
+                                                </IconButton>
+                                                <IconButton
+                                                    onClick={handleNextImage}
+                                                    sx={{
+                                                        position: "absolute",
+                                                        right: 8,
+                                                        top: "50%",
+                                                        transform: "translateY(-50%)",
+                                                        backgroundColor: "rgba(255, 255, 255, 0.8)",
+                                                        "&:hover": {
+                                                            backgroundColor: "rgba(255, 255, 255, 1)",
+                                                        },
+                                                    }}
+                                                >
+                                                    <ChevronRight />
+                                                </IconButton>
+                                            </>
+                                        )}
+
+                                        {/* Image Counter */}
+                                        <Box
+                                            sx={{
+                                                position: "absolute",
+                                                bottom: 12,
+                                                right: 12,
+                                                backgroundColor: "rgba(0, 0, 0, 0.6)",
+                                                color: "white",
+                                                padding: "4px 12px",
+                                                borderRadius: "20px",
+                                                fontSize: "12px",
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            {selectedImageIndex + 1} / {images.length}
+                                        </Box>
+                                    </Box>
+                                ) : (
+                                    <Box className="w-full h-80 flex items-center justify-center bg-gray-100">
+                                        <Typography className="text-gray-500">Rasmlar mavjud emas</Typography>
+                                    </Box>
+                                )}
+
+                                {/* Thumbnail Gallery */}
+                                {images.length > 1 && (
+                                    <Box className="p-3 bg-white border-t border-gray-200">
+                                        <Grid container spacing={2}>
+                                            {images.map((url, index) => (
+                                                <Grid item xs={3} key={index}>
+                                                    <Box
+                                                        onClick={() => setSelectedImageIndex(index)}
+                                                        className={`cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
+                                                            selectedImageIndex === index
+                                                                ? "border-blue-500 shadow-md"
+                                                                : "border-gray-200 hover:border-gray-300"
+                                                        }`}
+                                                    >
+                                                        <img
+                                                            src={AttachmentService.getImageUrl(url) || "/placeholder.svg"}
+                                                            alt={`Thumbnail ${index + 1}`}
+                                                            className="w-full h-20 object-cover"
+                                                            onError={(e) => {
+                                                                e.target.src = "/generic-thumbnail.png"
+                                                            }}
+                                                        />
+                                                    </Box>
+                                                </Grid>
+                                            ))}
+                                        </Grid>
+                                    </Box>
+                                )}
+                            </Paper>
                         </Grid>
-                    </Grid>
-                    <Grid item xs={12} md={7}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                                <Typography sx={{ fontWeight: 600 }}>ID:</Typography>
-                                <Typography>{product.id}</Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Typography sx={{ fontWeight: 600 }}>Nomi:</Typography>
-                                <Typography>{product.name}</Typography>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Typography sx={{ fontWeight: 600 }}>Tavsif:</Typography>
-                                <Typography>{product.description}</Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Typography sx={{ fontWeight: 600 }}>Narx:</Typography>
-                                <Typography>{product.price} so'm</Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Typography sx={{ fontWeight: 600 }}>Kategoriya:</Typography>
-                                <Typography>{product.categoryName}</Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Typography sx={{ fontWeight: 600 }}>Status:</Typography>
-                                <Chip
-                                    label={product.status}
-                                    color={product.status === "NEW" ? "success" : product.status === "HOT" ? "error" : "warning"}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Typography sx={{ fontWeight: 600 }}>Holati:</Typography>
-                                <Typography>{product.active ? "Faol" : "Nofaol"}</Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Typography sx={{ fontWeight: 600 }}>Kolleksiya:</Typography>
-                                <Typography>{product.collection || "-"}</Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Typography sx={{ fontWeight: 600 }}>Yaratilgan:</Typography>
-                                <Typography>{new Date(product.createdAt).toLocaleString()}</Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Typography sx={{ fontWeight: 600 }}>Yangilangan:</Typography>
-                                <Typography>{new Date(product.updatedAt).toLocaleString()}</Typography>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Typography sx={{ fontWeight: 600 }}>O'lchamlar:</Typography>
-                                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
-                                    {product.sizes &&
-                                        product.sizes.map(({ size, amount }, index) => (
-                                            <Chip key={index} label={`${size}: ${amount}`} color="primary" />
-                                        ))}
+
+                        {/* Product Details Section */}
+                        <Grid item xs={12} md={7}>
+                            <Box className="space-y-6">
+                                {/* Product Name */}
+                                <Box>
+                                    <Typography className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                                        Mahsulot nomi
+                                    </Typography>
+                                    <Typography variant="h5" className="font-bold text-gray-900">
+                                        {product.name}
+                                    </Typography>
                                 </Box>
-                            </Grid>
+
+                                {/* Status and Active */}
+                                <Box className="flex gap-3 flex-wrap">
+                                    <Chip
+                                        label={product.status || "NORMAL"}
+                                        color={getStatusColor(product.status)}
+                                        variant="filled"
+                                        sx={{ fontWeight: 600 }}
+                                    />
+                                    <Chip
+                                        label={product.active ? "✓ Faol" : "✗ Nofaol"}
+                                        color={product.active ? "success" : "default"}
+                                        variant="outlined"
+                                    />
+                                </Box>
+
+                                {/* Price Section */}
+                                <Grid
+                                    elevation={0}
+                                    className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200"
+                                >
+                                    <Typography className="text-sm text-gray-600 mb-1">Narx</Typography>
+                                    <Typography variant="h4" className="font-bold text-blue-900">
+                                        {product.price?.toLocaleString()} so'm
+                                    </Typography>
+                                    {product.discount > 0 && (
+                                        <Typography className="text-sm text-blue-700 mt-2">Chegirma: {product.discount}%</Typography>
+                                    )}
+                                </Grid>
+
+                                {/* Details Grid */}
+                                <Grid container spacing={3}>
+                                    <Grid item xs={6}>
+                                        <Box>
+                                            <Typography className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                                                ID
+                                            </Typography>
+                                            <Typography className="text-gray-900 font-medium">{product.id}</Typography>
+                                        </Box>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Box>
+                                            <Typography className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                                                Brend
+                                            </Typography>
+                                            <Typography className="text-gray-900 font-medium">{product.brand || "—"}</Typography>
+                                        </Box>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Box>
+                                            <Typography className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                                                Kategoriya
+                                            </Typography>
+                                            <Typography className="text-gray-900 font-medium">{product.categoryName}</Typography>
+                                        </Box>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <Box>
+                                            <Typography className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                                                O'lchamlar soni
+                                            </Typography>
+                                            <Typography className="text-gray-900 font-medium">{product.sizeCount || 0}</Typography>
+                                        </Box>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Box>
+                                            <Typography className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                                                Yaratilgan vaqti
+                                            </Typography>
+                                            <Typography className="text-gray-900 font-medium">
+                                                {new Date(product.createdAt).toLocaleString("uz-UZ")}
+                                            </Typography>
+                                        </Box>
+                                    </Grid>
+                                </Grid>
+                            </Box>
                         </Grid>
                     </Grid>
-                </Grid>
-                <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 4 }}>
-                    <Button onClick={onClose} variant="outlined">
-                        Yopish
-                    </Button>
+
+                    {/* Action Buttons */}
+                    <Box className="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
+                        <Button
+                            onClick={onClose}
+                            variant="contained"
+                            sx={{
+                                backgroundColor: "#3b82f6",
+                                color: "white",
+                                textTransform: "none",
+                                fontSize: "16px",
+                                fontWeight: 600,
+                                padding: "10px 24px",
+                                borderRadius: "8px",
+                                "&:hover": {
+                                    backgroundColor: "#2563eb",
+                                },
+                            }}
+                        >
+                            Yopish
+                        </Button>
+                    </Box>
                 </Box>
             </Box>
         </Modal>
