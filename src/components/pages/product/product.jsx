@@ -84,8 +84,8 @@ const Product = () => {
     const loadProducts = async () => {
         try {
             setIsLoading(true)
-            const data = await ProductService.getAll()
-            //setAllProducts(data)
+            const data = await ProductService.getOrLoadData()
+            setAllProducts(data)
         } catch (err) {
             setError("Mahsulotlarni yuklashda xatolik yuz berdi")
             showSnackbar("Mahsulotlarni yuklashda xatolik yuz berdi", "error")
