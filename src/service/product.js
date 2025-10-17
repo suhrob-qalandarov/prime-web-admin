@@ -73,6 +73,19 @@ const ProductService = {
         }
     },
 
+    // Caller product persist function and save response data to local storage
+    async persistToLS(productData) {
+        const newProduct = await this.persistData(productData)
+        const existing = JSON.parse(localStorage.getItem("products")) || []
+        existing.push(newProduct)
+        localStorage.setItem("products", JSON.stringify(existing))
+        return newProduct
+    },
+
+    async updatePictures(productId, productPictures, newPictures) {
+
+    },
+
     // Update product
     async update(id, productData) {
         /*try {
