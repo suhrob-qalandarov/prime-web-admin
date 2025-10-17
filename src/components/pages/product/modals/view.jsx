@@ -222,8 +222,8 @@ const ViewModal = ({ open, onClose, product }) => {
                                     />
                                 </Box>
 
-                                {/* Price Section */}
-                                <Grid
+                                {/* Price, Discount, and Description Section */}
+                                <Paper
                                     elevation={0}
                                     className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200"
                                 >
@@ -234,7 +234,9 @@ const ViewModal = ({ open, onClose, product }) => {
                                     {product.discount > 0 && (
                                         <Typography className="text-sm text-blue-700 mt-2">Chegirma: {product.discount}%</Typography>
                                     )}
-                                </Grid>
+                                    <Typography className="text-sm text-gray-600 mt-4 mb-1">Tavsif</Typography>
+                                    <Typography className="text-gray-900">{product.description || "Tavsif mavjud emas"}</Typography>
+                                </Paper>
 
                                 {/* Details Grid */}
                                 <Grid container spacing={3}>
