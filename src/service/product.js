@@ -21,7 +21,23 @@ const ProductService = {
         }*/
     },
 
-    // Get single product by ID
+    // Load products from local storage if it doesn't exist call reload function
+    async getOrLoadData() {
+        let products = JSON.parse(localStorage.getItem("products"))
+        if (!products) {
+            products = await this.reloadData()
+        }
+        return products
+    },
+
+    // Reloader products from backend and set to local storage
+    async reloadData() {
+        const data = await this.loadData()
+        localStorage.setItem("products", JSON.stringify(data))
+        return data
+    },
+
+    // Get single product by id, in ls
     async getById(id) {
         /*try {
             const response = await axios(`/api/products/${id}`)
