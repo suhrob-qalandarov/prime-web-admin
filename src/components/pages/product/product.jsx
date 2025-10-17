@@ -240,7 +240,7 @@ const Product = () => {
                                     <TableCell>Nomi</TableCell>
                                     <TableCell>Brend</TableCell>
                                     <TableCell>Kategoriya</TableCell>
-                                    <TableCell>Status & Discount</TableCell>
+                                    <TableCell>Sotuv va Chegirma</TableCell>
                                     <TableCell>Narx</TableCell>
                                     <TableCell>Holati</TableCell>
                                     <TableCell>Yaratilgan vaqt</TableCell>
