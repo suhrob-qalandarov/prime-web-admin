@@ -178,30 +178,42 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
         }
 
         try {
-            setLoading(true)
-            let attachmentIds = productForm.attachments.filter((a) => !a.file)
+            setLoading(true);
+
+            let attachmentIds = productForm.attachments
+                .filter((a) => !a.file)
+                .map((a) => a.id);
+
             if (selectedFiles.length > 0) {
-                const uploaded = await AttachmentService.uploadFiles(selectedFiles)
-                const uploadedIds = uploaded.map((attachment) => attachment.id)
-                attachmentIds = [...attachmentIds, ...uploadedIds]
+                const uploadedIds = await AttachmentService.uploadFiles(selectedFiles);
+                attachmentIds = [...attachmentIds, ...uploadedIds];
             }
-            const dataToSave = { ...productForm, attachments: attachmentIds }
 
-            await ProductService.create(dataToSave)
+            if (attachmentIds.length === 0) {
+                throw new Error("Kamida bitta attachment kerak!");
+            }
+
+            const dataToSave = {
+                ...productForm,
+                attachmentIds: attachmentIds,
+                attachments: undefined
+            };
+
+            await ProductService.create(dataToSave);
 
             if (onProductSaved) {
-                onProductSaved("Mahsulot muvaffaqiyatli saqlandi!", "success")
+                onProductSaved("Mahsulot muvaffaqiyatli saqlandi!", "success");
             }
-            onClose()
+            onClose();
         } catch (err) {
-            console.error("Error saving product:", err)
+            console.error("Error saving product:", err);
             if (onProductSaved) {
-                onProductSaved("Mahsulotni saqlashda xatolik yuz berdi!", "error")
+                onProductSaved(err.message || "Mahsulotni saqlashda xatolik yuz berdi!", "error");
             }
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     const handleClearData = async () => {
         setProductForm({
