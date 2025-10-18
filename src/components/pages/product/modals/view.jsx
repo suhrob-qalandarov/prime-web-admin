@@ -7,7 +7,7 @@ import {
     Grid,
     Modal,
     Typography,
-    Paper
+    Paper,
 } from "@mui/material"
 import { Close, ChevronLeft, ChevronRight } from "@mui/icons-material"
 import AttachmentService from "../../../../service/attachment"
@@ -17,16 +17,19 @@ const ViewModal = ({ open, onClose, product }) => {
 
     if (!product) return null
 
-    const images = product.picturesKeys && product.picturesKeys.length > 0 ? product.picturesKeys : []
-
+    const images = Array.isArray(product.picturesKeys) ? product.picturesKeys : []
     const currentImage = images[selectedImageIndex]
 
     const handlePrevImage = () => {
-        setSelectedImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
+        setSelectedImageIndex((prev) =>
+            prev === 0 ? images.length - 1 : prev - 1
+        )
     }
 
     const handleNextImage = () => {
-        setSelectedImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
+        setSelectedImageIndex((prev) =>
+            prev === images.length - 1 ? 0 : prev + 1
+        )
     }
 
     const getStatusColor = (status) => {
