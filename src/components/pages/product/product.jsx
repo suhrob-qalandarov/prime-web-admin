@@ -31,7 +31,7 @@ const Product = () => {
             id: 1,
             name: "Product 1",
             brand: null,
-            attachmentCount: 0,
+            picturesKeys: ["232"],
             categoryName: "Category 1",
             price: 100000,
             status: "NEW",
@@ -43,7 +43,7 @@ const Product = () => {
             id: 2,
             name: "Long Product Name 2",
             brand: "Brand 1",
-            attachmentCount: 3,
+            picturesKeys: ["121", "1212"],
             categoryName: "Category 2",
             price: 202000,
             status: "HOT",
@@ -55,7 +55,7 @@ const Product = () => {
             id: 3,
             name: "Product 3",
             brand: "Long Name Brand 3",
-            attachmentCount: null,
+            picturesKeys: null,
             categoryName: "Category 3",
             price: 330000,
             status: "SALE",
@@ -251,7 +251,7 @@ const Product = () => {
                                 {allProducts.map((prod) => (
                                     <TableRow key={prod.id} className="hover:bg-gray-50">
                                         <TableCell>{prod.id}</TableCell>
-                                        <TableCell>{prod.attachmentCount == null ? "---" : `${prod.attachmentCount} ta`}</TableCell>
+                                        <TableCell>{prod.picturesKeys == null ? "---" : `${prod.picturesKeys.length} ta`}</TableCell>
                                         <TableCell>{prod.name}</TableCell>
                                         <TableCell>{prod.brand ?? "---"}</TableCell>
                                         <TableCell>{prod.categoryName}</TableCell>
