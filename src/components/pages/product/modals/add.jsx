@@ -185,8 +185,8 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                 .map((a) => a.id);
 
             if (selectedFiles.length > 0) {
-                const uploadedIds = await AttachmentService.uploadFiles(selectedFiles);
-                attachmentIds = [...attachmentIds, ...uploadedIds];
+                const uploadedKeys = await AttachmentService.uploadFiles(selectedFiles);
+                attachmentIds = [...attachmentIds, ...uploadedKeys];
             }
 
             if (attachmentIds.length === 0) {
@@ -195,7 +195,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
 
             const dataToSave = {
                 ...productForm,
-                attachmentIds: attachmentIds,
+                attachmentKeys: attachmentIds,
                 attachments: undefined
             };
 
