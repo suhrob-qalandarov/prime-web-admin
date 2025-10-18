@@ -199,7 +199,7 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                 attachments: undefined
             };
 
-            await ProductService.create(dataToSave);
+            await ProductService.persistToLS(dataToSave);
 
             if (onProductSaved) {
                 onProductSaved("Mahsulot muvaffaqiyatli saqlandi!", "success");
