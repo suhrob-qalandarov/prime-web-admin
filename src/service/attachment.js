@@ -11,6 +11,11 @@ const AttachmentService = {
         }
     },
 
+    // Get image URL for direct display
+    getImageUrl(key) {
+        return `http://localhost/api/v1/attachment/${key}`
+    },
+
     // Upload multiple files
     async uploadFiles(files) {
         try {
