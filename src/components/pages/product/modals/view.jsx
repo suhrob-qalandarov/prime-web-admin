@@ -290,22 +290,26 @@ const ViewModal = ({ open, onClose, product }) => {
                         </Grid>
                     </Grid>
 
-                    {/* Action Buttons */}
-                    <Box className="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
+                    {/* ACTION BUTTON */}
+                    <Box
+                        sx={{
+                            mt: 6,
+                            pt: 3,
+                            borderTop: "1px solid #e5e7eb",
+                            display: "flex",
+                            justifyContent: "flex-end",
+                        }}
+                    >
                         <Button
                             onClick={onClose}
-                            variant="contained"
+                            variant="outlined"
                             sx={{
-                                backgroundColor: "#3b82f6",
-                                color: "white",
+                                px: 3,
+                                py: 1,
+                                borderRadius: 3,
                                 textTransform: "none",
-                                fontSize: "16px",
-                                fontWeight: 600,
-                                padding: "10px 24px",
-                                borderRadius: "8px",
-                                "&:hover": {
-                                    backgroundColor: "#2563eb",
-                                },
+                                fontWeight: 500,
+                                fontSize: 16,
                             }}
                         >
                             Yopish
