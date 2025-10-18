@@ -81,10 +81,24 @@ const ViewModal = ({ open, onClose, product }) => {
                     <Close />
                 </IconButton>
 
-                <Box className="p-8">
-                    {/* Header */}
-                    <Typography variant="h4" className="font-bold text-gray-900 mb-8" sx={{ textAlign: "center" }}>
-                        Mahsulot ma'lumotlari
+                <Box sx={{ p: { xs: 3, sm: 5, md: 6 } }}>
+                    <Typography variant="h6" sx={{ mb: 4 }}>
+                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
+                            <Typography variant="h6">Mahsulot ma'lumotlari</Typography>
+                            <Button
+                                variant="outlined"
+                                color="success"
+                                sx={{
+                                    px: 3,
+                                    py: 1,
+                                    borderRadius: 3,
+                                    textTransform: "none",
+                                    fontWeight: 500,
+                                }}
+                            >
+                                Yangilash
+                            </Button>
+                        </Box>
                     </Typography>
 
                     <Grid container spacing={6}>
