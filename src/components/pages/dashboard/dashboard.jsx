@@ -1,5 +1,3 @@
-"use client"
-import { Container, Grid, Card, CardContent, Typography, Box, Button } from "@mui/material"
 import {
     BarChart,
     Bar,
@@ -54,177 +52,101 @@ const recentActivities = [
 
 const Dashboard = () => {
     return (
-        <Container className="min-h-screen  py-8">
-            <div className="space-y-6">
-                <Box className="flex justify-between items-center ">
-                    <Typography variant="h4" className="font-bold text-gray-800">
-                        Overview
-                    </Typography>
-                </Box>
+        <div className="w-full min-h-screen bg-background">
+            <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
+                {/* Header */}
+                <div className="mb-8">
+                    <h1 className="text-3xl font-bold text-foreground">Overview</h1>
+                </div>
 
-                <Grid container spacing={3}>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <Card className="shadow">
-                            <CardContent sx={{ background: "var(--primary-color)", color: "white", padding: "2rem" }}>
-                                <Typography variant="h6" className="mb-2" sx={{ fontWeight: 600 }}>
-                                    Total Users
-                                </Typography>
-                                <Typography variant="h4" className="font-bold">
-                                    2,847
-                                </Typography>
-                                <Typography variant="body2" className="mt-2" sx={{ opacity: 0.9 }}>
-                                    +12% from last month
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <Card className="shadow">
-                            <CardContent sx={{ background: "var(--success-color)", color: "white", padding: "2rem" }}>
-                                <Typography variant="h6" className="mb-2" sx={{ fontWeight: 600 }}>
-                                    Revenue
-                                </Typography>
-                                <Typography variant="h4" className="font-bold">
-                                    $45,678
-                                </Typography>
-                                <Typography variant="body2" className="mt-2" sx={{ opacity: 0.9 }}>
-                                    +8% from last month
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <Card className="shadow">
-                            <CardContent sx={{ background: "var(--warning-color)", color: "white", padding: "2rem" }}>
-                                <Typography variant="h6" className="mb-2" sx={{ fontWeight: 600 }}>
-                                    Active Sessions
-                                </Typography>
-                                <Typography variant="h4" className="font-bold">
-                                    1,234
-                                </Typography>
-                                <Typography variant="body2" className="mt-2" sx={{ opacity: 0.9 }}>
-                                    +5% from last month
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <Card className="shadow">
-                            <CardContent sx={{ background: "var(--secondary-color)", color: "white", padding: "2rem" }}>
-                                <Typography variant="h6" className="mb-2" sx={{ fontWeight: 600 }}>
-                                    Conversion Rate
-                                </Typography>
-                                <Typography variant="h4" className="font-bold">
-                                    3.24%
-                                </Typography>
-                                <Typography variant="body2" className="mt-2" sx={{ opacity: 0.9 }}>
-                                    +2% from last month
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                </Grid>
+                {/* Statistic Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    {[
+                        { title: "Total Users", value: "2,847", color: "bg-indigo-600", change: "+12%" },
+                        { title: "Revenue", value: "$45,678", color: "bg-emerald-500", change: "+8%" },
+                        { title: "Active Sessions", value: "1,234", color: "bg-amber-500", change: "+5%" },
+                        { title: "Conversion Rate", value: "3.24%", color: "bg-purple-600", change: "+2%" },
+                    ].map((item, index) => (
+                        <div key={index} className={`${item.color} rounded-lg shadow-lg p-6 text-white`}>
+                            <h3 className="text-sm font-semibold opacity-90">{item.title}</h3>
+                            <p className="text-2xl font-bold mt-2">{item.value}</p>
+                            <p className="text-xs opacity-80 mt-2">{item.change} from last month</p>
+                        </div>
+                    ))}
+                </div>
 
-                <Grid container spacing={3}>
-                    <Grid item xs={12} md={8}>
-                        <Card className="shadow">
-                            <CardContent sx={{ padding: "2rem" }}>
-                                <Typography variant="h6" className="mb-4" sx={{ fontWeight: 600, color: "var(--dark-color)" }}>
-                                    User Growth
-                                </Typography>
-                                <Box className="h-80">
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <BarChart data={userGrowthData}>
-                                            <XAxis dataKey="name" />
-                                            <YAxis />
-                                            <Tooltip />
-                                            <Bar dataKey="users" fill="var(--primary-color)" />
-                                        </BarChart>
-                                    </ResponsiveContainer>
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                        <Card className="shadow">
-                            <CardContent sx={{ padding: "2rem" }}>
-                                <Typography variant="h6" className="mb-4" sx={{ fontWeight: 600, color: "var(--dark-color)" }}>
-                                    Sales by Category
-                                </Typography>
-                                <Box className="h-80 flex items-center justify-center">
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <PieChart>
-                                            <Pie
-                                                data={categoryData}
-                                                cx="50%"
-                                                cy="50%"
-                                                labelLine={false}
-                                                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                                                outerRadius={80}
-                                                fill="#8884d8"
-                                                dataKey="value"
-                                            >
-                                                {categoryData.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                                ))}
-                                            </Pie>
-                                            <Tooltip />
-                                        </PieChart>
-                                    </ResponsiveContainer>
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                </Grid>
+                {/* User Growth Chart */}
+                <div className="w-full bg-card rounded-lg shadow-lg p-6 mb-8">
+                    <h2 className="text-lg font-semibold text-foreground mb-6">User Growth</h2>
+                    <div className="w-full h-96">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={userGrowthData}>
+                                <XAxis dataKey="name" />
+                                <YAxis />
+                                <Tooltip />
+                                <Bar dataKey="users" fill="#4F46E5" />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
 
-                <Grid container spacing={3}>
-                    <Grid item xs={12} md={8}>
-                        <Card className="shadow">
-                            <CardContent sx={{ padding: "2rem" }}>
-                                <Typography variant="h6" className="mb-4" sx={{ fontWeight: 600, color: "var(--dark-color)" }}>
-                                    Revenue Trend
-                                </Typography>
-                                <Box className="h-80">
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <LineChart data={revenueData}>
-                                            <XAxis dataKey="name" />
-                                            <YAxis />
-                                            <Tooltip />
-                                            <Line type="monotone" dataKey="revenue" stroke="var(--success-color)" strokeWidth={3} />
-                                        </LineChart>
-                                    </ResponsiveContainer>
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                        <Card className="shadow">
-                            <CardContent sx={{ padding: "2rem" }}>
-                                <Typography variant="h6" className="mb-4" sx={{ fontWeight: 600, color: "var(--dark-color)" }}>
-                                    Recent Activities
-                                </Typography>
-                                <Box className="space-y-4">
-                                    {recentActivities.map((activity) => (
-                                        <Box key={activity.id} className="border-b pb-3 last:border-b-0">
-                                            <Typography variant="body1" sx={{ fontWeight: 600, color: "var(--dark-color)" }}>
-                                                {activity.user}
-                                            </Typography>
-                                            <Typography variant="body2" sx={{ color: "var(--gray-600)", marginTop: "0.25rem" }}>
-                                                {activity.action}
-                                            </Typography>
-                                            <Typography variant="caption" sx={{ color: "var(--gray-500)", marginTop: "0.25rem" }}>
-                                                {activity.time}
-                                            </Typography>
-                                        </Box>
+                {/* Sales by Category Chart */}
+                <div className="w-full bg-card rounded-lg shadow-lg p-6 mb-8">
+                    <h2 className="text-lg font-semibold text-foreground mb-6">Sales by Category</h2>
+                    <div className="w-full h-96 flex items-center justify-center">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie
+                                    data={categoryData}
+                                    cx="50%"
+                                    cy="50%"
+                                    labelLine={false}
+                                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                    outerRadius={100}
+                                    fill="#8884d8"
+                                    dataKey="value"
+                                >
+                                    {categoryData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                </Grid>
+                                </Pie>
+                                <Tooltip />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                {/* Revenue Trend Chart */}
+                <div className="w-full bg-card rounded-lg shadow-lg p-6 mb-8">
+                    <h2 className="text-lg font-semibold text-foreground mb-6">Revenue Trend</h2>
+                    <div className="w-full h-96">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <LineChart data={revenueData}>
+                                <XAxis dataKey="name" />
+                                <YAxis />
+                                <Tooltip />
+                                <Line type="monotone" dataKey="revenue" stroke="#10B981" strokeWidth={3} />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                {/* Recent Activities */}
+                <div className="w-full bg-card rounded-lg shadow-lg p-6">
+                    <h2 className="text-lg font-semibold text-foreground mb-6">Recent Activities</h2>
+                    <div className="space-y-4">
+                        {recentActivities.map((activity) => (
+                            <div key={activity.id} className="pb-4 border-b border-border last:border-b-0">
+                                <p className="font-semibold text-foreground">{activity.user}</p>
+                                <p className="text-sm text-muted-foreground mt-1">{activity.action}</p>
+                                <p className="text-xs text-muted-foreground mt-1">{activity.time}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
-        </Container>
+        </div>
     )
 }
 
-export default Dashboard
+export default Dashboard;
