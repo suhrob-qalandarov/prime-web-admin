@@ -6,13 +6,13 @@ const Navbar = () => {
 
     const pageTitles = {
         "/": { title: "Home", subtitle: "" },
-        "/dashboard": { title: "Dashboard", subtitle: "" },
-        "/categories": { title: "Categories", subtitle: "" },
-        "/products": { title: "Products", subtitle: "" },
-        "/orders": { title: "Orders", subtitle: "" },
-        "/warehouse": { title: "Inventory", subtitle: "Omborni boshqaring va stokni kuzatib boring" },
-        "/users": { title: "Users", subtitle: "" },
-        "/files": { title: "Files", subtitle: "" },
+        "/dashboard": { title: "DASHBOARD", subtitle: "Asosiy panelni kuzatish" },
+        "/categories": { title: "CATEGORIES PANEL", subtitle: "Kategoriyalarni boshqarish va kuzatish" },
+        "/products": { title: "PRODUCTS PANEL", subtitle: "Mahsulotlarni boshqarish va kuzatish" },
+        "/orders": { title: "ORDERS PANEL", subtitle: "Buyurtmalarni boshqarish va kuzatish" },
+        "/warehouse": { title: "INVENTORY PANEL", subtitle: "Omborni boshqarish va stokni kuzatish" },
+        "/users": { title: "USERS PANEL", subtitle: "Foydalanuvchilarni boshqarish va kuzatish" },
+        "/files": { title: "FILES PANEL", subtitle: "Fayllarni boshqarish va kuzatish" },
     }
 
     const currentPage = pageTitles[location.pathname] || { title: "Page", subtitle: "" }
@@ -28,6 +28,9 @@ const Navbar = () => {
                 justifyContent: "center",
                 padding: "0 2rem",
                 boxShadow: "var(--box-shadow)",
+                position: "sticky",
+                top: 0,
+                zIndex: 1000,
             }}
         >
             <Typography variant="h5" sx={{ fontWeight: 600, color: "var(--dark-color)" }}>
