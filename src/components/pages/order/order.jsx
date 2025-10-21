@@ -271,6 +271,17 @@ const Orders = () => {
                                 </svg>
                                 Qo'shish
                             </button>
+                            <button className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                    />
+                                </svg>
+                                Export
+                            </button>
                         </div>
 
                         {/* Center search field */}
@@ -309,18 +320,6 @@ const Orders = () => {
 
                         {/* Right buttons */}
                         <div className="absolute right-0 top-0 flex items-center gap-3">
-                            <button className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                                    />
-                                </svg>
-                                Export
-                            </button>
-
                             <button
                                 className="text-slate-600 hover:text-slate-900 transition p-1 hover:bg-slate-100 rounded"
                                 title="Qayta yuklash"
