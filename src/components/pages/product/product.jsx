@@ -1,10 +1,20 @@
-"use client"
-
 import React, { useState, useEffect } from "react"
 import { Button } from "@mui/material"
 import { EditMenuModal, AddModal, ViewModal } from "./modals"
 import CustomSnackbar from "../../bars/snackbar/snackbar"
 import ProductService from "../../../service/product"
+
+import {
+    ShoppingBag,
+    AccessTime,
+    CheckCircle,
+    TrendingUp,
+    Phone,
+    CalendarMonth,
+    Inventory,
+    ExpandMore,
+    Close,
+} from "@mui/icons-material"
 
 const Product = () => {
     const [allProducts, setAllProducts] = useState([])
@@ -216,138 +226,131 @@ const Product = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-stone-50 via-stone-100 to-stone-50 p-6 md:p-8">
-            <div className="flex flex-wrap gap-4 mb-8">
-                {/* Jami Mahsulotlar */}
-                <div className="flex items-center gap-3 bg-white rounded-lg shadow-md p-4 flex-1 min-w-max">
-                    <div className="bg-blue-100 p-2 rounded-lg">
-                        <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10"
-                            />
-                        </svg>
-                    </div>
-                    <div>
-                        <p className="text-xs text-stone-600 font-medium">Jami</p>
-                        <p className="text-lg font-bold text-stone-900">{totalProducts}</p>
-                    </div>
-                </div>
+            <div className="max-w-8xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+                {/* Search and Actions */}
+                <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
+                    <div className="flex items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-200 flex-wrap">
+                        {/* Total Products */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-blue-100 p-2 rounded-lg">
+                                <svg className="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10"
+                                    />
+                                </svg>
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">Jami</p>
+                                <p className="text-lg font-bold text-blue-600">{totalProducts}</p>
+                            </div>
+                        </div>
 
-                {/* Faol Mahsulotlar */}
-                <div className="flex items-center gap-3 bg-white rounded-lg shadow-md p-4 flex-1 min-w-max">
-                    <div className="bg-green-100 p-2 rounded-lg">
-                        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                        </svg>
-                    </div>
-                    <div>
-                        <p className="text-xs text-stone-600 font-medium">Faol</p>
-                        <p className="text-lg font-bold text-stone-900">{activeProducts}</p>
-                    </div>
-                </div>
+                        {/* Active Products */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-green-100 p-2 rounded-lg">
+                                <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">Faol</p>
+                                <p className="text-lg font-bold text-green-600">{activeProducts}</p>
+                            </div>
+                        </div>
 
-                {/* Nofaol Mahsulotlar */}
-                <div className="flex items-center gap-3 bg-white rounded-lg shadow-md p-4 flex-1 min-w-max">
-                    <div className="bg-red-100 p-2 rounded-lg">
-                        <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M10 14l-2-2m0 0l-2-2m2 2l2-2m-2 2l-2 2"
-                            />
-                        </svg>
-                    </div>
-                    <div>
-                        <p className="text-xs text-stone-600 font-medium">Nofaol</p>
-                        <p className="text-lg font-bold text-stone-900">{inactiveProducts}</p>
-                    </div>
-                </div>
+                        {/* Inactive Products */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-red-100 p-2 rounded-lg">
+                                <Close className="w-5 h-5 text-red-600" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">Nofaol</p>
+                                <p className="text-lg font-bold text-red-600">{inactiveProducts}</p>
+                            </div>
+                        </div>
 
-                {/* Chegirmali Mahsulotlar */}
-                <div className="flex items-center gap-3 bg-white rounded-lg shadow-md p-4 flex-1 min-w-max">
-                    <div className="bg-yellow-100 p-2 rounded-lg">
-                        <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 012 12V7a4 4 0 014-4z"
-                            />
-                        </svg>
-                    </div>
-                    <div>
-                        <p className="text-xs text-stone-600 font-medium">Chegirma</p>
-                        <p className="text-lg font-bold text-stone-900">{saleProducts}</p>
-                    </div>
-                </div>
+                        {/* Sale Status Products */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-yellow-100 p-2 rounded-lg">
+                                <svg className="w-7 h-7 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 012 12V7a4 4 0 014-4z"
+                                    />
+                                </svg>
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">Sale</p>
+                                <p className="text-lg font-bold text-yellow-600">{saleProducts}</p>
+                            </div>
+                        </div>
 
-                {/* Yangi Mahsulotlar */}
-                <div className="flex items-center gap-3 bg-white rounded-lg shadow-md p-4 flex-1 min-w-max">
-                    <div className="bg-emerald-100 p-2 rounded-lg">
-                        <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 6v6m0 0v6m0-6h6m0 0h6m-6-6h-6m0 0H0"
-                            />
-                        </svg>
-                    </div>
-                    <div>
-                        <p className="text-xs text-stone-600 font-medium">Yangi</p>
-                        <p className="text-lg font-bold text-stone-900">{newProducts}</p>
-                    </div>
-                </div>
+                        {/* New Status Products */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-green-100 p-2 rounded-lg">
+                                <TrendingUp className="w-5 h-5 text-green-600" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">New</p>
+                                <p className="text-lg font-bold text-green-600">{newProducts}</p>
+                            </div>
+                        </div>
 
-                {/* Hot Mahsulotlar */}
-                <div className="flex items-center gap-3 bg-white rounded-lg shadow-md p-4 flex-1 min-w-max">
-                    <div className="bg-orange-100 p-2 rounded-lg">
-                        <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M17.657 18.657L13.414 22.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"
-                            />
-                        </svg>
+                        {/* Hot Status Products */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-orange-100 p-2 rounded-lg">
+                                <svg className="w-7 h-7 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M17.657 18.657L13.414 22.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"
+                                    />
+                                </svg>
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">Hot</p>
+                                <p className="text-lg font-bold text-orange-600">{hotProducts}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <p className="text-xs text-stone-600 font-medium">Hot</p>
-                        <p className="text-lg font-bold text-stone-900">{hotProducts}</p>
-                    </div>
-                </div>
-            </div>
 
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                {/* Search Bar */}
-                <div className="p-6 border-b border-stone-200 relative">
-                    <div className="flex items-center justify-center">
+                    <div className="flex items-center justify-center relative">
                         {/* Left buttons */}
-                        <div className="flex gap-4 absolute left-6 top-6">
-                            <Button
-                                onClick={() => handleOpenAddEditModal()}
-                                variant="outlined"
-                                className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
-                            >
+                        <div className="flex gap-4 absolute left-0 top-0">
+                            <button onClick={() => handleOpenAddEditModal()} className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                                 </svg>
                                 Qo'shish
-                            </Button>
+                            </button>
+                            <button className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                    />
+                                </svg>
+                                Export
+                            </button>
                         </div>
 
                         {/* Center search field */}
                         <div className="flex-1 max-w-xl relative">
                             <svg
-                                className="absolute left-3 top-3 w-5 h-5 text-stone-400"
+                                className="absolute left-3 top-3 w-5 h-5 text-slate-400"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -364,13 +367,9 @@ const Product = () => {
                                 placeholder="Mahsulot, brend yoki kategoriya qidirish..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                                className="w-full pl-10 pr-10 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-500"
+                                className="w-full pl-10 pr-10 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
-                            <button
-                                onClick={handleSearch}
-                                className="absolute right-2 top-2 p-1 text-stone-400 hover:text-stone-600 transition"
-                            >
+                            <button className="absolute right-2 top-2 p-1 text-slate-400 hover:text-slate-600 transition">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path
                                         strokeLinecap="round"
@@ -383,23 +382,11 @@ const Product = () => {
                         </div>
 
                         {/* Right buttons */}
-                        <div className="absolute right-6 top-6 flex items-center gap-3">
+                        <div className="absolute right-0 top-0 flex items-center gap-3">
                             <button
-                                onClick={handleExport}
-                                className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
+                                className="text-slate-600 hover:text-slate-900 transition p-1 hover:bg-slate-100 rounded"
+                                title="Qayta yuklash"
                             >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                                    />
-                                </svg>
-                                Export
-                            </button>
-
-                            <button className="text-stone-600 hover:text-stone-900 transition p-1" title="Qayta buyurtma">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                                     <path
                                         strokeLinecap="round"
@@ -409,7 +396,10 @@ const Product = () => {
                                 </svg>
                             </button>
 
-                            <button className="text-stone-700 hover:text-stone-900 transition p-1" aria-label="Fullscreen">
+                            <button
+                                className="text-slate-700 hover:text-slate-900 transition p-1 hover:bg-slate-100 rounded"
+                                aria-label="Fullscreen"
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="w-5 h-5"
