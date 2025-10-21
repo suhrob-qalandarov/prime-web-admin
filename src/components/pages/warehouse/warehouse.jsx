@@ -454,7 +454,7 @@ const Warehouse = () => {
 
                             {/* Ma'lumotlarni yangilash tugmasi */}
                             <button
-                                className="text-stone-600 hover:text-stone-900 transition p-1 hover:bg-stone-100 rounded"
+                                className="text-stone-600 hover:text-stone-900 transition p-1"
                                 title="Qayta buyurtma"
                             >
                                 <svg
