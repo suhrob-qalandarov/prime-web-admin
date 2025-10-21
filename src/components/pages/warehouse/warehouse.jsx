@@ -289,12 +289,6 @@ const Warehouse = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-stone-50 via-stone-100 to-stone-50 p-6 md:p-8">
-            {/* Header */}
-            <div className="mb-8">
-                <h1 className="text-4xl font-bold text-stone-900 mb-2">Erkaklar Kiyim Ombori</h1>
-                <p className="text-stone-600">Inventorni boshqaring va stokni kuzatib boring</p>
-            </div>
-
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600 hover:shadow-lg transition">
