@@ -6,10 +6,6 @@ import {
     AccessTime,
     CheckCircle,
     TrendingUp,
-    Search,
-    FileDownload,
-    Refresh,
-    ZoomIn,
     Phone,
     CalendarMonth,
     Inventory,
@@ -275,27 +271,96 @@ const Orders = () => {
                 </div>
 
                 {/* Search and Actions */}
-                <div className="bg-white rounded-lg p-4 mb-8 shadow-sm flex flex-col sm:flex-row gap-4 items-center">
-                    <div className="flex-1 relative w-full">
-                        <Search className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-                        <input
-                            type="text"
-                            placeholder="Buyurtma ID yoki mijoz nomini qidirish..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
+                <div className="bg-white rounded-lg p-6 mb-8 shadow-sm relative">
+                    <div className="flex items-center justify-center">
+                        {/* Left buttons */}
+                        <div className="flex gap-4 absolute left-6 top-6">
+                            <button className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                </svg>
+                                Qo'shish
+                            </button>
+                        </div>
+
+                        {/* Center search field */}
+                        <div className="flex-1 max-w-xl relative">
+                            <svg
+                                className="absolute left-3 top-3 w-5 h-5 text-slate-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                />
+                            </svg>
+                            <input
+                                type="text"
+                                placeholder="Buyurtma ID yoki mijoz nomini qidirish..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full pl-10 pr-10 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <button className="absolute right-2 top-2 p-1 text-slate-400 hover:text-slate-600 transition">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Right buttons */}
+                        <div className="absolute right-6 top-6 flex items-center gap-3">
+                            <button className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                    />
+                                </svg>
+                                Export
+                            </button>
+
+                            <button
+                                className="text-slate-600 hover:text-slate-900 transition p-1 hover:bg-slate-100 rounded"
+                                title="Qayta yuklash"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                    />
+                                </svg>
+                            </button>
+
+                            <button
+                                className="text-slate-700 hover:text-slate-900 transition p-1 hover:bg-slate-100 rounded"
+                                aria-label="Fullscreen"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="w-5 h-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    strokeWidth={2}
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4h4M4 16v4h4M20 8V4h-4M20 16v4h-4" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors">
-                        <FileDownload className="w-4 h-4" />
-                        <span className="text-sm font-medium">Export</span>
-                    </button>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors">
-                        <Refresh className="w-4 h-4" />
-                    </button>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors">
-                        <ZoomIn className="w-4 h-4" />
-                    </button>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
