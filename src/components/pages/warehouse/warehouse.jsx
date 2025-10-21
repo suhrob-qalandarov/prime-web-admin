@@ -5,9 +5,8 @@ import { Box, Modal, Button } from "@mui/material"
 
 const mockClothingProducts = [
     {
-        id: 1,
+        id: 1001,
         name: "Klassik Oq Ko'ylak",
-        sku: "SHIRT-001",
         category: "Ko'ylaklar",
         sizes: ["XS", "S", "M", "L", "XL", "XXL"],
         basePrice: 85000,
@@ -33,9 +32,8 @@ const mockClothingProducts = [
         },
     },
     {
-        id: 2,
+        id: 1002,
         name: "Qora Jeans",
-        sku: "JEANS-001",
         category: "Shim",
         sizes: ["28", "30", "32", "34", "36", "38"],
         basePrice: 125000,
@@ -61,9 +59,8 @@ const mockClothingProducts = [
         },
     },
     {
-        id: 3,
+        id: 1003,
         name: "Qizil Futbolka",
-        sku: "TSHIRT-001",
         category: "Futbolkalar",
         sizes: ["XS", "S", "M", "L", "XL", "XXL"],
         basePrice: 45000,
@@ -89,9 +86,8 @@ const mockClothingProducts = [
         },
     },
     {
-        id: 4,
+        id: 1004,
         name: "Qora Blazer",
-        sku: "BLAZER-001",
         category: "Kurtka",
         sizes: ["S", "M", "L", "XL", "XXL"],
         basePrice: 250000,
@@ -116,9 +112,8 @@ const mockClothingProducts = [
         },
     },
     {
-        id: 5,
+        id: 1005,
         name: "Oq Sneaker",
-        sku: "SHOE-001",
         category: "Oyoq kiyim",
         sizes: ["39", "40", "41", "42", "43", "44", "45"],
         basePrice: 180000,
@@ -177,7 +172,7 @@ const Warehouse = () => {
         const filtered = mockClothingProducts.filter(
             (item) =>
                 item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                item.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item.id.toString().includes(searchTerm) ||
                 item.category.toLowerCase().includes(searchTerm.toLowerCase()),
         )
         setFilteredItems(filtered)
@@ -243,11 +238,11 @@ const Warehouse = () => {
     const getStatusLabel = (status) => {
         switch (status) {
             case "NEW":
-                return "NEW"
+                return "Yangi"
             case "HOT":
-                return "HOT"
+                return "Sof"
             case "SALE":
-                return "SALE"
+                return "Chegirma"
             default:
                 return status
         }
@@ -263,9 +258,9 @@ const Warehouse = () => {
 
     const handleExport = () => {
         const csv = [
-            ["SKU", "Mahsulot", "Kategoriya", "Jami Stok", "Narx", "Status", "Ombor"],
+            ["ID", "Mahsulot", "Kategoriya", "Jami Stok", "Narx", "Status", "Ombor"],
             ...filteredItems.map((item) => [
-                item.sku,
+                item.id,
                 item.name,
                 item.category,
                 getTotalStock(item),
@@ -436,7 +431,7 @@ const Warehouse = () => {
                             </svg>
                             <input
                                 type="text"
-                                placeholder="Mahsulot, SKU yoki kategoriya qidirish..."
+                                placeholder="Mahsulot, ID yoki kategoriya qidirish..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 onKeyPress={(e) => e.key === "Enter" && handleSearch()}
@@ -535,7 +530,7 @@ const Warehouse = () => {
                         <thead className="bg-stone-100 border-b border-stone-200">
                         <tr>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700"></th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">SKU</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">ID</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Mahsulot</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Kategoriya</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Jami stok</th>
@@ -575,7 +570,7 @@ const Warehouse = () => {
                                                 )}
                                             </button>
                                         </td>
-                                        <td className="px-6 py-4 text-sm font-medium text-stone-900">{item.sku}</td>
+                                        <td className="px-6 py-4 text-sm font-medium text-stone-900">{item.id}</td>
                                         <td className="px-6 py-4 text-sm text-stone-700">{item.name}</td>
                                         <td className="px-6 py-4 text-sm text-stone-600">{item.category}</td>
                                         <td className="px-6 py-4 text-sm font-medium text-stone-900">{totalStock}</td>
@@ -667,7 +662,7 @@ const Warehouse = () => {
                                                                     key={size}
                                                                     className="bg-white border border-stone-200 rounded-lg p-3 text-center hover:border-stone-400 transition"
                                                                 >
-                                                                    <div className="text-xs font-medium text-stone-600 mb-1">{size}</div>
+                                                                    <div className="text-xs font-medium text-stone-600">{size}</div>
                                                                     <div className="text-lg font-bold text-stone-900">{item.stockBySize[size]}</div>
                                                                 </div>
                                                             ))}
@@ -741,7 +736,7 @@ const Warehouse = () => {
                                 <option value="">-- Mahsulot Tanlang --</option>
                                 {mockClothingProducts.map((product) => (
                                     <option key={product.id} value={product.id}>
-                                        {product.name} ({product.sku})
+                                        {product.name} (ID: {product.id})
                                     </option>
                                 ))}
                             </select>
@@ -904,8 +899,8 @@ const Warehouse = () => {
                                         <span className="font-medium text-stone-900">{selectedItem.name}</span>
                                     </div>
                                     <div className="flex justify-between">
-                                        <span className="text-stone-600">SKU:</span>
-                                        <span className="font-medium text-stone-900 font-mono">{selectedItem.sku}</span>
+                                        <span className="text-stone-600">ID:</span>
+                                        <span className="font-medium text-stone-900 font-mono">{selectedItem.id}</span>
                                     </div>
                                     <div className="flex justify-between">
                                         <span className="text-stone-600">Kategoriya:</span>
