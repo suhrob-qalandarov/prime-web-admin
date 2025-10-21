@@ -34,6 +34,7 @@ const Product = () => {
             setIsLoading(true)
             const data = await ProductService.getOrLoadData()
             setAllProducts(data)
+            showSnackbar("Ma'lumotlar muvaffaqiyatli yuklandi", "success")
         } catch (err) {
             setError("Mahsulotlarni yuklashda xatolik yuz berdi")
             showSnackbar("Mahsulotlarni yuklashda xatolik yuz berdi", "error")
@@ -54,6 +55,8 @@ const Product = () => {
     const activeProducts = allProducts.filter((p) => p.active).length
     const inactiveProducts = allProducts.filter((p) => !p.active).length
     const saleProducts = allProducts.filter((p) => p.status === "SALE").length
+    const newProducts = 12
+    const hotProducts = 8
 
     const handleSearch = () => {
         // Search is handled by filter above
@@ -213,80 +216,112 @@ const Product = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-stone-50 via-stone-100 to-stone-50 p-6 md:p-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600 hover:shadow-lg transition">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-stone-600 text-sm font-medium">Jami Mahsulotlar</p>
-                            <p className="text-3xl font-bold text-stone-900 mt-2">{totalProducts}</p>
-                        </div>
-                        <div className="bg-blue-100 p-3 rounded-lg">
-                            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10"
-                                />
-                            </svg>
-                        </div>
+            <div className="flex flex-wrap gap-4 mb-8">
+                {/* Jami Mahsulotlar */}
+                <div className="flex items-center gap-3 bg-white rounded-lg shadow-md p-4 flex-1 min-w-max">
+                    <div className="bg-blue-100 p-2 rounded-lg">
+                        <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10"
+                            />
+                        </svg>
+                    </div>
+                    <div>
+                        <p className="text-xs text-stone-600 font-medium">Jami</p>
+                        <p className="text-lg font-bold text-stone-900">{totalProducts}</p>
                     </div>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-600 hover:shadow-lg transition">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-stone-600 text-sm font-medium">Faol Mahsulotlar</p>
-                            <p className="text-3xl font-bold text-stone-900 mt-2">{activeProducts}</p>
-                        </div>
-                        <div className="bg-green-100 p-3 rounded-lg">
-                            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                            </svg>
-                        </div>
+                {/* Faol Mahsulotlar */}
+                <div className="flex items-center gap-3 bg-white rounded-lg shadow-md p-4 flex-1 min-w-max">
+                    <div className="bg-green-100 p-2 rounded-lg">
+                        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
+                    </div>
+                    <div>
+                        <p className="text-xs text-stone-600 font-medium">Faol</p>
+                        <p className="text-lg font-bold text-stone-900">{activeProducts}</p>
                     </div>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-600 hover:shadow-lg transition">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-stone-600 text-sm font-medium">Nofaol Mahsulotlar</p>
-                            <p className="text-3xl font-bold text-stone-900 mt-2">{inactiveProducts}</p>
-                        </div>
-                        <div className="bg-red-100 p-3 rounded-lg">
-                            <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M10 14l-2-2m0 0l-2-2m2 2l2-2m-2 2l-2 2"
-                                />
-                            </svg>
-                        </div>
+                {/* Nofaol Mahsulotlar */}
+                <div className="flex items-center gap-3 bg-white rounded-lg shadow-md p-4 flex-1 min-w-max">
+                    <div className="bg-red-100 p-2 rounded-lg">
+                        <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M10 14l-2-2m0 0l-2-2m2 2l2-2m-2 2l-2 2"
+                            />
+                        </svg>
+                    </div>
+                    <div>
+                        <p className="text-xs text-stone-600 font-medium">Nofaol</p>
+                        <p className="text-lg font-bold text-stone-900">{inactiveProducts}</p>
                     </div>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-600 hover:shadow-lg transition">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-stone-600 text-sm font-medium">Chegirmali Mahsulotlar</p>
-                            <p className="text-3xl font-bold text-stone-900 mt-2">{saleProducts}</p>
-                        </div>
-                        <div className="bg-yellow-100 p-3 rounded-lg">
-                            <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 012 12V7a4 4 0 014-4z"
-                                />
-                            </svg>
-                        </div>
+                {/* Chegirmali Mahsulotlar */}
+                <div className="flex items-center gap-3 bg-white rounded-lg shadow-md p-4 flex-1 min-w-max">
+                    <div className="bg-yellow-100 p-2 rounded-lg">
+                        <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 012 12V7a4 4 0 014-4z"
+                            />
+                        </svg>
+                    </div>
+                    <div>
+                        <p className="text-xs text-stone-600 font-medium">Chegirma</p>
+                        <p className="text-lg font-bold text-stone-900">{saleProducts}</p>
+                    </div>
+                </div>
+
+                {/* Yangi Mahsulotlar */}
+                <div className="flex items-center gap-3 bg-white rounded-lg shadow-md p-4 flex-1 min-w-max">
+                    <div className="bg-emerald-100 p-2 rounded-lg">
+                        <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 6v6m0 0v6m0-6h6m0 0h6m-6-6h-6m0 0H0"
+                            />
+                        </svg>
+                    </div>
+                    <div>
+                        <p className="text-xs text-stone-600 font-medium">Yangi</p>
+                        <p className="text-lg font-bold text-stone-900">{newProducts}</p>
+                    </div>
+                </div>
+
+                {/* Hot Mahsulotlar */}
+                <div className="flex items-center gap-3 bg-white rounded-lg shadow-md p-4 flex-1 min-w-max">
+                    <div className="bg-orange-100 p-2 rounded-lg">
+                        <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M17.657 18.657L13.414 22.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"
+                            />
+                        </svg>
+                    </div>
+                    <div>
+                        <p className="text-xs text-stone-600 font-medium">Hot</p>
+                        <p className="text-lg font-bold text-stone-900">{hotProducts}</p>
                     </div>
                 </div>
             </div>
