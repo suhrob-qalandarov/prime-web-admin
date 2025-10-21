@@ -1,14 +1,468 @@
-import React, { useState, useEffect } from 'react';
+"use client"
 
-const Order = () => {
-    const [isLoading, setIsLoading] = useState(true);
+import { useState } from "react"
+import {
+    ShoppingBag,
+    AccessTime,
+    CheckCircle,
+    TrendingUp,
+    Search,
+    FileDownload,
+    Refresh,
+    ZoomIn,
+    Phone,
+    CalendarMonth,
+    Inventory,
+    ExpandMore,
+} from "@mui/icons-material"
+
+// Mock data for orders
+const MOCK_ORDERS = [
+    {
+        id: 1001,
+        customerName: "Alisher Karimov",
+        customerPhone: "+998901234567",
+        status: "PENDING",
+        totalAmount: 250000,
+        orderDate: "2024-01-15T10:30:00",
+        items: [
+            { id: 1, name: "iPhone 14", quantity: 1, price: 200000 },
+            { id: 2, name: "Telefon g'ilofi", quantity: 1, price: 50000 },
+        ],
+    },
+    {
+        id: 1002,
+        customerName: "Malika Toshmatova",
+        customerPhone: "+998907654321",
+        status: "PENDING",
+        totalAmount: 180000,
+        orderDate: "2024-01-15T11:15:00",
+        items: [{ id: 3, name: "Samsung Galaxy", quantity: 1, price: 180000 }],
+    },
+    {
+        id: 1003,
+        customerName: "Bobur Rahimov",
+        customerPhone: "+998901111111",
+        status: "ACCEPT",
+        totalAmount: 320000,
+        orderDate: "2024-01-15T09:45:00",
+        items: [
+            { id: 4, name: "MacBook Air", quantity: 1, price: 300000 },
+            { id: 5, name: "Sichqoncha", quantity: 1, price: 20000 },
+        ],
+    },
+    {
+        id: 1004,
+        customerName: "Gulnora Saidova",
+        customerPhone: "+998912345678",
+        status: "ACCEPT",
+        totalAmount: 120000,
+        orderDate: "2024-01-14T14:00:00",
+        items: [{ id: 6, name: "Smart soat", quantity: 1, price: 120000 }],
+    },
+    {
+        id: 1005,
+        customerName: "Farhod Olimov",
+        customerPhone: "+998934567890",
+        status: "DELIVERED",
+        totalAmount: 75000,
+        orderDate: "2024-01-13T16:45:00",
+        items: [{ id: 7, name: "Simsiz quloqchin", quantity: 1, price: 75000 }],
+    },
+    {
+        id: 1006,
+        customerName: "Zarina Abdullayeva",
+        customerPhone: "+998998765432",
+        status: "DELIVERED",
+        totalAmount: 450000,
+        orderDate: "2024-01-12T13:20:00",
+        items: [
+            { id: 8, name: "iPad Pro", quantity: 1, price: 400000 },
+            { id: 9, name: "Apple Pencil", quantity: 1, price: 50000 },
+        ],
+    },
+]
+
+const Orders = () => {
+    const [orders, setOrders] = useState(MOCK_ORDERS)
+    const [searchTerm, setSearchTerm] = useState("")
+    const [draggedOrder, setDraggedOrder] = useState(null)
+    const [expandedOrder, setExpandedOrder] = useState(null)
+
+    // Filter orders by search term
+    const filteredOrders = orders.filter(
+        (order) =>
+            order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) || order.id.toString().includes(searchTerm),
+    )
+
+    // Get stats
+    const stats = {
+        total: orders.length,
+        pending: orders.filter((o) => o.status === "PENDING").length,
+        accepted: orders.filter((o) => o.status === "ACCEPT").length,
+        delivered: orders.filter((o) => o.status === "DELIVERED").length,
+    }
+
+    // Get orders by status
+    const getOrdersByStatus = (status) => {
+        return filteredOrders.filter((order) => order.status === status)
+    }
+
+    // Handle drag start
+    const handleDragStart = (e, order) => {
+        setDraggedOrder(order)
+        e.dataTransfer.effectAllowed = "move"
+    }
+
+    // Handle drag over
+    const handleDragOver = (e) => {
+        e.preventDefault()
+        e.dataTransfer.dropEffect = "move"
+    }
+
+    // Handle drop
+    const handleDrop = (e, newStatus) => {
+        e.preventDefault()
+        if (draggedOrder) {
+            setOrders(orders.map((order) => (order.id === draggedOrder.id ? { ...order, status: newStatus } : order)))
+            setDraggedOrder(null)
+        }
+    }
+
+    // Format price
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat("uz-UZ").format(price)
+    }
+
+    // Format date
+    const formatDate = (dateString) => {
+        const date = new Date(dateString)
+        return date.toLocaleDateString("uz-UZ", {
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        })
+    }
+
+    // Get status color
+    const getStatusColor = (status) => {
+        switch (status) {
+            case "PENDING":
+                return "border-l-amber-500 bg-amber-50"
+            case "ACCEPT":
+                return "border-l-blue-500 bg-blue-50"
+            case "DELIVERED":
+                return "border-l-green-500 bg-green-50"
+            default:
+                return "border-l-slate-500 bg-slate-50"
+        }
+    }
+
+    // Get status badge color
+    const getStatusBadgeColor = (status) => {
+        switch (status) {
+            case "PENDING":
+                return "bg-amber-100 text-amber-800"
+            case "ACCEPT":
+                return "bg-blue-100 text-blue-800"
+            case "DELIVERED":
+                return "bg-green-100 text-green-800"
+            default:
+                return "bg-slate-100 text-slate-800"
+        }
+    }
+
+    // Get status text
+    const getStatusText = (status) => {
+        switch (status) {
+            case "PENDING":
+                return "Kutilmoqda"
+            case "ACCEPT":
+                return "Tasdiqlandi"
+            case "DELIVERED":
+                return "Yetkazildi"
+            default:
+                return status
+        }
+    }
 
     return (
-        <div style={{ padding: '20px' }}>
-            <h1>Orders Page</h1>
-            {/* Add your admin dashboard content here */}
-        </div>
-    );
-};
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+            <div className="max-w-7xl mx-auto">
+                {/* Stats Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    {/* Total Orders */}
+                    <div className="bg-white rounded-lg border-l-4 border-l-slate-500 p-6 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="flex items-start justify-between">
+                            <div>
+                                <p className="text-slate-600 text-sm font-medium mb-1">Jami buyurtmalar</p>
+                                <p className="text-3xl font-bold text-slate-900">{stats.total}</p>
+                            </div>
+                            <div className="bg-slate-100 p-3 rounded-lg">
+                                <ShoppingBag className="w-6 h-6 text-slate-600" />
+                            </div>
+                        </div>
+                    </div>
 
-export default Order;
+                    {/* Pending Orders */}
+                    <div className="bg-white rounded-lg border-l-4 border-l-amber-500 p-6 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="flex items-start justify-between">
+                            <div>
+                                <p className="text-slate-600 text-sm font-medium mb-1">Kutilayotgan</p>
+                                <p className="text-3xl font-bold text-amber-600">{stats.pending}</p>
+                            </div>
+                            <div className="bg-amber-100 p-3 rounded-lg">
+                                <AccessTime className="w-6 h-6 text-amber-600" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Accepted Orders */}
+                    <div className="bg-white rounded-lg border-l-4 border-l-blue-500 p-6 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="flex items-start justify-between">
+                            <div>
+                                <p className="text-slate-600 text-sm font-medium mb-1">Tasdiqlangan</p>
+                                <p className="text-3xl font-bold text-blue-600">{stats.accepted}</p>
+                            </div>
+                            <div className="bg-blue-100 p-3 rounded-lg">
+                                <CheckCircle className="w-6 h-6 text-blue-600" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Delivered Orders */}
+                    <div className="bg-white rounded-lg border-l-4 border-l-green-500 p-6 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="flex items-start justify-between">
+                            <div>
+                                <p className="text-slate-600 text-sm font-medium mb-1">Yetkazildi</p>
+                                <p className="text-3xl font-bold text-green-600">{stats.delivered}</p>
+                            </div>
+                            <div className="bg-green-100 p-3 rounded-lg">
+                                <TrendingUp className="w-6 h-6 text-green-600" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Search and Actions */}
+                <div className="bg-white rounded-lg p-4 mb-8 shadow-sm flex flex-col sm:flex-row gap-4 items-center">
+                    <div className="flex-1 relative w-full">
+                        <Search className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
+                        <input
+                            type="text"
+                            placeholder="Buyurtma ID yoki mijoz nomini qidirish..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                    </div>
+                    <button className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors">
+                        <FileDownload className="w-4 h-4" />
+                        <span className="text-sm font-medium">Export</span>
+                    </button>
+                    <button className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors">
+                        <Refresh className="w-4 h-4" />
+                    </button>
+                    <button className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors">
+                        <ZoomIn className="w-4 h-4" />
+                    </button>
+                </div>
+
+                {/* Kanban Board */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Pending Column */}
+                    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div className="bg-gradient-to-r from-slate-50 to-slate-100 px-6 py-4 border-b border-slate-200">
+                            <div className="flex items-center justify-between">
+                                <h3 className="font-semibold text-slate-900">Kutilayotgan</h3>
+                                <span className="bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1 rounded-full">
+                  {getOrdersByStatus("PENDING").length}
+                </span>
+                            </div>
+                        </div>
+                        <div
+                            onDragOver={handleDragOver}
+                            onDrop={(e) => handleDrop(e, "PENDING")}
+                            className="p-4 min-h-96 bg-slate-50 overflow-y-auto space-y-3"
+                        >
+                            {getOrdersByStatus("PENDING").length === 0 ? (
+                                <div className="flex flex-col items-center justify-center h-full text-slate-400 py-8">
+                                    <Inventory className="w-8 h-8 mb-2 opacity-50" />
+                                    <p className="text-sm">Buyurtmalar mavjud emas</p>
+                                </div>
+                            ) : (
+                                getOrdersByStatus("PENDING").map((order) => (
+                                    <OrderCard
+                                        key={order.id}
+                                        order={order}
+                                        onDragStart={handleDragStart}
+                                        onExpandClick={() => setExpandedOrder(expandedOrder?.id === order.id ? null : order)}
+                                        isExpanded={expandedOrder?.id === order.id}
+                                        getStatusColor={getStatusColor}
+                                        getStatusBadgeColor={getStatusBadgeColor}
+                                        getStatusText={getStatusText}
+                                        formatPrice={formatPrice}
+                                        formatDate={formatDate}
+                                    />
+                                ))
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Accepted Column */}
+                    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div className="bg-gradient-to-r from-slate-50 to-slate-100 px-6 py-4 border-b border-slate-200">
+                            <div className="flex items-center justify-between">
+                                <h3 className="font-semibold text-slate-900">Tasdiqlangan</h3>
+                                <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">
+                  {getOrdersByStatus("ACCEPT").length}
+                </span>
+                            </div>
+                        </div>
+                        <div
+                            onDragOver={handleDragOver}
+                            onDrop={(e) => handleDrop(e, "ACCEPT")}
+                            className="p-4 min-h-96 bg-slate-50 overflow-y-auto space-y-3"
+                        >
+                            {getOrdersByStatus("ACCEPT").length === 0 ? (
+                                <div className="flex flex-col items-center justify-center h-full text-slate-400 py-8">
+                                    <Inventory className="w-8 h-8 mb-2 opacity-50" />
+                                    <p className="text-sm">Buyurtmalar mavjud emas</p>
+                                </div>
+                            ) : (
+                                getOrdersByStatus("ACCEPT").map((order) => (
+                                    <OrderCard
+                                        key={order.id}
+                                        order={order}
+                                        onDragStart={handleDragStart}
+                                        onExpandClick={() => setExpandedOrder(expandedOrder?.id === order.id ? null : order)}
+                                        isExpanded={expandedOrder?.id === order.id}
+                                        getStatusColor={getStatusColor}
+                                        getStatusBadgeColor={getStatusBadgeColor}
+                                        getStatusText={getStatusText}
+                                        formatPrice={formatPrice}
+                                        formatDate={formatDate}
+                                    />
+                                ))
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Delivered Column */}
+                    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div className="bg-gradient-to-r from-slate-50 to-slate-100 px-6 py-4 border-b border-slate-200">
+                            <div className="flex items-center justify-between">
+                                <h3 className="font-semibold text-slate-900">Yetkazildi</h3>
+                                <span className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
+                  {getOrdersByStatus("DELIVERED").length}
+                </span>
+                            </div>
+                        </div>
+                        <div
+                            onDragOver={handleDragOver}
+                            onDrop={(e) => handleDrop(e, "DELIVERED")}
+                            className="p-4 min-h-96 bg-slate-50 overflow-y-auto space-y-3"
+                        >
+                            {getOrdersByStatus("DELIVERED").length === 0 ? (
+                                <div className="flex flex-col items-center justify-center h-full text-slate-400 py-8">
+                                    <Inventory className="w-8 h-8 mb-2 opacity-50" />
+                                    <p className="text-sm">Buyurtmalar mavjud emas</p>
+                                </div>
+                            ) : (
+                                getOrdersByStatus("DELIVERED").map((order) => (
+                                    <OrderCard
+                                        key={order.id}
+                                        order={order}
+                                        onDragStart={handleDragStart}
+                                        onExpandClick={() => setExpandedOrder(expandedOrder?.id === order.id ? null : order)}
+                                        isExpanded={expandedOrder?.id === order.id}
+                                        getStatusColor={getStatusColor}
+                                        getStatusBadgeColor={getStatusBadgeColor}
+                                        getStatusText={getStatusText}
+                                        formatPrice={formatPrice}
+                                        formatDate={formatDate}
+                                    />
+                                ))
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+// Order Card Component
+const OrderCard = ({
+                       order,
+                       onDragStart,
+                       onExpandClick,
+                       isExpanded,
+                       getStatusColor,
+                       getStatusBadgeColor,
+                       getStatusText,
+                       formatPrice,
+                       formatDate,
+                   }) => {
+    return (
+        <div
+            draggable
+            onDragStart={(e) => onDragStart(e, order)}
+            className={`${getStatusColor(order.status)} border-l-4 rounded-lg p-4 cursor-grab active:cursor-grabbing hover:shadow-md transition-all`}
+        >
+            <div className="flex items-start justify-between mb-3">
+                <div className="flex-1">
+                    <p className="font-bold text-slate-900">#{order.id}</p>
+                    <p className="text-sm text-slate-600 mt-1">{order.customerName}</p>
+                </div>
+                <span className={`${getStatusBadgeColor(order.status)} text-xs font-semibold px-2 py-1 rounded`}>
+          {getStatusText(order.status)}
+        </span>
+            </div>
+
+            <div className="space-y-2 mb-3 text-sm">
+                <div className="flex items-center gap-2 text-slate-600">
+                    <Phone className="w-4 h-4" />
+                    <span>{order.customerPhone}</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-600">
+                    <CalendarMonth className="w-4 h-4" />
+                    <span>{formatDate(order.orderDate)}</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-600">
+                    <Inventory className="w-4 h-4" />
+                    <span>{order.items.length} ta mahsulot</span>
+                </div>
+            </div>
+
+            <div className="border-t border-slate-200 pt-3 mb-3">
+                <p className="font-bold text-slate-900">{formatPrice(order.totalAmount)} so'm</p>
+            </div>
+
+            {isExpanded && (
+                <div className="bg-white bg-opacity-60 rounded p-3 mt-3 border border-slate-200">
+                    <h4 className="font-semibold text-slate-900 mb-2 text-sm">Mahsulotlar:</h4>
+                    <div className="space-y-2">
+                        {order.items.map((item) => (
+                            <div key={item.id} className="flex justify-between text-sm text-slate-600">
+                                <span>{item.name}</span>
+                                <span className="font-medium text-slate-900">x{item.quantity}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <button
+                onClick={onExpandClick}
+                className="w-full mt-3 flex items-center justify-center gap-1 text-xs font-medium text-slate-600 hover:text-slate-900 transition-colors"
+            >
+                <ExpandMore className={`w-4 h-4 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                {isExpanded ? "Yashirish" : "Batafsil"}
+            </button>
+        </div>
+    )
+}
+
+export default Orders
