@@ -361,10 +361,11 @@ const Warehouse = () => {
             {/* Main Content */}
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
                 {/* Search Bar */}
+                {/* Search Bar */}
                 <div className="p-6 border-b border-stone-200 relative">
-                    {/* Oldingi search bar ichidagi elementlar */}
-                    <div className="flex gap-2">
-                        <div className="flex gap-3">
+                    <div className="flex items-center justify-center">
+                        {/* Chapdagi tugmalar */}
+                        <div className="flex gap-3 absolute left-6 top-6">
                             <button
                                 onClick={handleOpenAddModal}
                                 className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
@@ -374,6 +375,7 @@ const Warehouse = () => {
                                 </svg>
                                 Kiritish
                             </button>
+
                             <button
                                 onClick={handleOpenAddModal}
                                 className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
@@ -384,7 +386,9 @@ const Warehouse = () => {
                                 Chiqarish
                             </button>
                         </div>
-                        <div className="flex-1 relative" style={{ maxWidth: '600px' }}>
+
+                        {/* Markazdagi qidiruv maydoni */}
+                        <div className="flex-1 max-w-xl relative">
                             <svg
                                 className="absolute left-3 top-3 w-5 h-5 text-stone-400"
                                 fill="none"
@@ -425,47 +429,49 @@ const Warehouse = () => {
                                 </svg>
                             </button>
                         </div>
-                    </div>
-                    <div className="absolute right-6 top-6 flex items-center gap-3">
-                        <button
-                            onClick={handleExport}
-                            className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
-                        >
-                            <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                                />
-                            </svg>
-                            Export
-                        </button>
 
-                        <button
-                            className="text-stone-700 hover:text-stone-900 transition p-1"
-                            aria-label="Fullscreen"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="w-5 h-5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth={2}
+                        {/* O‘ngdagi tugmalar */}
+                        <div className="absolute right-6 top-6 flex items-center gap-3">
+                            <button
+                                onClick={handleExport}
+                                className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M4 8V4h4M4 16v4h4M20 8V4h-4M20 16v4h-4"
-                                />
-                            </svg>
-                        </button>
+                                <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                    />
+                                </svg>
+                                Export
+                            </button>
+
+                            <button
+                                className="text-stone-700 hover:text-stone-900 transition p-1"
+                                aria-label="Fullscreen"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="w-5 h-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    strokeWidth={2}
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M4 8V4h4M4 16v4h4M20 8V4h-4M20 16v4h-4"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
