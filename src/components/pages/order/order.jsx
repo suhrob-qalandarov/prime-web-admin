@@ -16,17 +16,6 @@ import {
 // Mock data for orders - Updated for clothing store
 const MOCK_ORDERS = [
     {
-        id: 1000,
-        customerName: "Eshmat Toshmatov",
-        customerPhone: "+998901234567",
-        status: "CANCELLED",
-        totalAmount: 250000,
-        orderDate: "2024-01-15T10:30:00",
-        items: [
-            { id: 1, name: "Qora Ko'ylak", quantity: 1, price: 200000 },
-        ],
-    },
-    {
         id: 1001,
         customerName: "Alisher Karimov",
         customerPhone: "+998901234567",
@@ -214,78 +203,68 @@ const Orders = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
             <div className="max-w-8xl mx-auto">
-                {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-                    {/* Total Orders */}
-                    <div className="bg-white rounded-lg border-l-4 border-l-slate-500 p-6 shadow-sm hover:shadow-md transition-shadow">
-                        <div className="flex items-start justify-between">
-                            <div>
-                                <p className="text-slate-600 text-sm font-medium mb-1">Jami buyurtmalar</p>
-                                <p className="text-3xl font-bold text-slate-900">{stats.total}</p>
-                            </div>
-                            <div className="bg-slate-100 p-3 rounded-lg">
-                                <ShoppingBag className="w-6 h-6 text-slate-600" />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Pending Orders */}
-                    <div className="bg-white rounded-lg border-l-4 border-l-amber-500 p-6 shadow-sm hover:shadow-md transition-shadow">
-                        <div className="flex items-start justify-between">
-                            <div>
-                                <p className="text-slate-600 text-sm font-medium mb-1">Jami kutilayotgan buyurtmalar</p>
-                                <p className="text-3xl font-bold text-amber-600">{stats.pending}</p>
-                            </div>
-                            <div className="bg-amber-100 p-3 rounded-lg">
-                                <AccessTime className="w-6 h-6 text-amber-600" />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Accepted Orders */}
-                    <div className="bg-white rounded-lg border-l-4 border-l-blue-500 p-6 shadow-sm hover:shadow-md transition-shadow">
-                        <div className="flex items-start justify-between">
-                            <div>
-                                <p className="text-slate-600 text-sm font-medium mb-1">Jami tasdiqlangan buyurtmala</p>
-                                <p className="text-3xl font-bold text-blue-600">{stats.accepted}</p>
-                            </div>
-                            <div className="bg-blue-100 p-3 rounded-lg">
-                                <CheckCircle className="w-6 h-6 text-blue-600" />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Delivered Orders */}
-                    <div className="bg-white rounded-lg border-l-4 border-l-green-500 p-6 shadow-sm hover:shadow-md transition-shadow">
-                        <div className="flex items-start justify-between">
-                            <div>
-                                <p className="text-slate-600 text-sm font-medium mb-1">Jami yetkazilgan buyurtmala</p>
-                                <p className="text-3xl font-bold text-green-600">{stats.delivered}</p>
-                            </div>
-                            <div className="bg-green-100 p-3 rounded-lg">
-                                <TrendingUp className="w-6 h-6 text-green-600" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg border-l-4 border-l-red-500 p-6 shadow-sm hover:shadow-md transition-shadow">
-                        <div className="flex items-start justify-between">
-                            <div>
-                                <p className="text-slate-600 text-sm font-medium mb-1">Jami bekor qilingan buyurtmala</p>
-                                <p className="text-3xl font-bold text-red-600">{stats.cancelled}</p>
-                            </div>
-                            <div className="bg-red-100 p-3 rounded-lg">
-                                <Close className="w-6 h-6 text-red-600" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 {/* Search and Actions */}
-                <div className="bg-white rounded-lg p-6 mb-8 shadow-sm relative">
-                    <div className="flex items-center justify-center">
+                <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
+                    <div className="flex items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-200 flex-wrap">
+                        {/* Total Orders */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-slate-100 p-2 rounded-lg">
+                                <ShoppingBag className="w-5 h-5 text-slate-600" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-slate-600">Jami</p>
+                                <p className="text-lg font-bold text-slate-900">{stats.total}</p>
+                            </div>
+                        </div>
+
+                        {/* Pending Orders */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-amber-100 p-2 rounded-lg">
+                                <AccessTime className="w-5 h-5 text-amber-600" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-slate-600">Kutilayotgan</p>
+                                <p className="text-lg font-bold text-amber-600">{stats.pending}</p>
+                            </div>
+                        </div>
+
+                        {/* Accepted Orders */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-blue-100 p-2 rounded-lg">
+                                <CheckCircle className="w-5 h-5 text-blue-600" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-slate-600">Tasdiqlangan</p>
+                                <p className="text-lg font-bold text-blue-600">{stats.accepted}</p>
+                            </div>
+                        </div>
+
+                        {/* Delivered Orders */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-green-100 p-2 rounded-lg">
+                                <TrendingUp className="w-5 h-5 text-green-600" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-slate-600">Yetkazildi</p>
+                                <p className="text-lg font-bold text-green-600">{stats.delivered}</p>
+                            </div>
+                        </div>
+
+                        {/* Cancelled Orders */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-red-100 p-2 rounded-lg">
+                                <Close className="w-5 h-5 text-red-600" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-slate-600">Bekor qilindi</p>
+                                <p className="text-lg font-bold text-red-600">{stats.cancelled}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center justify-center relative">
                         {/* Left buttons */}
-                        <div className="flex gap-4 absolute left-6 top-6">
+                        <div className="flex gap-4 absolute left-0 top-0">
                             <button className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -329,7 +308,7 @@ const Orders = () => {
                         </div>
 
                         {/* Right buttons */}
-                        <div className="absolute right-6 top-6 flex items-center gap-3">
+                        <div className="absolute right-0 top-0 flex items-center gap-3">
                             <button className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path
@@ -531,6 +510,21 @@ const Orders = () => {
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    )
+}
+
+const CancelledOrderCard = ({ order, onDragStart }) => {
+    return (
+        <div
+            draggable
+            onDragStart={(e) => onDragStart(e, order)}
+            className="border-l-4 border-l-red-500 bg-red-50 rounded-lg p-3 cursor-grab active:cursor-grabbing hover:shadow-md transition-all"
+        >
+            <div className="flex items-center justify-between">
+                <p className="font-bold text-slate-900 text-lg">#{order.id}</p>
+                <Close className="w-5 h-5 text-red-600" />
             </div>
         </div>
     )
