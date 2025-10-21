@@ -361,7 +361,6 @@ const Warehouse = () => {
             {/* Main Content */}
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
                 {/* Search Bar */}
-                {/* Search Bar */}
                 <div className="p-6 border-b border-stone-200 relative">
                     <div className="flex items-center justify-center">
                         {/* Chapdagi tugmalar */}
@@ -432,6 +431,7 @@ const Warehouse = () => {
 
                         {/* O‘ngdagi tugmalar */}
                         <div className="absolute right-6 top-6 flex items-center gap-3">
+                            {/* Export tugmasi */}
                             <button
                                 onClick={handleExport}
                                 className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
@@ -452,6 +452,27 @@ const Warehouse = () => {
                                 Export
                             </button>
 
+                            {/* Ma'lumotlarni yangilash tugmasi */}
+                            <button
+                                className="text-stone-600 hover:text-stone-900 transition p-1 hover:bg-stone-100 rounded"
+                                title="Qayta buyurtma"
+                            >
+                                <svg
+                                    className="w-5 h-5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={2}
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                    />
+                                </svg>
+                            </button>
+
+                            {/* Kattalashtirish tugmasi */}
                             <button
                                 className="text-stone-700 hover:text-stone-900 transition p-1"
                                 aria-label="Fullscreen"
