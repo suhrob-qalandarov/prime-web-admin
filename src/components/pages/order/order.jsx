@@ -223,7 +223,7 @@ const Orders = () => {
                                 <AccessTime className="w-5 h-5 text-amber-600" />
                             </div>
                             <div>
-                                <p className="text-xs text-slate-600">Kutilayotgan</p>
+                                <p className="text-xs text-slate-600">Jami kutilayotgan</p>
                                 <p className="text-lg font-bold text-amber-600">{stats.pending}</p>
                             </div>
                         </div>
@@ -234,7 +234,7 @@ const Orders = () => {
                                 <CheckCircle className="w-5 h-5 text-blue-600" />
                             </div>
                             <div>
-                                <p className="text-xs text-slate-600">Tasdiqlangan</p>
+                                <p className="text-xs text-slate-600">Jami tasdiqlangan</p>
                                 <p className="text-lg font-bold text-blue-600">{stats.accepted}</p>
                             </div>
                         </div>
@@ -245,7 +245,7 @@ const Orders = () => {
                                 <TrendingUp className="w-5 h-5 text-green-600" />
                             </div>
                             <div>
-                                <p className="text-xs text-slate-600">Yetkazildi</p>
+                                <p className="text-xs text-slate-600">Jami yetkazilgan</p>
                                 <p className="text-lg font-bold text-green-600">{stats.delivered}</p>
                             </div>
                         </div>
@@ -256,7 +256,7 @@ const Orders = () => {
                                 <Close className="w-5 h-5 text-red-600" />
                             </div>
                             <div>
-                                <p className="text-xs text-slate-600">Bekor qilindi</p>
+                                <p className="text-xs text-slate-600">Jami bekor qilingan</p>
                                 <p className="text-lg font-bold text-red-600">{stats.cancelled}</p>
                             </div>
                         </div>
