@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
-import { Box, Modal } from "@mui/material"
+import { Box, Modal, Button } from "@mui/material"
 
 const mockClothingProducts = [
     {
@@ -230,11 +230,11 @@ const Warehouse = () => {
     const getStatusColor = (status) => {
         switch (status) {
             case "NEW":
-                return { bg: "#EFF6FF", text: "#1E40AF", border: "#BFDBFE" }
+                return { bg: "#DCFCE7", text: "#166534", border: "#BBF7D0" }
             case "HOT":
                 return { bg: "#FEE2E2", text: "#991B1B", border: "#FECACA" }
             case "SALE":
-                return { bg: "#DCFCE7", text: "#166534", border: "#BBF7D0" }
+                return { bg: "#FFF9C4", text: "#B76E00", border: "#FFECB3" }
             default:
                 return { bg: "#F3F4F6", text: "#374151", border: "#D1D5DB" }
         }
@@ -360,40 +360,31 @@ const Warehouse = () => {
 
             {/* Main Content */}
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                {/* Header */}
-                <div className="bg-gradient-to-r from-stone-800 to-stone-900 text-white p-6 flex items-center justify-between">
-                    <h2 className="text-2xl font-bold">Mahsulotlar Ro'yxati</h2>
-                    <div className="flex gap-3">
-                        <button
-                            onClick={handleExport}
-                            className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
-                        >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                                />
-                            </svg>
-                            Export
-                        </button>
-                        <button
-                            onClick={handleOpenAddModal}
-                            className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
-                        >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                            </svg>
-                            Qo'shish
-                        </button>
-                    </div>
-                </div>
-
                 {/* Search Bar */}
-                <div className="p-6 border-b border-stone-200">
+                <div className="p-6 border-b border-stone-200 relative">
+                    {/* Oldingi search bar ichidagi elementlar */}
                     <div className="flex gap-2">
-                        <div className="flex-1 relative">
+                        <div className="flex gap-3">
+                            <button
+                                onClick={handleOpenAddModal}
+                                className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                </svg>
+                                Kiritish
+                            </button>
+                            <button
+                                onClick={handleOpenAddModal}
+                                className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                </svg>
+                                Chiqarish
+                            </button>
+                        </div>
+                        <div className="flex-1 relative" style={{ maxWidth: '600px' }}>
                             <svg
                                 className="absolute left-3 top-3 w-5 h-5 text-stone-400"
                                 fill="none"
@@ -413,20 +404,67 @@ const Warehouse = () => {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                                className="w-full pl-10 pr-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-500"
+                                className="w-full pl-10 pr-10 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-500"
                             />
+                            <button
+                                onClick={handleSearch}
+                                className="absolute right-2 top-2 p-1 text-stone-400 hover:text-stone-600 transition"
+                            >
+                                <svg
+                                    className="w-5 h-5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                    />
+                                </svg>
+                            </button>
                         </div>
+                    </div>
+                    <div className="absolute right-6 top-6 flex items-center gap-3">
                         <button
-                            onClick={handleSearch}
-                            className="bg-stone-800 text-white px-6 py-2 rounded-lg hover:bg-stone-900 transition font-medium"
+                            onClick={handleExport}
+                            className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
                         >
-                            Qidirish
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                />
+                            </svg>
+                            Export
                         </button>
+
                         <button
-                            onClick={handleClearSearch}
-                            className="bg-stone-200 text-stone-700 px-6 py-2 rounded-lg hover:bg-stone-300 transition font-medium"
+                            className="text-stone-700 hover:text-stone-900 transition p-1"
+                            aria-label="Fullscreen"
                         >
-                            Tozalash
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-5 h-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M4 8V4h4M4 16v4h4M20 8V4h-4M20 16v4h-4"
+                                />
+                            </svg>
                         </button>
                     </div>
                 </div>
@@ -441,8 +479,8 @@ const Warehouse = () => {
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Mahsulot</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Kategoriya</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Stok</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Narx</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Status</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Narx so'm</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Sotuvda</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Amallar</th>
                         </tr>
                         </thead>
@@ -485,10 +523,10 @@ const Warehouse = () => {
                                             {item.status === "SALE" ? (
                                                 <div className="flex items-center gap-2">
                                                     <span className="line-through text-stone-400">{item.basePrice.toLocaleString()}</span>
-                                                    <span className="font-bold text-green-600">{displayPrice.toLocaleString()}</span>
-                                                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                              -{item.discount}%
-                            </span>
+                                                    <span className="font-medium text-stone-600">{displayPrice.toLocaleString()}</span>
+                                                    <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+        -{item.discount}%
+      </span>
                                                 </div>
                                             ) : (
                                                 <span className="text-stone-700">{displayPrice.toLocaleString()}</span>
