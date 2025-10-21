@@ -14,9 +14,10 @@ import {
     CalendarMonth,
     Inventory,
     ExpandMore,
+    Close,
 } from "@mui/icons-material"
 
-// Mock data for orders
+// Mock data for orders - Updated for clothing store
 const MOCK_ORDERS = [
     {
         id: 1001,
@@ -26,8 +27,8 @@ const MOCK_ORDERS = [
         totalAmount: 250000,
         orderDate: "2024-01-15T10:30:00",
         items: [
-            { id: 1, name: "iPhone 14", quantity: 1, price: 200000 },
-            { id: 2, name: "Telefon g'ilofi", quantity: 1, price: 50000 },
+            { id: 1, name: "Qora Ko'ylak", quantity: 1, price: 200000 },
+            { id: 2, name: "Oq Futbolka", quantity: 1, price: 50000 },
         ],
     },
     {
@@ -37,7 +38,7 @@ const MOCK_ORDERS = [
         status: "PENDING",
         totalAmount: 180000,
         orderDate: "2024-01-15T11:15:00",
-        items: [{ id: 3, name: "Samsung Galaxy", quantity: 1, price: 180000 }],
+        items: [{ id: 3, name: "Jeans Shim", quantity: 1, price: 180000 }],
     },
     {
         id: 1003,
@@ -47,8 +48,8 @@ const MOCK_ORDERS = [
         totalAmount: 320000,
         orderDate: "2024-01-15T09:45:00",
         items: [
-            { id: 4, name: "MacBook Air", quantity: 1, price: 300000 },
-            { id: 5, name: "Sichqoncha", quantity: 1, price: 20000 },
+            { id: 4, name: "Klassik Kurtka", quantity: 1, price: 300000 },
+            { id: 5, name: "Qora Shim", quantity: 1, price: 20000 },
         ],
     },
     {
@@ -58,27 +59,36 @@ const MOCK_ORDERS = [
         status: "ACCEPT",
         totalAmount: 120000,
         orderDate: "2024-01-14T14:00:00",
-        items: [{ id: 6, name: "Smart soat", quantity: 1, price: 120000 }],
+        items: [{ id: 6, name: "Sneaker Oyoq kiyim", quantity: 1, price: 120000 }],
     },
     {
         id: 1005,
+        customerName: "Eshmat",
+        customerPhone: "+9989123456567",
+        status: "ACCEPT",
+        totalAmount: 300000,
+        orderDate: "2024-01-14T14:00:00",
+        items: [{ id: 6, name: "Rang-barang Aksessuar", quantity: 1, price: 150000 }],
+    },
+    {
+        id: 1006,
         customerName: "Farhod Olimov",
         customerPhone: "+998934567890",
         status: "DELIVERED",
         totalAmount: 75000,
         orderDate: "2024-01-13T16:45:00",
-        items: [{ id: 7, name: "Simsiz quloqchin", quantity: 1, price: 75000 }],
+        items: [{ id: 7, name: "Qo'lqop va Shlyapa", quantity: 1, price: 75000 }],
     },
     {
-        id: 1006,
+        id: 1007,
         customerName: "Zarina Abdullayeva",
         customerPhone: "+998998765432",
         status: "DELIVERED",
         totalAmount: 450000,
         orderDate: "2024-01-12T13:20:00",
         items: [
-            { id: 8, name: "iPad Pro", quantity: 1, price: 400000 },
-            { id: 9, name: "Apple Pencil", quantity: 1, price: 50000 },
+            { id: 8, name: "Formal Ko'ylak", quantity: 1, price: 400000 },
+            { id: 9, name: "Qora Shim", quantity: 1, price: 50000 },
         ],
     },
 ]
@@ -101,6 +111,7 @@ const Orders = () => {
         pending: orders.filter((o) => o.status === "PENDING").length,
         accepted: orders.filter((o) => o.status === "ACCEPT").length,
         delivered: orders.filter((o) => o.status === "DELIVERED").length,
+        cancelled: orders.filter((o) => o.status === "CANCELLED").length,
     }
 
     // Get orders by status
@@ -154,6 +165,8 @@ const Orders = () => {
                 return "border-l-blue-500 bg-blue-50"
             case "DELIVERED":
                 return "border-l-green-500 bg-green-50"
+            case "CANCELLED":
+                return "border-l-red-500 bg-red-50"
             default:
                 return "border-l-slate-500 bg-slate-50"
         }
@@ -168,6 +181,8 @@ const Orders = () => {
                 return "bg-blue-100 text-blue-800"
             case "DELIVERED":
                 return "bg-green-100 text-green-800"
+            case "CANCELLED":
+                return "bg-red-100 text-red-800"
             default:
                 return "bg-slate-100 text-slate-800"
         }
@@ -182,6 +197,8 @@ const Orders = () => {
                 return "Tasdiqlandi"
             case "DELIVERED":
                 return "Yetkazildi"
+            case "CANCELLED":
+                return "Bekor qilindi"
             default:
                 return status
         }
@@ -189,9 +206,9 @@ const Orders = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-8xl mx-auto">
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
                     {/* Total Orders */}
                     <div className="bg-white rounded-lg border-l-4 border-l-slate-500 p-6 shadow-sm hover:shadow-md transition-shadow">
                         <div className="flex items-start justify-between">
@@ -243,6 +260,18 @@ const Orders = () => {
                             </div>
                         </div>
                     </div>
+
+                    <div className="bg-white rounded-lg border-l-4 border-l-red-500 p-6 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="flex items-start justify-between">
+                            <div>
+                                <p className="text-slate-600 text-sm font-medium mb-1">Bekor qilindi</p>
+                                <p className="text-3xl font-bold text-red-600">{stats.cancelled}</p>
+                            </div>
+                            <div className="bg-red-100 p-3 rounded-lg">
+                                <Close className="w-6 h-6 text-red-600" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Search and Actions */}
@@ -269,8 +298,35 @@ const Orders = () => {
                     </button>
                 </div>
 
-                {/* Kanban Board */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    {/* Cancelled Column - Narrower */}
+                    <div className="bg-white rounded-lg shadow-sm overflow-hidden lg:col-span-1">
+                        <div className="bg-gradient-to-r from-slate-50 to-slate-100 px-6 py-4 border-b border-slate-200">
+                            <div className="flex items-center justify-between">
+                                <h3 className="font-semibold text-slate-900 text-sm">Bekor qilish</h3>
+                                <span className="bg-red-100 text-red-800 text-xs font-semibold px-3 py-1 rounded-full">
+                  {getOrdersByStatus("CANCELLED").length}
+                </span>
+                            </div>
+                        </div>
+                        <div
+                            onDragOver={handleDragOver}
+                            onDrop={(e) => handleDrop(e, "CANCELLED")}
+                            className="p-4 min-h-96 bg-slate-50 overflow-y-auto space-y-3"
+                        >
+                            {getOrdersByStatus("CANCELLED").length === 0 ? (
+                                <div className="flex flex-col items-center justify-center h-full text-slate-400 py-8">
+                                    <Inventory className="w-8 h-8 mb-2 opacity-50" />
+                                    <p className="text-sm">Buyurtmalar mavjud emas</p>
+                                </div>
+                            ) : (
+                                getOrdersByStatus("CANCELLED").map((order) => (
+                                    <CancelledOrderCard key={order.id} order={order} onDragStart={handleDragStart} />
+                                ))
+                            )}
+                        </div>
+                    </div>
+
                     {/* Pending Column */}
                     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
                         <div className="bg-gradient-to-r from-slate-50 to-slate-100 px-6 py-4 border-b border-slate-200">
@@ -393,6 +449,21 @@ const Orders = () => {
     )
 }
 
+const CancelledOrderCard = ({ order, onDragStart }) => {
+    return (
+        <div
+            draggable
+            onDragStart={(e) => onDragStart(e, order)}
+            className="border-l-4 border-l-red-500 bg-red-50 rounded-lg p-3 cursor-grab active:cursor-grabbing hover:shadow-md transition-all"
+        >
+            <div className="flex items-center justify-between">
+                <p className="font-bold text-slate-900 text-lg">#{order.id}</p>
+                <Close className="w-5 h-5 text-red-600" />
+            </div>
+        </div>
+    )
+}
+
 // Order Card Component
 const OrderCard = ({
                        order,
@@ -432,7 +503,7 @@ const OrderCard = ({
                 </div>
                 <div className="flex items-center gap-2 text-slate-600">
                     <Inventory className="w-4 h-4" />
-                    <span>{order.items.length} ta mahsulot</span>
+                    <span>{order.items.length} ta kiyim</span>
                 </div>
             </div>
 
@@ -442,7 +513,7 @@ const OrderCard = ({
 
             {isExpanded && (
                 <div className="bg-white bg-opacity-60 rounded p-3 mt-3 border border-slate-200">
-                    <h4 className="font-semibold text-slate-900 mb-2 text-sm">Mahsulotlar:</h4>
+                    <h4 className="font-semibold text-slate-900 mb-2 text-sm">Kiyimlar:</h4>
                     <div className="space-y-2">
                         {order.items.map((item) => (
                             <div key={item.id} className="flex justify-between text-sm text-slate-600">
