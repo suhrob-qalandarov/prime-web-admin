@@ -1,456 +1,729 @@
-import React, { useState, useEffect } from 'react';
-import {
-    Box,
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    Container,
-    FormControl,
-    IconButton,
-    InputLabel,
-    MenuItem,
-    Modal,
-    Select,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TextField,
-    Typography,
-    Switch,
-    Grid,
-    Paper,
-    Alert,
-    CircularProgress,
-} from '@mui/material';
-import {
-    Add as AddIcon,
-    Edit as EditIcon,
-    Visibility as VisibilityIcon,
-    Sort as SortIcon,
-    Search as SearchIcon,
-    Clear as ClearIcon,
-    Refresh as RefreshIcon,
-    Fullscreen as FullscreenIcon,
-    Delete as DeleteIcon,
-} from '@mui/icons-material';
-import axios from 'axios';
+"use client"
 
-const API_BASE_URL = 'http://localhost';
+import React, { useState } from "react"
+import { Box, Button, Modal, Switch, TextField } from "@mui/material"
+
+// Mock data with the specified response structure
+const mockCategories = [
+    {
+        id: 1,
+        name: "Ko'ylaklar",
+        spotlightName: "Klassik Ko'ylaklar",
+        order: 1,
+        active: true,
+        productCount: 45,
+        createdAt: "2024-10-15",
+    },
+    {
+        id: 2,
+        name: "Shim",
+        spotlightName: "Qora Jeans",
+        order: 2,
+        active: true,
+        productCount: 32,
+        createdAt: "2024-10-14",
+    },
+    {
+        id: 3,
+        name: "Futbolkalar",
+        spotlightName: "Rang-barang Futbolkalar",
+        order: 3,
+        active: true,
+        productCount: 58,
+        createdAt: "2024-10-13",
+    },
+    {
+        id: 4,
+        name: "Kurtka",
+        spotlightName: "Qora Blazer",
+        order: 4,
+        active: true,
+        productCount: 28,
+        createdAt: "2024-10-12",
+    },
+    {
+        id: 5,
+        name: "Oyoq kiyim",
+        spotlightName: "Oq Sneaker",
+        order: 5,
+        active: false,
+        productCount: 15,
+        createdAt: "2024-10-11",
+    },
+    {
+        id: 6,
+        name: "Aksessuarlar",
+        spotlightName: "Shlyapalar va Qo'lqop",
+        order: 6,
+        active: true,
+        productCount: 72,
+        createdAt: "2024-10-10",
+    },
+]
 
 const Category = () => {
-    const [dashboardData, setDashboardData] = useState(null);
-    const [allCategories, setAllCategories] = useState([]);
-    const [activeCategories, setActiveCategories] = useState([]);
-    const [inactiveCategories, setInactiveCategories] = useState([]);
-    const [filteredCategories, setFilteredCategories] = useState([]);
-    const [currentStatusFilter, setCurrentStatusFilter] = useState('all');
-    const [searchTerm, setSearchTerm] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [openAddEditModal, setOpenAddEditModal] = useState(false);
-    const [openViewModal, setOpenViewModal] = useState(false);
-    const [openOrderModal, setOpenOrderModal] = useState(false);
-    const [selectedCategory, setSelectedCategory] = useState(null);
-    const [categoryForm, setCategoryForm] = useState({ id: null, name: '', active: true });
-    const [orderList, setOrderList] = useState([]);
+    const [filteredItems, setFilteredItems] = useState(mockCategories)
+    const [searchTerm, setSearchTerm] = useState("")
+    const [expandedRows, setExpandedRows] = useState({})
+    const [selectedCategory, setSelectedCategory] = useState(null)
+    const [openAddEditModal, setOpenAddEditModal] = useState(false)
+    const [openViewModal, setOpenViewModal] = useState(false)
+    const [openOrderModal, setOpenOrderModal] = useState(false)
+    const [orderList, setOrderList] = useState([])
 
-    useEffect(() => {
-        loadCategoriesDashboard();
-    }, []);
+    const [formData, setFormData] = useState({
+        id: null,
+        name: "",
+        spotlightName: "",
+        order: "",
+        active: true,
+    })
 
-    const apiRequest = async (url, options = {}) => {
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-            // Handle unauthorized
-            return null;
-        }
-        try {
-            const response = await axios({
-                url: `${API_BASE_URL}${url}`,
-                headers: { Authorization: `Bearer ${token}`, ...options.headers },
-                ...options,
-            });
-            return response.data;
-        } catch (err) {
-            setError(err.message);
-            return null;
-        }
-    };
-
-    const loadCategoriesDashboard = async () => {
-        setIsLoading(true);
-        setError(null);
-        try {
-            const response = await apiRequest('/api/v1/admin/category/dashboard');
-            if (response) {
-                setDashboardData(response);
-                setAllCategories(response.categoryResList || []);
-                setActiveCategories(response.activeCategoryResList || []);
-                setInactiveCategories(response.inactiveCategoryResList || []);
-                applyFilter('all');
-            }
-        } catch (err) {
-            setError('Failed to load categories');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const applyFilter = (status) => {
-        setCurrentStatusFilter(status);
-        let categories;
-        switch (status) {
-            case 'active':
-                categories = activeCategories;
-                break;
-            case 'inactive':
-                categories = inactiveCategories;
-                break;
-            default:
-                categories = allCategories;
-        }
-        setFilteredCategories(applySearch(categories, searchTerm));
-    };
-
-    const applySearch = (categories, term) => {
-        if (!term) return categories;
-        return categories.filter((cat) => cat.name.toLowerCase().includes(term.toLowerCase()));
-    };
+    const totalCategories = mockCategories.length
+    const activeCategories = mockCategories.filter((c) => c.active).length
+    const inactiveCategories = mockCategories.filter((c) => !c.active).length
+    const totalProducts = mockCategories.reduce((sum, cat) => sum + cat.productCount, 0)
 
     const handleSearch = () => {
-        setFilteredCategories(applySearch(getFilteredByStatus(), searchTerm));
-    };
-
-    const handleClearSearch = () => {
-        setSearchTerm('');
-        setFilteredCategories(getFilteredByStatus());
-    };
-
-    const getFilteredByStatus = () => {
-        switch (currentStatusFilter) {
-            case 'active':
-                return activeCategories;
-            case 'inactive':
-                return inactiveCategories;
-            default:
-                return allCategories;
-        }
-    };
-
-    const handleOpenAddEditModal = (category = null) => {
-        setSelectedCategory(category);
-        setCategoryForm({
-            id: category?.id || null,
-            name: category?.name || '',
-            active: category?.active ?? true,
-        });
-        setOpenAddEditModal(true);
-    };
-
-    const handleCloseAddEditModal = () => {
-        setOpenAddEditModal(false);
-    };
-
-    const handleSaveCategory = async () => {
-        try {
-            const data = { name: categoryForm.name };
-            let response;
-            if (categoryForm.id) {
-                response = await apiRequest(`/api/v1/admin/category/${categoryForm.id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    data: JSON.stringify(data),
-                });
-            } else {
-                response = await apiRequest('/api/v1/admin/category', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    data: JSON.stringify(data),
-                });
-            }
-            if (response) {
-                loadCategoriesDashboard();
-                handleCloseAddEditModal();
-            }
-        } catch (err) {
-            setError('Failed to save category');
-        }
-    };
-
-    const handleToggleCategory = async (id) => {
-        try {
-            await apiRequest(`/api/v1/admin/category/toggle/${id}`, { method: 'PATCH' });
-            loadCategoriesDashboard();
-        } catch (err) {
-            setError('Failed to toggle category');
-        }
-    };
-
-    const handleOpenViewModal = (category) => {
-        setSelectedCategory(category);
-        setOpenViewModal(true);
-    };
-
-    const handleCloseViewModal = () => {
-        setOpenViewModal(false);
-    };
-
-    const handleOpenOrderModal = () => {
-        setOrderList([...filteredCategories]);
-        setOpenOrderModal(true);
-    };
-
-    const handleCloseOrderModal = () => {
-        setOpenOrderModal(false);
-    };
-
-    const handleSaveOrder = async () => {
-        try {
-            const orderMap = {};
-            orderList.forEach((cat, index) => {
-                orderMap[cat.id] = index + 1;
-            });
-            await apiRequest('/api/v1/admin/categories/order', {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                data: JSON.stringify(orderMap),
-            });
-            loadCategoriesDashboard();
-            handleCloseOrderModal();
-        } catch (err) {
-            setError('Failed to save order');
-        }
-    };
-
-    const moveOrderItem = (fromIndex, toIndex) => {
-        const newList = [...orderList];
-        const [moved] = newList.splice(fromIndex, 1);
-        newList.splice(toIndex, 0, moved);
-        setOrderList(newList);
-    };
-
-    if (isLoading) {
-        return (
-            <Box className="flex justify-center items-center h-screen">
-                <CircularProgress />
-                <Typography className="ml-4">Loading...</Typography>
-            </Box>
-        );
+        const filtered = mockCategories.filter(
+            (item) =>
+                item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item.spotlightName.toLowerCase().includes(searchTerm.toLowerCase()),
+        )
+        setFilteredItems(filtered)
     }
 
-    if (error) {
-        return <Alert severity="error">{error}</Alert>;
+    const handleClearSearch = () => {
+        setSearchTerm("")
+        setFilteredItems(mockCategories)
+    }
+
+    const toggleRowExpand = (id) => {
+        setExpandedRows((prev) => ({
+            ...prev,
+            [id]: !prev[id],
+        }))
+    }
+
+    const handleOpenAddEditModal = (category = null) => {
+        if (category) {
+            setFormData({
+                id: category.id,
+                name: category.name,
+                spotlightName: category.spotlightName,
+                order: category.order,
+                active: category.active,
+            })
+        } else {
+            setFormData({
+                id: null,
+                name: "",
+                spotlightName: "",
+                order: "",
+                active: true,
+            })
+        }
+        setOpenAddEditModal(true)
+    }
+
+    const handleCloseAddEditModal = () => {
+        setOpenAddEditModal(false)
+    }
+
+    const handleSaveCategory = () => {
+        console.log("[v0] Saved category:", formData)
+        handleCloseAddEditModal()
+    }
+
+    const handleOpenViewModal = (category) => {
+        setSelectedCategory(category)
+        setOpenViewModal(true)
+    }
+
+    const handleCloseViewModal = () => {
+        setOpenViewModal(false)
+    }
+
+    const handleOpenOrderModal = () => {
+        setOrderList([...filteredItems])
+        setOpenOrderModal(true)
+    }
+
+    const handleCloseOrderModal = () => {
+        setOpenOrderModal(false)
+    }
+
+    const handleSaveOrder = () => {
+        console.log("[v0] Saved order:", orderList)
+        handleCloseOrderModal()
+    }
+
+    const moveOrderItem = (fromIndex, toIndex) => {
+        const newList = [...orderList]
+        const [moved] = newList.splice(fromIndex, 1)
+        newList.splice(toIndex, 0, moved)
+        setOrderList(newList)
+    }
+
+    const handleToggleCategory = (id) => {
+        console.log("[v0] Toggled category:", id)
+    }
+
+    const handleExport = () => {
+        const csv = [
+            ["ID", "Kategoriya", "Spotlight Nomi", "Tartib", "Holati", "Mahsulotlar"],
+            ...filteredItems.map((item) => [
+                item.id,
+                item.name,
+                item.spotlightName,
+                item.order,
+                item.active ? "Faol" : "Nofaol",
+                item.productCount,
+            ]),
+        ]
+            .map((row) => row.join(","))
+            .join("\n")
+
+        const blob = new Blob([csv], { type: "text/csv" })
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement("a")
+        a.href = url
+        a.download = "kategoriyalar.csv"
+        a.click()
     }
 
     return (
-        <Container maxWidth="xl" className="py-8">
-            <Card className="shadow-lg rounded-xl overflow-hidden">
-                <CardHeader
-                    title="Kategoriyalar ro'yxati"
-                    className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white"
-                    action={
-                        <Box className="flex space-x-2">
+        <div className="min-h-screen bg-gradient-to-br from-stone-50 via-stone-100 to-stone-50 p-6 md:p-8">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-600 hover:shadow-lg transition">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-stone-600 text-sm font-medium">Toifalar</p>
+                            <p className="text-3xl font-bold text-stone-900 mt-2">4</p>
+                        </div>
+                        <div className="bg-purple-100 p-3 rounded-lg">
+                            <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600 hover:shadow-lg transition">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-stone-600 text-sm font-medium">Jami Kategoriyalar</p>
+                            <p className="text-3xl font-bold text-stone-900 mt-2">{totalCategories}</p>
+                        </div>
+                        <div className="bg-blue-100 p-3 rounded-lg">
+                            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-600 hover:shadow-lg transition">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-stone-600 text-sm font-medium">Faol Kategoriyalar</p>
+                            <p className="text-3xl font-bold text-stone-900 mt-2">{activeCategories}</p>
+                        </div>
+                        <div className="bg-green-100 p-3 rounded-lg">
+                            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-600 hover:shadow-lg transition">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-stone-600 text-sm font-medium">Nofaol Kategoriyalar</p>
+                            <p className="text-3xl font-bold text-stone-900 mt-2">{inactiveCategories}</p>
+                        </div>
+                        <div className="bg-red-100 p-3 rounded-lg">
+                            <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M10 14l-2-2m0 0l-2-2m2 2l2-2m-2 2l-2 2"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                {/* Search Bar */}
+                <div className="p-6 border-b border-stone-200 relative">
+                    <div className="flex items-center justify-center">
+                        {/* Left Buttons */}
+                        <div className="flex gap-4 absolute left-6 top-6">
                             <Button
-                                variant="contained"
-                                startIcon={<AddIcon />}
                                 onClick={() => handleOpenAddEditModal()}
-                                className="text-indigo-600 hover:bg-gray-100"
+                                variant="outlined"
+                                className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
                             >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                </svg>
                                 Qo'shish
                             </Button>
+
                             <Button
-                                variant="contained"
-                                startIcon={<SortIcon />}
                                 onClick={handleOpenOrderModal}
-                                className="text-indigo-600 hover:bg-gray-100"
+                                variant="outlined"
+                                className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
                             >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
                                 Tartiblash
                             </Button>
-                        </Box>
-                    }
-                />
-                <Box className="flex justify-between p-4 bg-gray-50">
-                    <Box className="flex space-x-4">
-                        <Typography className="font-semibold">Jami kategoriyalar: {allCategories.length}</Typography>
-                        <Typography className="font-semibold">Faol kategoriyalar: {activeCategories.length}</Typography>
-                        <Typography className="font-semibold">Nofaol kategoriyalar: {inactiveCategories.length}</Typography>
-                    </Box>
-                </Box>
-                <CardContent>
-                    {/*<Grid container spacing={2} className="mb-4">
-                        <Grid item xs={12} md={3}>
-                            <FormControl fullWidth>
-                                <InputLabel>Status</InputLabel>
-                                <Select
-                                    value={currentStatusFilter}
-                                    onChange={(e) => applyFilter(e.target.value)}
-                                    label="Status"
-                                >
-                                    <MenuItem value="all">Barcha kategoriyalar</MenuItem>
-                                    <MenuItem value="active">Faol kategoriyalar</MenuItem>
-                                    <MenuItem value="inactive">Nofaol kategoriyalar</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <Box className="flex">
-                                <TextField
-                                    fullWidth
-                                    placeholder="Kategoriya qidirish..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                        </div>
+
+                        {/* Center Search */}
+                        <div className="flex-1 max-w-xl relative">
+                            <svg
+                                className="absolute left-3 top-3 w-5 h-5 text-stone-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                                 />
-                                <IconButton onClick={handleSearch} className="ml-2">
-                                    <SearchIcon />
-                                </IconButton>
-                                <IconButton onClick={handleClearSearch} className="ml-2">
-                                    <ClearIcon />
-                                </IconButton>
-                            </Box>
-                        </Grid>
-                    </Grid>*/}
-                    <TableContainer component={Paper} className="shadow-md rounded-lg overflow-hidden">
-                        <Table>
-                            <TableHead className="bg-gray-200">
-                                <TableRow>
-                                    <TableCell>Tartib raqam</TableCell>
-                                    <TableCell>ID</TableCell>
-                                    <TableCell>Nomi</TableCell>
-                                    <TableCell>Mahsulotlar soni</TableCell>
-                                    <TableCell>Holati</TableCell>
-                                    <TableCell>Yaratilgan</TableCell>
-                                    <TableCell>Amallar</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {filteredCategories.map((cat, index) => (
-                                    <TableRow key={cat.id} className="hover:bg-gray-50">
-                                        <TableCell>{index + 1}</TableCell>
-                                        <TableCell>{cat.id}</TableCell>
-                                        <TableCell>{cat.name}</TableCell>
-                                        <TableCell>{cat.productCount || 0}</TableCell>
-                                        <TableCell>
-                                            <Switch checked={cat.active} onChange={() => handleToggleCategory(cat.id)} color="primary" />
-                                        </TableCell>
-                                        <TableCell>{new Date(cat.createdAt).toLocaleString()}</TableCell>
-                                        <TableCell>
-                                            <IconButton onClick={() => handleOpenViewModal(cat)}>
-                                                <VisibilityIcon className="text-blue-500" />
-                                            </IconButton>
-                                            <IconButton onClick={() => handleOpenAddEditModal(cat)}>
-                                                <EditIcon className="text-green-500" />
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </CardContent>
-            </Card>
+                            </svg>
+                            <input
+                                type="text"
+                                placeholder="Kategoriya yoki spotlight nomi qidirish..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                                className="w-full pl-10 pr-10 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-500"
+                            />
+                            <button
+                                onClick={handleSearch}
+                                className="absolute right-2 top-2 p-1 text-stone-400 hover:text-stone-600 transition"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Right Buttons */}
+                        <div className="absolute right-6 top-6 flex items-center gap-3">
+                            <button
+                                onClick={handleExport}
+                                className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                    />
+                                </svg>
+                                Export
+                            </button>
+
+                            <button className="text-stone-600 hover:text-stone-900 transition p-1" title="Qayta yuklash">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Table */}
+                <div className="overflow-x-auto">
+                    <table className="w-full">
+                        <thead className="bg-stone-100 border-b border-stone-200">
+                        <tr>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700"></th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">ID</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Kategoriya</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Toifa</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Tartib</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Mahsulotlar</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Holati</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Amallar</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {filteredItems.map((item) => (
+                            <React.Fragment key={item.id}>
+                                <tr className="border-b border-stone-200 hover:bg-stone-50 transition">
+                                    <td className="px-6 py-4">
+                                        <button onClick={() => toggleRowExpand(item.id)} className="text-stone-500 hover:text-stone-700">
+                                            {expandedRows[item.id] ? (
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                                                </svg>
+                                            ) : (
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                                                    />
+                                                </svg>
+                                            )}
+                                        </button>
+                                    </td>
+                                    <td className="px-6 py-4 text-sm font-medium text-stone-900">{item.id}</td>
+                                    <td className="px-6 py-4 text-sm text-stone-700">{item.name}</td>
+                                    <td className="px-6 py-4 text-sm text-stone-600">{item.spotlightName}</td>
+                                    <td className="px-6 py-4 text-sm font-medium text-stone-900">{item.order}</td>
+                                    <td className="px-6 py-4 text-sm font-medium text-stone-900">{item.productCount}</td>
+                                    <td className="px-6 py-4">
+                                        <Switch
+                                            checked={item.active}
+                                            onChange={() => handleToggleCategory(item.id)}
+                                            color="primary"
+                                            size="small"
+                                        />
+                                    </td>
+                                    <td className="px-6 py-4 flex gap-2">
+                                        <button
+                                            onClick={() => handleOpenViewModal(item)}
+                                            className="text-stone-600 hover:text-stone-900 transition p-1 hover:bg-stone-100 rounded"
+                                            title="Ko'rish"
+                                        >
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                />
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                />
+                                            </svg>
+                                        </button>
+                                        <button
+                                            onClick={() => handleOpenAddEditModal(item)}
+                                            className="text-stone-600 hover:text-stone-900 transition p-1 hover:bg-stone-100 rounded"
+                                            title="Tahrirlash"
+                                        >
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                {expandedRows[item.id] && (
+                                    <tr className="bg-stone-50 border-b border-stone-200">
+                                        <td colSpan="8" className="px-6 py-4">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <div>
+                                                    <h4 className="font-semibold text-stone-900 mb-4">Asosiy Ma'lumotlar</h4>
+                                                    <div className="space-y-3 text-sm">
+                                                        <div className="flex justify-between border-b border-stone-200 pb-2">
+                                                            <span className="text-stone-600">ID:</span>
+                                                            <span className="font-medium text-stone-900">{item.id}</span>
+                                                        </div>
+                                                        <div className="flex justify-between border-b border-stone-200 pb-2">
+                                                            <span className="text-stone-600">Kategoriya:</span>
+                                                            <span className="font-medium text-stone-900">{item.name}</span>
+                                                        </div>
+                                                        <div className="flex justify-between border-b border-stone-200 pb-2">
+                                                            <span className="text-stone-600">Spotlight:</span>
+                                                            <span className="font-medium text-stone-900">{item.spotlightName}</span>
+                                                        </div>
+                                                        <div className="flex justify-between">
+                                                            <span className="text-stone-600">Tartib:</span>
+                                                            <span className="font-medium text-stone-900">{item.order}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <h4 className="font-semibold text-stone-900 mb-4">Qo'shimcha Ma'lumotlar</h4>
+                                                    <div className="space-y-3 text-sm">
+                                                        <div className="flex justify-between border-b border-stone-200 pb-2">
+                                                            <span className="text-stone-600">Mahsulotlar:</span>
+                                                            <span className="font-medium text-stone-900">{item.productCount}</span>
+                                                        </div>
+                                                        <div className="flex justify-between border-b border-stone-200 pb-2">
+                                                            <span className="text-stone-600">Holati:</span>
+                                                            <span
+                                                                className={`font-medium px-2 py-1 rounded text-xs ${
+                                                                    item.active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                                                                }`}
+                                                            >
+                                  {item.active ? "Faol" : "Nofaol"}
+                                </span>
+                                                        </div>
+                                                        <div className="flex justify-between">
+                                                            <span className="text-stone-600">Yaratilgan:</span>
+                                                            <span className="font-medium text-stone-900">{item.createdAt}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
+                            </React.Fragment>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
             {/* Add/Edit Modal */}
             <Modal open={openAddEditModal} onClose={handleCloseAddEditModal}>
-                <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-xl shadow-2xl w-full max-w-lg">
-                    <Typography variant="h6" className="mb-4">
-                        {categoryForm.id ? 'Kategoriyani tahrirlash' : 'Kategoriya qo\'shish'}
-                    </Typography>
-                    <TextField
-                        fullWidth
-                        label="Kategoriya nomi"
-                        value={categoryForm.name}
-                        onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })}
-                        className="mb-4"
-                    />
-                    <Box className="flex items-center mb-4">
-                        <Switch
-                            checked={categoryForm.active}
-                            onChange={(e) => setCategoryForm({ ...categoryForm, active: e.target.checked })}
-                            color="primary"
-                        />
-                        <Typography>Faol kategoriya</Typography>
-                    </Box>
-                    <Box className="flex justify-end space-x-2">
-                        <Button onClick={handleCloseAddEditModal} variant="outlined">
+                <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-2xl font-bold text-stone-900">
+                            {formData.id ? "Kategoriyani Tahrirlash" : "Kategoriya Qo'shish"}
+                        </h2>
+                        <button onClick={handleCloseAddEditModal} className="text-stone-500 hover:text-stone-700">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-stone-700 mb-2">Kategoriya Nomi</label>
+                            <TextField
+                                fullWidth
+                                value={formData.name}
+                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                placeholder="Kategoriya nomini kiriting"
+                                size="small"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-stone-700 mb-2">Spotlight Nomi</label>
+                            <TextField
+                                fullWidth
+                                value={formData.spotlightName}
+                                onChange={(e) => setFormData({ ...formData, spotlightName: e.target.value })}
+                                placeholder="Spotlight nomini kiriting"
+                                size="small"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-stone-700 mb-2">Tartib Raqami</label>
+                            <TextField
+                                fullWidth
+                                type="number"
+                                value={formData.order}
+                                onChange={(e) => setFormData({ ...formData, order: e.target.value })}
+                                placeholder="Tartib raqamini kiriting"
+                                size="small"
+                            />
+                        </div>
+
+                        <div className="flex items-center gap-3 bg-stone-50 p-4 rounded-lg">
+                            <Switch
+                                checked={formData.active}
+                                onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
+                                color="primary"
+                            />
+                            <label className="text-sm font-medium text-stone-700">Faol kategoriya</label>
+                        </div>
+                    </div>
+
+                    <div className="flex justify-end gap-3 mt-8">
+                        <button
+                            onClick={handleCloseAddEditModal}
+                            className="px-6 py-2 border border-stone-300 text-stone-700 rounded-lg hover:bg-stone-50 transition font-medium"
+                        >
                             Bekor qilish
-                        </Button>
-                        <Button onClick={handleSaveCategory} variant="contained" color="primary">
+                        </button>
+                        <button
+                            onClick={handleSaveCategory}
+                            className="px-6 py-2 bg-stone-800 text-white rounded-lg hover:bg-stone-900 transition font-medium"
+                        >
                             Saqlash
-                        </Button>
-                    </Box>
+                        </button>
+                    </div>
                 </Box>
             </Modal>
 
             {/* View Modal */}
             <Modal open={openViewModal} onClose={handleCloseViewModal}>
                 <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-xl shadow-2xl w-full max-w-lg">
-                    <Typography variant="h6" className="mb-4">Kategoriya ma'lumotlari</Typography>
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-2xl font-bold text-stone-900">Kategoriya Ma'lumotlari</h2>
+                        <button onClick={handleCloseViewModal} className="text-stone-500 hover:text-stone-700">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
                     {selectedCategory && (
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
-                                <Typography className="font-semibold">ID:</Typography>
-                                <Typography>{selectedCategory.id}</Typography>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Typography className="font-semibold">Nomi:</Typography>
-                                <Typography>{selectedCategory.name}</Typography>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Typography className="font-semibold">Tartib raqami:</Typography>
-                                <Typography>{selectedCategory.order}</Typography>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Typography className="font-semibold">Holati:</Typography>
-                                <Typography>{selectedCategory.active ? 'Faol' : 'Nofaol'}</Typography>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Typography className="font-semibold">Yaratilgan vaqti:</Typography>
-                                <Typography>{new Date(selectedCategory.createdAt).toLocaleString()}</Typography>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Typography className="font-semibold">Yangilangan vaqti:</Typography>
-                                <Typography>{new Date(selectedCategory.updatedAt).toLocaleString()}</Typography>
-                            </Grid>
-                        </Grid>
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p className="text-sm text-stone-600 font-medium">ID</p>
+                                    <p className="text-lg font-semibold text-stone-900">{selectedCategory.id}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-stone-600 font-medium">Tartib</p>
+                                    <p className="text-lg font-semibold text-stone-900">{selectedCategory.order}</p>
+                                </div>
+                                <div className="col-span-2">
+                                    <p className="text-sm text-stone-600 font-medium">Kategoriya Nomi</p>
+                                    <p className="text-lg font-semibold text-stone-900">{selectedCategory.name}</p>
+                                </div>
+                                <div className="col-span-2">
+                                    <p className="text-sm text-stone-600 font-medium">Spotlight Nomi</p>
+                                    <p className="text-lg font-semibold text-stone-900">{selectedCategory.spotlightName}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-stone-600 font-medium">Mahsulotlar</p>
+                                    <p className="text-lg font-semibold text-stone-900">{selectedCategory.productCount}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-stone-600 font-medium">Holati</p>
+                                    <p
+                                        className={`text-lg font-semibold px-3 py-1 rounded inline-block ${
+                                            selectedCategory.active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                                        }`}
+                                    >
+                                        {selectedCategory.active ? "Faol" : "Nofaol"}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     )}
-                    <Box className="flex justify-end mt-4">
-                        <Button onClick={handleCloseViewModal} variant="outlined">Yopish</Button>
-                    </Box>
+
+                    <div className="flex justify-end gap-3 mt-8">
+                        <button
+                            onClick={handleCloseViewModal}
+                            className="px-6 py-2 bg-stone-800 text-white rounded-lg hover:bg-stone-900 transition font-medium"
+                        >
+                            Yopish
+                        </button>
+                    </div>
                 </Box>
             </Modal>
 
             {/* Order Modal */}
             <Modal open={openOrderModal} onClose={handleCloseOrderModal}>
-                <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-xl shadow-2xl w-full max-w-lg">
-                    <Typography variant="h6" className="mb-4">Kategoriyalar tartibini o'zgartirish</Typography>
-                    <Box className="mb-4">
+                <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-2xl font-bold text-stone-900">Kategoriyalar Tartibini O'zgartirish</h2>
+                        <button onClick={handleCloseOrderModal} className="text-stone-500 hover:text-stone-700">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div className="space-y-2 mb-6">
                         {orderList.map((cat, index) => (
-                            <Box key={cat.id} className="flex justify-between items-center p-2 border-b">
-                                <Typography>{cat.name}</Typography>
-                                <Box>
-                                    <IconButton disabled={index === 0} onClick={() => moveOrderItem(index, index - 1)}>
-                                        <i className="fas fa-arrow-up" />
-                                    </IconButton>
-                                    <IconButton disabled={index === orderList.length - 1} onClick={() => moveOrderItem(index, index + 1)}>
-                                        <i className="fas fa-arrow-down" />
-                                    </IconButton>
-                                </Box>
-                            </Box>
+                            <div
+                                key={cat.id}
+                                className="flex justify-between items-center p-3 border border-stone-200 rounded-lg hover:bg-stone-50"
+                            >
+                                <div>
+                                    <p className="font-medium text-stone-900">{cat.name}</p>
+                                    <p className="text-sm text-stone-600">{cat.spotlightName}</p>
+                                </div>
+                                <div className="flex gap-2">
+                                    <button
+                                        disabled={index === 0}
+                                        onClick={() => moveOrderItem(index, index - 1)}
+                                        className="p-1 text-stone-600 hover:text-stone-900 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                                        </svg>
+                                    </button>
+                                    <button
+                                        disabled={index === orderList.length - 1}
+                                        onClick={() => moveOrderItem(index, index + 1)}
+                                        className="p-1 text-stone-600 hover:text-stone-900 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                                            />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
                         ))}
-                    </Box>
-                    <Box className="flex justify-end space-x-2">
-                        <Button onClick={handleCloseOrderModal} variant="outlined">Bekor qilish</Button>
-                        <Button onClick={handleSaveOrder} variant="contained" color="primary">Saqlash</Button>
-                    </Box>
+                    </div>
+
+                    <div className="flex justify-end gap-3">
+                        <button
+                            onClick={handleCloseOrderModal}
+                            className="px-6 py-2 border border-stone-300 text-stone-700 rounded-lg hover:bg-stone-50 transition font-medium"
+                        >
+                            Bekor qilish
+                        </button>
+                        <button
+                            onClick={handleSaveOrder}
+                            className="px-6 py-2 bg-stone-800 text-white rounded-lg hover:bg-stone-900 transition font-medium"
+                        >
+                            Saqlash
+                        </button>
+                    </div>
                 </Box>
             </Modal>
-        </Container>
-    );
-};
+        </div>
+    )
+}
 
-export default Category;
+export default Category
