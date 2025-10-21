@@ -364,26 +364,59 @@ const Warehouse = () => {
                 <div className="p-6 border-b border-stone-200 relative">
                     <div className="flex items-center justify-center">
                         {/* Chapdagi tugmalar */}
-                        <div className="flex gap-3 absolute left-6 top-6">
-                            <button
+                        <div className="flex gap-4 absolute left-6 top-6">
+                            <Button
                                 onClick={handleOpenAddModal}
+                                variant="outlined"
+                                color="primary"
+                                sx={{
+                                    px: 3,
+                                    py: 1,
+                                    borderRadius: 1,
+                                    textTransform: "none",
+                                    fontWeight: 500,
+                                }}
                                 className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                                    />
                                 </svg>
                                 Kiritish
-                            </button>
+                            </Button>
 
-                            <button
+                            <Button
                                 onClick={handleOpenAddModal}
+                                variant="outlined"
+                                color="primary"
+                                sx={{
+                                    px: 3,
+                                    py: 1,
+                                    borderRadius: 1,
+                                    textTransform: "none",
+                                    fontWeight: 500,
+                                }}
                                 className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
                             >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M12 19V5m0 0l-6 6m6-6l6 6"
+                                    />
                                 </svg>
                                 Chiqarish
-                            </button>
+                            </Button>
                         </div>
 
                         {/* Markazdagi qidiruv maydoni */}
@@ -505,7 +538,7 @@ const Warehouse = () => {
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">SKU</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Mahsulot</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Kategoriya</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Stok</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Jami stok</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Narx so'm</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Sotuvda</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Amallar</th>
