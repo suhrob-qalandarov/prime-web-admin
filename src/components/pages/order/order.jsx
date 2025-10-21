@@ -16,6 +16,17 @@ import {
 // Mock data for orders - Updated for clothing store
 const MOCK_ORDERS = [
     {
+        id: 1000,
+        customerName: "Eshmat Toshmatov",
+        customerPhone: "+998901234567",
+        status: "CANCELLED",
+        totalAmount: 250000,
+        orderDate: "2024-01-15T10:30:00",
+        items: [
+            { id: 1, name: "Qora Ko'ylak", quantity: 1, price: 200000 },
+        ],
+    },
+    {
         id: 1001,
         customerName: "Alisher Karimov",
         customerPhone: "+998901234567",
@@ -222,7 +233,7 @@ const Orders = () => {
                     <div className="bg-white rounded-lg border-l-4 border-l-amber-500 p-6 shadow-sm hover:shadow-md transition-shadow">
                         <div className="flex items-start justify-between">
                             <div>
-                                <p className="text-slate-600 text-sm font-medium mb-1">Kutilayotgan</p>
+                                <p className="text-slate-600 text-sm font-medium mb-1">Jami kutilayotgan buyurtmalar</p>
                                 <p className="text-3xl font-bold text-amber-600">{stats.pending}</p>
                             </div>
                             <div className="bg-amber-100 p-3 rounded-lg">
@@ -235,7 +246,7 @@ const Orders = () => {
                     <div className="bg-white rounded-lg border-l-4 border-l-blue-500 p-6 shadow-sm hover:shadow-md transition-shadow">
                         <div className="flex items-start justify-between">
                             <div>
-                                <p className="text-slate-600 text-sm font-medium mb-1">Tasdiqlangan</p>
+                                <p className="text-slate-600 text-sm font-medium mb-1">Jami tasdiqlangan buyurtmala</p>
                                 <p className="text-3xl font-bold text-blue-600">{stats.accepted}</p>
                             </div>
                             <div className="bg-blue-100 p-3 rounded-lg">
@@ -248,7 +259,7 @@ const Orders = () => {
                     <div className="bg-white rounded-lg border-l-4 border-l-green-500 p-6 shadow-sm hover:shadow-md transition-shadow">
                         <div className="flex items-start justify-between">
                             <div>
-                                <p className="text-slate-600 text-sm font-medium mb-1">Yetkazildi</p>
+                                <p className="text-slate-600 text-sm font-medium mb-1">Jami yetkazilgan buyurtmala</p>
                                 <p className="text-3xl font-bold text-green-600">{stats.delivered}</p>
                             </div>
                             <div className="bg-green-100 p-3 rounded-lg">
@@ -260,7 +271,7 @@ const Orders = () => {
                     <div className="bg-white rounded-lg border-l-4 border-l-red-500 p-6 shadow-sm hover:shadow-md transition-shadow">
                         <div className="flex items-start justify-between">
                             <div>
-                                <p className="text-slate-600 text-sm font-medium mb-1">Bekor qilindi</p>
+                                <p className="text-slate-600 text-sm font-medium mb-1">Jami bekor qilingan buyurtmala</p>
                                 <p className="text-3xl font-bold text-red-600">{stats.cancelled}</p>
                             </div>
                             <div className="bg-red-100 p-3 rounded-lg">
@@ -368,7 +379,7 @@ const Orders = () => {
                     <div className="bg-white rounded-lg shadow-sm overflow-hidden lg:col-span-1">
                         <div className="bg-gradient-to-r from-slate-50 to-slate-100 px-6 py-4 border-b border-slate-200">
                             <div className="flex items-center justify-between">
-                                <h3 className="font-semibold text-slate-900 text-sm">Bekor qilish</h3>
+                                <h3 className="font-semibold text-slate-900 text-sm">Bekor qilindi</h3>
                                 <span className="bg-red-100 text-red-800 text-xs font-semibold px-3 py-1 rounded-full">
                   {getOrdersByStatus("CANCELLED").length}
                 </span>
@@ -386,7 +397,18 @@ const Orders = () => {
                                 </div>
                             ) : (
                                 getOrdersByStatus("CANCELLED").map((order) => (
-                                    <CancelledOrderCard key={order.id} order={order} onDragStart={handleDragStart} />
+                                    <OrderCard
+                                        key={order.id}
+                                        order={order}
+                                        onDragStart={handleDragStart}
+                                        onExpandClick={() => setExpandedOrder(expandedOrder?.id === order.id ? null : order)}
+                                        isExpanded={expandedOrder?.id === order.id}
+                                        getStatusColor={getStatusColor}
+                                        getStatusBadgeColor={getStatusBadgeColor}
+                                        getStatusText={getStatusText}
+                                        formatPrice={formatPrice}
+                                        formatDate={formatDate}
+                                    />
                                 ))
                             )}
                         </div>
@@ -509,21 +531,6 @@ const Orders = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    )
-}
-
-const CancelledOrderCard = ({ order, onDragStart }) => {
-    return (
-        <div
-            draggable
-            onDragStart={(e) => onDragStart(e, order)}
-            className="border-l-4 border-l-red-500 bg-red-50 rounded-lg p-3 cursor-grab active:cursor-grabbing hover:shadow-md transition-all"
-        >
-            <div className="flex items-center justify-between">
-                <p className="font-bold text-slate-900 text-lg">#{order.id}</p>
-                <Close className="w-5 h-5 text-red-600" />
             </div>
         </div>
     )
