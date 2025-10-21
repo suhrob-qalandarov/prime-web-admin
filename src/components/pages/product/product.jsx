@@ -7,44 +7,7 @@ import CustomSnackbar from "../../bars/snackbar/snackbar"
 import ProductService from "../../../service/product"
 
 const Product = () => {
-    const [allProducts, setAllProducts] = useState([
-        {
-            id: 1,
-            name: "Product 1",
-            brand: null,
-            picturesKeys: ["232"],
-            categoryName: "Category 1",
-            price: 100000,
-            status: "NEW",
-            active: true,
-            discount: 0,
-            createdAt: "2025-10-04 18:07:33.000000",
-        },
-        {
-            id: 2,
-            name: "Long Product Name 2",
-            brand: "Brand 1",
-            picturesKeys: ["121", "1212"],
-            categoryName: "Category 2",
-            price: 202000,
-            status: "HOT",
-            active: false,
-            discount: 0,
-            createdAt: "2025-10-04 18:07:33.000000",
-        },
-        {
-            id: 3,
-            name: "Product 3",
-            brand: "Long Name Brand 3",
-            picturesKeys: null,
-            categoryName: "Category 3",
-            price: 330000,
-            status: "SALE",
-            active: true,
-            discount: 10,
-            createdAt: "",
-        },
-    ])
+    const [allProducts, setAllProducts] = useState([])
 
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
