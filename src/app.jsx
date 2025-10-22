@@ -20,7 +20,13 @@ const App = () => {
             try {
                 setLoading(true)
                 // Check if user has admin role, get user data
-                const isAdmin = await AuthService.checkAdminWithCredentials()
+                const delay = new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Run API call and delay concurrently
+                const isAdmin= await Promise.all([
+                    AuthService.checkAdminWithCredentials(),
+                    delay
+                ]);
                 if (isAdmin) {
                     setIsAdminVerified(true)
                     const userData = await UserService.getOrLoadData()
