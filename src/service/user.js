@@ -38,6 +38,15 @@ const UserService = {
         localStorage.setItem("prime-user", JSON.stringify(data))
         return data
     },
+
+    async logout () {
+        await axios.post(`/auth/logout`, {}, {withCredentials: true}).then(() => {
+                localStorage.removeItem("prime-user")
+                localStorage.removeItem("prime-orders")
+                localStorage.removeItem("prime-products")
+            }
+        )
+    },
 };
 
 // Bind methods to ensure correct `this` context
