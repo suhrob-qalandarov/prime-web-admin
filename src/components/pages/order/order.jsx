@@ -16,6 +16,18 @@ import {
 // Mock data for orders - Updated for clothing store
 const MOCK_ORDERS = [
     {
+        id: 1000,
+        customerName: "Alisher Karimov",
+        customerPhone: "+998901234567",
+        status: "CANCELLED",
+        totalAmount: 250000,
+        orderDate: "2024-01-15T10:30:00",
+        items: [
+            { id: 1, name: "Qora Ko'ylak", quantity: 1, price: 200000 },
+            { id: 2, name: "Oq Futbolka", quantity: 1, price: 50000 },
+        ],
+    },
+    {
         id: 1001,
         customerName: "Alisher Karimov",
         customerPhone: "+998901234567",
