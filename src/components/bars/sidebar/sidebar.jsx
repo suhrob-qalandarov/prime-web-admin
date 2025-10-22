@@ -1,4 +1,3 @@
-"use client"
 import {
     Drawer,
     Box,
@@ -14,15 +13,15 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSignOutAlt, faUser } from "@fortawesome/free-solid-svg-icons"
 import { links } from "../../../constants/page-links"
+import UserService from "../../../service/user";
 
 const MINI_WIDTH = "60px"
 const FULL_WIDTH = "var(--sidebar-width)"
 
-const Sidebar = ({ isOpen, setIsOpen }) => {
+const Sidebar = ({ isOpen, setIsOpen, user }) => {
     const currentPath = window.location.pathname
 
     const handleMenuClick = () => {
-        // Allow navigation to happen
         setTimeout(() => {
             setIsOpen(false)
         }, 100)
@@ -222,13 +221,16 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     </Avatar>
                     {isOpen && (
                         <Box sx={{ flex: 1 }}>
-                            <Typography sx={{ fontWeight: 600, fontSize: "0.9rem" }}>Admin</Typography>
-                            <Typography sx={{ fontSize: "0.75rem", color: "var(--gray-400)" }}>Super Admin</Typography>
+                            <Typography sx={{ fontWeight: 600, fontSize: "0.9rem" }}>
+                                {user?.firstName || 'Loading...'}
+                            </Typography>
+                            <Typography sx={{ fontSize: "0.75rem", color: "var(--gray-400)" }}>
+                                {user?.roles?.includes('ROLE_ADMIN') ? 'Admin' : 'Visitor'}
+                            </Typography>
                         </Box>
                     )}
                 </Box>
                 {isOpen ? (
-                    // Open state: Full button with text
                     <Button
                         sx={{
                             width: "100%",
@@ -246,13 +248,13 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                         onClick={(e) => {
                             e.stopPropagation()
                             console.log("Logout clicked")
+                            UserService.logout().then(() => window.location.href = '/')
                         }}
                     >
                         <FontAwesomeIcon icon={faSignOutAlt} style={{ fontSize: "18px" }} />
                         <span>Chiqish</span>
                     </Button>
                 ) : (
-                    // Closed state: Icon only button
                     <Button
                         sx={{
                             width: "100%",
@@ -267,6 +269,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                         onClick={(e) => {
                             e.stopPropagation()
                             console.log("Logout clicked")
+                            localStorage.removeItem('prime-user')
+                            window.location.href = '/login'
                         }}
                     >
                         <FontAwesomeIcon icon={faSignOutAlt} style={{ fontSize: "18px" }} />
