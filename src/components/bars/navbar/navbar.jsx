@@ -6,13 +6,13 @@ const Navbar = () => {
 
     const pageTitles = {
         "/": { title: "Home", subtitle: "" },
-        "/dashboard": { title: "DASHBOARD", subtitle: "Asosiy panelni kuzatish" },
-        "/categories": { title: "CATEGORIES PANEL", subtitle: "Kategoriyalarni boshqarish va kuzatish" },
-        "/products": { title: "PRODUCTS PANEL", subtitle: "Mahsulotlarni boshqarish va kuzatish" },
-        "/orders": { title: "ORDERS PANEL", subtitle: "Buyurtmalarni boshqarish va kuzatish" },
-        "/warehouse": { title: "INVENTORY PANEL", subtitle: "Omborni boshqarish va stokni kuzatish" },
-        "/users": { title: "USERS PANEL", subtitle: "Foydalanuvchilarni boshqarish va kuzatish" },
-        "/files": { title: "FILES PANEL", subtitle: "Fayllarni boshqarish va kuzatish" },
+        "/dashboard": { title: "DASHBOARD", subtitle: "Umumiy statistika va nazorat" },
+        "/categories": { title: "KATEGORIYALAR PANELI", subtitle: "Kategoriyalarni boshqarish va kuzatish" },
+        "/products": { title: "MAHSULOTLAR PANELI", subtitle: "Mahsulotlarni boshqarish va kuzatish" },
+        "/orders": { title: "BUYURTMALAR PANELI", subtitle: "Onlayn berilgan buyurtmalarni boshqarish va kuzatish" },
+        "/warehouse": { title: "OMBORXONA PANELI", subtitle: "Omborni boshqarish va stokni kuzatish" },
+        "/users": { title: "FOYDALANUVCHILAR PANELI", subtitle: "Foydalanuvchilarni boshqarish va kuzatish" },
+        "/files": { title: "RASM FAYLLAR PANELI", subtitle: "Fayllarni boshqarish va kuzatish" },
     }
 
     const currentPage = pageTitles[location.pathname] || { title: "Page", subtitle: "" }
