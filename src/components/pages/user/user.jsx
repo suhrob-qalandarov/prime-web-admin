@@ -94,7 +94,7 @@ const Users = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6 md:p-8">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-8xl mx-auto">
                 {/* Search */}
                 <div className="bg-white rounded-lg p-4 mb-8 shadow-sm flex flex-col sm:flex-row gap-4 items-center">
                     <div className="flex-1 relative w-full">
