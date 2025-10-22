@@ -16,23 +16,22 @@ const Home = () => {
                 const delay = new Promise(resolve => setTimeout(resolve, 3000));
 
                 // Run API call and delay concurrently
-                const [userData] = await Promise.all([
-                    AuthService.checkAdminWithCredentials(), // Call /home/admin endpoint
+                const [isAdmin] = await Promise.all([
+                    AuthService.checkAdminWithCredentials(),
                     delay
                 ]);
 
-                if (!userData || !userData.isAdmin || !userData.roles.includes('ROLE_ADMIN')) {
-                    // No data, not admin, or no ADMIN role: Redirect to main site
-                    window.location.href = urls.mainSiteUrl; // Replace with your main site URL
+                // No access, redirect to main site
+                if (!isAdmin) {
+                    window.location.href = urls.mainSiteUrl;
                     return;
                 }
 
-                // Admin confirmed: Allow dashboard access
                 setIsAdmin(true);
             } catch (error) {
                 console.error('Admin verification failed:', error);
                 // On error, redirect to main site
-                window.location.href = urls.mainSiteUrl; // Replace with your main site URL
+                window.location.href = urls.mainSiteUrl;
             } finally {
                 setIsLoading(false);
             }
@@ -42,11 +41,10 @@ const Home = () => {
     }, []);
 
     if (isLoading) {
-        return <Loading message="Verifying access..." />; // Use your loading animation
+        return <Loading message="Verifying access..." />;
     }
 
     if (!isAdmin) {
-        // Fallback: Shouldn't render due to redirect, but included for safety
         return null;
     }
 
