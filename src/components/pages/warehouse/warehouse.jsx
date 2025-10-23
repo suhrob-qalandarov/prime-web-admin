@@ -1,7 +1,9 @@
-"use client"
-
 import React, { useState } from "react"
-import { Box, Modal, Button } from "@mui/material"
+import { Box, Modal } from "@mui/material"
+import {
+    TrendingUp,
+    Close,
+} from "@mui/icons-material"
 
 const mockClothingProducts = [
     {
@@ -283,95 +285,134 @@ const Warehouse = () => {
     const selectedProduct = formData.product ? mockClothingProducts.find((p) => p.id == formData.product) : null
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-stone-50 via-stone-100 to-stone-50 p-6 md:p-8">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600 hover:shadow-lg transition">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-stone-600 text-sm font-medium">Jami Mahsulotlar</p>
-                            <p className="text-3xl font-bold text-stone-900 mt-2">{totalProducts}</p>
-                        </div>
-                        <div className="bg-blue-100 p-3 rounded-lg">
-                            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-600 hover:shadow-lg transition">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-stone-600 text-sm font-medium">Jami Stok</p>
-                            <p className="text-3xl font-bold text-stone-900 mt-2">{totalStock}</p>
-                        </div>
-                        <div className="bg-purple-100 p-3 rounded-lg">
-                            <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10"
-                                />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-600 hover:shadow-lg transition">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-stone-600 text-sm font-medium">Sof Mahsulotlar</p>
-                            <p className="text-3xl font-bold text-stone-900 mt-2">{hotItems}</p>
-                        </div>
-                        <div className="bg-red-100 p-3 rounded-lg">
-                            <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-600 hover:shadow-lg transition">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-stone-600 text-sm font-medium">Chegirma Mahsulotlar</p>
-                            <p className="text-3xl font-bold text-stone-900 mt-2">{saleItems}</p>
-                        </div>
-                        <div className="bg-green-100 p-3 rounded-lg">
-                            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                                />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        /*<div className="min-h-screen bg-gradient-to-br from-stone-50 via-stone-100 to-stone-50 p-6 md:p-8">*/
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
 
             {/* Main Content */}
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                {/* Search Bar */}
-                <div className="p-6 border-b border-stone-200 relative">
-                    <div className="flex items-center justify-center">
-                        {/* Chapdagi tugmalar */}
-                        <div className="flex gap-4 absolute left-6 top-6">
-                            <Button
-                                onClick={handleOpenAddModal}
-                                variant="outlined"
-                                color="primary"
-                                sx={{
-                                    px: 3,
-                                    py: 1,
-                                    borderRadius: 1,
-                                    textTransform: "none",
-                                    fontWeight: 500,
-                                }}
-                                className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
+            <div className="max-w-8xl mx-auto">
+                {/* Search and Actions */}
+                <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
+
+                    <div className="flex items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-200 flex-wrap">
+                        {/* Total Stock */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-blue-100 p-2 rounded-lg">
+                                <svg className="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10"
+                                    />
+                                </svg>
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">Jami stock</p>
+                                <p className="text-lg font-bold text-blue-600">1</p>
+                            </div>
+                        </div>
+
+                        {/* Total Products */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-blue-100 p-2 rounded-lg">
+                                <svg className="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10"
+                                    />
+                                </svg>
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">Jami</p>
+                                <p className="text-lg font-bold text-blue-600">1</p>
+                            </div>
+                        </div>
+
+                        {/* Active Products */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-green-100 p-2 rounded-lg">
+                                <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">Faol</p>
+                                <p className="text-lg font-bold text-green-600">2</p>
+                            </div>
+                        </div>
+
+                        {/* Inactive Products */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-red-100 p-2 rounded-lg">
+                                <Close className="w-5 h-5 text-red-600" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">Nofaol</p>
+                                <p className="text-lg font-bold text-red-600">3</p>
+                            </div>
+                        </div>
+
+                        {/* Sale Status Products */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-yellow-100 p-2 rounded-lg">
+                                <svg className="w-7 h-7 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 012 12V7a4 4 0 014-4z"
+                                    />
+                                </svg>
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">Sale</p>
+                                <p className="text-lg font-bold text-yellow-600">7</p>
+                            </div>
+                        </div>
+
+                        {/* New Status Products */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-green-100 p-2 rounded-lg">
+                                <TrendingUp className="w-5 h-5 text-green-600" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">New</p>
+                                <p className="text-lg font-bold text-green-600">5</p>
+                            </div>
+                        </div>
+
+                        {/* Hot Status Products */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-orange-100 p-2 rounded-lg">
+                                <svg className="w-7 h-7 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M17.657 18.657L13.414 22.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"
+                                    />
+                                </svg>
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">Hot</p>
+                                <p className="text-lg font-bold text-orange-600">6</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center justify-center relative">
+                        {/* Left buttons */}
+                        <div className="flex gap-4 absolute left-0 top-0">
+                            {/* Income button */}
+                            <button
+                                className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path
@@ -382,20 +423,11 @@ const Warehouse = () => {
                                     />
                                 </svg>
                                 Kiritish
-                            </Button>
+                            </button>
 
-                            <Button
-                                onClick={handleOpenAddModal}
-                                variant="outlined"
-                                color="primary"
-                                sx={{
-                                    px: 3,
-                                    py: 1,
-                                    borderRadius: 1,
-                                    textTransform: "none",
-                                    fontWeight: 500,
-                                }}
-                                className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
+                            {/* Outcome button */}
+                            <button
+                                className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300"
                             >
                                 <svg
                                     className="w-4 h-4"
@@ -411,7 +443,7 @@ const Warehouse = () => {
                                     />
                                 </svg>
                                 Chiqarish
-                            </Button>
+                            </button>
                         </div>
 
                         {/* Markazdagi qidiruv maydoni */}
@@ -458,11 +490,10 @@ const Warehouse = () => {
                         </div>
 
                         {/* O‘ngdagi tugmalar */}
-                        <div className="absolute right-6 top-6 flex items-center gap-3">
+                        <div className="flex gap-4 absolute right-0 top-0">
                             {/* Export tugmasi */}
                             <button
-                                onClick={handleExport}
-                                className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
+                                className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300"
                             >
                                 <svg
                                     className="w-4 h-4"
@@ -525,9 +556,9 @@ const Warehouse = () => {
                 </div>
 
                 {/* Table */}
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto bg-white">
                     <table className="w-full">
-                        <thead className="bg-stone-100 border-b border-stone-200">
+                        <thead className="bg-white border-b border-stone-200">
                         <tr>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700"></th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">ID</th>
@@ -548,7 +579,7 @@ const Warehouse = () => {
 
                             return (
                                 <React.Fragment key={item.id}>
-                                    <tr className="border-b border-stone-200 hover:bg-stone-50 transition">
+                                    <tr className=" border-b border-stone-200 hover:bg-stone-50 transition">
                                         <td className="px-6 py-4">
                                             <button
                                                 onClick={() => toggleRowExpand(item.id)}
