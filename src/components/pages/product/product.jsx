@@ -15,6 +15,7 @@ import {
     ExpandMore,
     Close,
 } from "@mui/icons-material"
+import { Chip } from "@mui/material"
 
 const Product = () => {
     const [products, setProducts] = useState([])
@@ -231,7 +232,8 @@ const Product = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-stone-50 via-stone-100 to-stone-50 p-6 md:p-8">
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+            {/* Main Content */}
             <div className="max-w-8xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
                 {/* Search and Actions */}
                 <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
@@ -340,7 +342,7 @@ const Product = () => {
                                 </svg>
                                 Qo'shish
                             </button>
-                            <button className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300">
+                            <button onClick={handleExport} className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path
                                         strokeLinecap="round"
@@ -431,7 +433,8 @@ const Product = () => {
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Brend</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Kategoriya</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Narx so'm</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Holati</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Sotuvda</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Ko'rinish</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Amallar</th>
                         </tr>
                         </thead>
@@ -474,28 +477,36 @@ const Product = () => {
                                                     <span className="line-through text-stone-400">{prod.price.toLocaleString()}</span>
                                                     <span className="font-medium text-stone-600">{displayPrice.toLocaleString()}</span>
                                                     <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
-                              -{prod.discount}%
-                            </span>
+                                                        -{prod.discount}%
+                                                    </span>
                                                 </div>
                                             ) : (
                                                 <span className="text-stone-700">{displayPrice.toLocaleString()}</span>
                                             )}
                                         </td>
                                         <td className="px-6 py-4">
-                        <span
-                            className="px-3 py-1 rounded-full text-xs font-semibold border"
-                            style={{
-                                backgroundColor: statusColor.bg,
-                                color: statusColor.text,
-                                borderColor: statusColor.border,
-                            }}
-                        >
-                          {getStatusLabel(prod.status)}
-                        </span>
+                                            <span
+                                                className="px-3 py-1 rounded-full text-xs font-semibold border"
+                                                style={{
+                                                    backgroundColor: statusColor.bg,
+                                                    color: statusColor.text,
+                                                    borderColor: statusColor.border,
+                                                }}
+                                            >
+                                                {getStatusLabel(prod.status)}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <Chip
+                                                label={prod.active ? "Faol" : "Nofaol"}
+                                                color={prod.active ? "success" : "error"}
+                                                size="small"
+                                                variant="outlined"
+                                            />
                                         </td>
                                         <td className="px-6 py-4 flex gap-2">
                                             <button
-                                                onClick={() => handleOpenViewModal(prod)}
+                                                onClick={() => handleOpenDetailPanel(prod)}
                                                 className="text-stone-600 hover:text-stone-900 transition p-1 hover:bg-stone-100 rounded"
                                                 title="Ko'rish"
                                             >
