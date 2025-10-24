@@ -17,8 +17,14 @@ import {
 } from "@mui/icons-material"
 
 const Product = () => {
-    const [allProducts, setAllProducts] = useState([])
-
+    const [products, setProducts] = useState([])
+    const [totalCount, setTotalCount] = useState(0)
+    const [activeCount, setActiveCount] = useState(0)
+    const [inactiveCount, setInactiveCount] = useState(0)
+    const [newCount, setNewCount] = useState(0)
+    const [hotCount, setHotCount] = useState(0)
+    const [saleCount, setSaleCount] = useState(0)
+    const [responseDate, setResponseDate] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
     const [openAddModal, setOpenAddModal] = useState(false)
@@ -36,14 +42,21 @@ const Product = () => {
     })
 
     useEffect(() => {
-        loadProducts()
+        loadProductDashboardData()
     }, [])
 
-    const loadProducts = async () => {
+    const loadProductDashboardData = async () => {
         try {
             setIsLoading(true)
             const data = await ProductService.getOrLoadData()
-            setAllProducts(data)
+            setProducts(data.productResList)
+            setTotalCount(data.totalCount)
+            setActiveCount(data.activeCount)
+            setInactiveCount(data.inactiveCount)
+            setNewCount(data.newCount)
+            setHotCount(data.hotCount)
+            setSaleCount(data.saleCount)
+            setResponseDate(data.responseDate)
             showSnackbar("Ma'lumotlar muvaffaqiyatli yuklandi", "success")
         } catch (err) {
             setError("Mahsulotlarni yuklashda xatolik yuz berdi")
@@ -54,19 +67,12 @@ const Product = () => {
         }
     }
 
-    const filteredProducts = allProducts.filter(
+    const filteredProducts = products.filter(
         (product) =>
             product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             (product.brand && product.brand.toLowerCase().includes(searchTerm.toLowerCase())) ||
             product.categoryName.toLowerCase().includes(searchTerm.toLowerCase()),
     )
-
-    const totalProducts = allProducts.length
-    const activeProducts = allProducts.filter((p) => p.active).length
-    const inactiveProducts = allProducts.filter((p) => !p.active).length
-    const saleProducts = allProducts.filter((p) => p.status === "SALE").length
-    const newProducts = 12
-    const hotProducts = 8
 
     const handleSearch = () => {
         // Search is handled by filter above
@@ -123,7 +129,7 @@ const Product = () => {
     }
 
     const handleProductUpdated = () => {
-        loadProducts()
+        loadProductDashboardData()
         handleCloseEditMenuModal()
     }
 
@@ -143,7 +149,7 @@ const Product = () => {
     }
 
     const handleProductSaved = (message, type) => {
-        loadProducts()
+        loadProductDashboardData()
         handleCloseAddEditModal()
         if (message && type) {
             showSnackbar(message, type)
@@ -244,7 +250,7 @@ const Product = () => {
                             </div>
                             <div>
                                 <p className="text-xs text-stone-600 font-medium">Jami</p>
-                                <p className="text-lg font-bold text-blue-600">{totalProducts}</p>
+                                <p className="text-lg font-bold text-blue-600">{totalCount}</p>
                             </div>
                         </div>
 
@@ -262,7 +268,7 @@ const Product = () => {
                             </div>
                             <div>
                                 <p className="text-xs text-stone-600 font-medium">Faol</p>
-                                <p className="text-lg font-bold text-green-600">{activeProducts}</p>
+                                <p className="text-lg font-bold text-green-600">{activeCount}</p>
                             </div>
                         </div>
 
@@ -273,7 +279,7 @@ const Product = () => {
                             </div>
                             <div>
                                 <p className="text-xs text-stone-600 font-medium">Nofaol</p>
-                                <p className="text-lg font-bold text-red-600">{inactiveProducts}</p>
+                                <p className="text-lg font-bold text-red-600">{inactiveCount}</p>
                             </div>
                         </div>
 
@@ -291,7 +297,7 @@ const Product = () => {
                             </div>
                             <div>
                                 <p className="text-xs text-stone-600 font-medium">Sale</p>
-                                <p className="text-lg font-bold text-yellow-600">{saleProducts}</p>
+                                <p className="text-lg font-bold text-yellow-600">{saleCount}</p>
                             </div>
                         </div>
 
@@ -302,7 +308,7 @@ const Product = () => {
                             </div>
                             <div>
                                 <p className="text-xs text-stone-600 font-medium">New</p>
-                                <p className="text-lg font-bold text-green-600">{newProducts}</p>
+                                <p className="text-lg font-bold text-green-600">{newCount}</p>
                             </div>
                         </div>
 
@@ -320,7 +326,7 @@ const Product = () => {
                             </div>
                             <div>
                                 <p className="text-xs text-stone-600 font-medium">Hot</p>
-                                <p className="text-lg font-bold text-orange-600">{hotProducts}</p>
+                                <p className="text-lg font-bold text-orange-600">{hotCount}</p>
                             </div>
                         </div>
                     </div>
