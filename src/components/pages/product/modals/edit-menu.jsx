@@ -64,22 +64,14 @@ const ProductEditMenuModal = ({ open, onClose, product, onProductUpdated }) => {
                 </DialogContent>
 
                 <DialogActions sx={{ flexDirection: "column", alignItems: "stretch", gap: 2, p: 2 }}>
-                    <Button variant="contained" color="primary" fullWidth onClick={handleOpenEdit}>
-                        Tahrirlash
-                    </Button>
-
                     <Stack direction="row" spacing={2} justifyContent="space-between">
-                        <Button variant="outlined" color="secondary" fullWidth onClick={handleOpenStatusEdit}>
-                            Status & Discount
+                        <Button variant="outlined" color="primary" fullWidth onClick={handleOpenEdit}>
+                            Tahrirlash
                         </Button>
                         <Button variant="outlined" color="info" fullWidth onClick={handleOpenPicturesEdit}>
-                            Rasmlarni o'zgartirish
+                            Rasmlarni tahrirlash
                         </Button>
                     </Stack>
-
-                    <Button variant="outlined" color="success" fullWidth onClick={handleOpenAddSize}>
-                        O'lcham qo'shish
-                    </Button>
                 </DialogActions>
             </Dialog>
 
