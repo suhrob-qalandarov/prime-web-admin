@@ -6,7 +6,7 @@ const UserService = {
     async loadData() {
         try {
             const response = await axios.get(
-                "/auth/me",
+                "/v2/auth/me",
                 {
                     withCredentials: true,
                     headers: {
@@ -40,7 +40,7 @@ const UserService = {
     },
 
     async logout () {
-        await axios.post(`/auth/logout`, {}, {withCredentials: true}).then(() => {
+        await axios.post(`/v2/auth/logout`, {}, {withCredentials: true}).then(() => {
                 localStorage.removeItem("prime-user")
                 localStorage.removeItem("prime-orders")
                 localStorage.removeItem("prime-products")

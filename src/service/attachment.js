@@ -1,10 +1,11 @@
 import axios from'./api'
+import urls from "../constants/urls";
 
 const AttachmentService = {
 
     async loadPicture(key) {
         try {
-            return await axios.get(`/attachment/${key}`);
+            return await axios.get(`/v1/attachment/${key}`);
         } catch (error) {
             console.error("Error get file:", error);
             throw error;
@@ -13,7 +14,7 @@ const AttachmentService = {
 
     // Get image URL for direct display
     getImageUrl(key) {
-        return `http://localhost/api/v1/attachment/${key}`
+        return `${urls.apiBaseUrl}/v1/attachment/${key}`
     },
 
     // Upload multiple files
@@ -25,7 +26,7 @@ const AttachmentService = {
             });
 
             const response = await axios.post(
-                "/admin/attachment/multiupload",
+                "/v1/admin/attachment/multiupload",
                 formData,
                 {
                     withCredentials: true,

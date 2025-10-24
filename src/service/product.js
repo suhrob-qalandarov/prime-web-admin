@@ -6,7 +6,7 @@ const ProductService = {
     async loadData() {
         try {
             const response = await axios.get(
-                "/admin/product",
+                "/v2/admin/product",
                 {
                     withCredentials: true,
                     headers: {
@@ -47,7 +47,7 @@ const ProductService = {
     async persistData(productData) {
         try {
             const response = await axios.post(
-                "/admin/product", productData,
+                "/v2/admin/product", productData,
                 {
                     withCredentials: true,
                     headers: {
