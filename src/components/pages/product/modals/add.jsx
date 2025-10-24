@@ -17,7 +17,6 @@ import {
 import { Delete as DeleteIcon } from "@mui/icons-material"
 import ProductService from "../../../../service/product"
 import AttachmentService from "../../../../service/attachment"
-import { sizes } from "../../../../constants/product-sizes"
 
 const AddModal = ({ open, onClose, product, onProductSaved }) => {
     const [productForm, setProductForm] = useState({
@@ -31,7 +30,6 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
         attachments: [],
     })
 
-    const [newSize, setNewSize] = useState({ size: "", amount: "" })
     const [newCategory, setNewCategory] = useState(null)
     const [selectedFiles, setSelectedFiles] = useState([])
     const [loading, setLoading] = useState(false)
@@ -40,7 +38,6 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
         name: "",
         price: "",
         categoryId: "",
-        sizes: "",
         attachments: "",
     })
 
@@ -53,8 +50,6 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                 description: product.description || "",
                 price: product.price || "",
                 categoryId: product.categoryId || "",
-                status: product.status || "NEW",
-                sizes: product.sizes || [],
                 attachments: product.attachments || [],
             })
         } else {
@@ -65,8 +60,6 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                 description: "",
                 price: "",
                 categoryId: "",
-                status: "NEW",
-                sizes: [],
                 attachments: [],
             })
         }
@@ -74,7 +67,6 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
             name: "",
             price: "",
             categoryId: "",
-            sizes: "",
             attachments: "",
         })
     }, [product, open])
@@ -100,26 +92,6 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
         }))
     }
 
-    const handleAddSize = () => {
-        if (newSize.size && newSize.amount) {
-            const exists = productForm.sizes.some((s) => s.size === newSize.size)
-            if (exists) return
-            setProductForm((prev) => ({
-                ...prev,
-                sizes: [...prev.sizes, { ...newSize }],
-            }))
-            setNewSize({ size: "", amount: "" })
-            setErrors((prev) => ({ ...prev, sizes: "" }))
-        }
-    }
-
-    const handleRemoveSize = (index) => {
-        setProductForm((prev) => ({
-            ...prev,
-            sizes: prev.sizes.filter((_, i) => i !== index),
-        }))
-    }
-
     const validateForm = () => {
         const newErrors = {
             name: "",
@@ -127,7 +99,6 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
             description: "",
             price: "",
             categoryId: "",
-            sizes: "",
             attachments: "",
         }
 
@@ -155,11 +126,6 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
 
         if (!productForm.categoryId) {
             newErrors.categoryId = "Kategoriyani tanlang!"
-            isValid = false
-        }
-
-        if (productForm.sizes.length === 0) {
-            newErrors.sizes = "Kamida bitta o'lcham qo'shing!"
             isValid = false
         }
 
@@ -223,8 +189,6 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
             description: "",
             price: "",
             categoryId: "",
-            status: "NEW",
-            sizes: [],
             attachments: [],
         })
         setErrors({
@@ -233,12 +197,9 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
             description: "Mahsulot tavsifini kiriting!",
             price: "Mahsulot narxini kiriting!",
             categoryId: "Kategoriyani tanlang!",
-            sizes: "Kamida bitta o'lcham qo'shing!",
             attachments: "Kamida bitta rasm qo'shing!",
         })
     }
-
-    const availableSizes = sizes.filter((s) => !productForm.sizes.some((sel) => sel.size === s.value))
 
     const availableCategories = [
         { id: 1, name: "Ko'ylaklar" },
@@ -426,9 +387,50 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                 )}
                             </Box>
                         </Box>
+                    </Box>
 
-                        {/* ==== O'NG: O'LCHAMLAR ==== */}
-                        <Box
+                    {/* === ACTIONS === */}
+                    <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 3 }}>
+                        <Button
+                            onClick={onClose}
+                            variant="outlined"
+                            color="warning"
+                            sx={{
+                                px: 3,
+                                py: 1,
+                                borderRadius: 3,
+                                textTransform: "none",
+                                fontWeight: 500,
+                            }}
+                        >
+                            Bekor qilish
+                        </Button>
+                        <Button
+                            onClick={handleSaveProduct}
+                            variant="outlined"
+                            color="success"
+                            disabled={loading}
+                            sx={{
+                                px: 3,
+                                py: 1,
+                                borderRadius: 3,
+                                textTransform: "none",
+                                fontWeight: 500,
+                            }}
+                        >
+                            {loading ? "Saqlanmoqda..." : "Saqlash"}
+                        </Button>
+                    </Box>
+                </Grid>
+            </Box>
+        </Modal>
+    )
+}
+
+export default AddModal
+
+{/* ==== O'NG: O'LCHAMLAR ==== */}
+{/*<Box
                             className="flex-1 flex flex-col border-l border-gray-300 pl-4"
                             sx={{
                                 overflowY: "auto",
@@ -510,45 +512,4 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
                                     </Typography>
                                 )}
                             </Box>
-
-                            {/* === ACTIONS === */}
-                            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 3 }}>
-                                <Button
-                                    onClick={onClose}
-                                    variant="outlined"
-                                    color="warning"
-                                    sx={{
-                                        px: 3,
-                                        py: 1,
-                                        borderRadius: 3,
-                                        textTransform: "none",
-                                        fontWeight: 500,
-                                    }}
-                                >
-                                    Bekor qilish
-                                </Button>
-                                <Button
-                                    onClick={handleSaveProduct}
-                                    variant="outlined"
-                                    color="success"
-                                    disabled={loading}
-                                    sx={{
-                                        px: 3,
-                                        py: 1,
-                                        borderRadius: 3,
-                                        textTransform: "none",
-                                        fontWeight: 500,
-                                    }}
-                                >
-                                    {loading ? "Saqlanmoqda..." : "Saqlash"}
-                                </Button>
-                            </Box>
-                        </Box>
-                    </Box>
-                </Grid>
-            </Box>
-        </Modal>
-    )
-}
-
-export default AddModal
+                        </Box>*/}
