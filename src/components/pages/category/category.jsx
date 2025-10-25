@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import { TrendingUp, Close } from "@mui/icons-material"
-import { Box, Modal, Switch, TextField } from "@mui/material"
+import {Box, Chip, Modal, Switch, TextField} from "@mui/material"
 
 // Mock data with the specified response structure
 const mockCategories = [
@@ -194,9 +194,9 @@ const Category = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-stone-50 via-stone-100 to-stone-50 p-6 md:p-8">
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
             {/* Main Content */}
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="max-w-8xl mx-auto">
                 {/* Search and Actions */}
                 <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
                     <div className="flex items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-200 flex-wrap">
@@ -224,7 +224,7 @@ const Category = () => {
                                 <TrendingUp className="w-5 h-5 text-blue-600" />
                             </div>
                             <div>
-                                <p className="text-xs text-stone-600 font-medium">Jami</p>
+                                <p className="text-xs text-stone-600 font-medium">Kategoriyalar</p>
                                 <p className="text-lg font-bold text-blue-600">{totalCategories}</p>
                             </div>
                         </div>
@@ -350,7 +350,7 @@ const Category = () => {
                 </div>
 
                 {/* Table */}
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto bg-white">
                     <table className="w-full">
                         <thead className="bg-stone-100 border-b border-stone-200">
                         <tr>
@@ -392,11 +392,11 @@ const Category = () => {
                                     <td className="px-6 py-4 text-sm font-medium text-stone-900">{item.order}</td>
                                     <td className="px-6 py-4 text-sm font-medium text-stone-900">{item.productCount}</td>
                                     <td className="px-6 py-4">
-                                        <Switch
-                                            checked={item.active}
-                                            onChange={() => handleToggleCategory(item.id)}
-                                            color="primary"
+                                        <Chip
+                                            label={item.active ? "Faol" : "Nofaol"}
+                                            color={item.active ? "success" : "error"}
                                             size="small"
+                                            variant="outlined"
                                         />
                                     </td>
                                     <td className="px-6 py-4 flex gap-2">
