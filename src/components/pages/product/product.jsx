@@ -234,7 +234,7 @@ const Product = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
             {/* Main Content */}
-            <div className="max-w-8xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="max-w-8xl mx-auto">
                 {/* Search and Actions */}
                 <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
                     <div className="flex items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-200 flex-wrap">
@@ -423,7 +423,7 @@ const Product = () => {
                     </div>
                 </div>
 
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto bg-white">
                     <table className="w-full">
                         <thead className="bg-stone-100 border-b border-stone-200">
                         <tr>
