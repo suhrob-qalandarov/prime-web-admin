@@ -367,7 +367,7 @@ const Orders = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                     {/* Cancelled Column - Narrower */}
                     <div className="bg-white rounded-lg shadow-sm overflow-hidden lg:col-span-1">
-                        <div className="bg-gradient-to-r from-slate-50 to-slate-100 px-6 py-4 border-b border-slate-200">
+                        <div className="bg-stone-100-to-r from-slate-50 to-slate-100 px-6 py-4 border-b border-slate-200">
                             <div className="flex items-center justify-between">
                                 <h3 className="font-semibold text-slate-900 text-sm">Bekor qilindi</h3>
                                 <span className="bg-red-100 text-red-800 text-xs font-semibold px-3 py-1 rounded-full">
@@ -406,7 +406,7 @@ const Orders = () => {
 
                     {/* Pending Column */}
                     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                        <div className="bg-gradient-to-r from-slate-50 to-slate-100 px-6 py-4 border-b border-slate-200">
+                        <div className="bg-stone-100-to-r from-slate-50 to-slate-100 px-6 py-4 border-b border-slate-200">
                             <div className="flex items-center justify-between">
                                 <h3 className="font-semibold text-slate-900">Kutilayotgan</h3>
                                 <span className="bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1 rounded-full">
@@ -445,7 +445,7 @@ const Orders = () => {
 
                     {/* Accepted Column */}
                     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                        <div className="bg-gradient-to-r from-slate-50 to-slate-100 px-6 py-4 border-b border-slate-200">
+                        <div className="bg-stone-100-to-r from-slate-50 to-slate-100 px-6 py-4 border-b border-slate-200">
                             <div className="flex items-center justify-between">
                                 <h3 className="font-semibold text-slate-900">Tasdiqlangan</h3>
                                 <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">
@@ -484,7 +484,7 @@ const Orders = () => {
 
                     {/* Delivered Column */}
                     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                        <div className="bg-gradient-to-r from-slate-50 to-slate-100 px-6 py-4 border-b border-slate-200">
+                        <div className="bg-stone-100-to-r from-slate-50 to-slate-100 px-6 py-4 border-b border-slate-200">
                             <div className="flex items-center justify-between">
                                 <h3 className="font-semibold text-slate-900">Yetkazildi</h3>
                                 <span className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
