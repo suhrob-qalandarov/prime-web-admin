@@ -553,8 +553,8 @@ const Product = () => {
                                                             <div className="flex justify-between border-b border-stone-200 pb-2">
                                                                 <span className="text-stone-600">Rasmlar:</span>
                                                                 <span className="font-medium text-stone-900">
-                                    {prod.picturesKeys == null ? "---" : `${prod.picturesKeys.length} ta`}
-                                  </span>
+                                                                    {prod.picturesKeys == null ? "---" : `${prod.picturesKeys.length} ta`}
+                                                                </span>
                                                             </div>
                                                             <div className="flex justify-between border-b border-stone-200 pb-2">
                                                                 <span className="text-stone-600">Brend:</span>
@@ -574,8 +574,8 @@ const Product = () => {
                                                                         borderColor: statusColor.border,
                                                                     }}
                                                                 >
-                                    {getStatusLabel(prod.status)}
-                                  </span>
+                                                                    {getStatusLabel(prod.status)}
+                                                                </span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -599,14 +599,14 @@ const Product = () => {
                                                             <div className="flex justify-between">
                                                                 <span className="text-stone-600">Yaratilgan:</span>
                                                                 <span className="font-medium text-stone-900">
-                                    {prod.createdAt && !isNaN(new Date(prod.createdAt))
-                                        ? new Date(prod.createdAt).toLocaleString("uz-UZ", {
-                                            day: "2-digit",
-                                            month: "2-digit",
-                                            year: "numeric",
-                                        })
-                                        : "Nomaʼlum"}
-                                  </span>
+                                                                    {prod.createdAt && !isNaN(new Date(prod.createdAt))
+                                                                        ? new Date(prod.createdAt).toLocaleString("uz-UZ", {
+                                                                            day: "2-digit",
+                                                                            month: "2-digit",
+                                                                            year: "numeric",
+                                                                        })
+                                                                        : "Nomaʼlum"}
+                                                                </span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -659,8 +659,8 @@ const Product = () => {
                                     <div className="flex justify-between">
                                         <span className="text-stone-600">Rasmlar:</span>
                                         <span className="font-medium text-stone-900">
-                      {selectedProduct.picturesKeys == null ? "---" : `${selectedProduct.picturesKeys.length} ta`}
-                    </span>
+                                            {selectedProduct.picturesKeys == null ? "---" : `${selectedProduct.picturesKeys.length} ta`}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -679,8 +679,8 @@ const Product = () => {
                                     <div className="flex justify-between pt-2 border-t border-stone-200">
                                         <span className="text-stone-600">Yakuniy Narx:</span>
                                         <span className="font-bold text-stone-900">
-                      {getDiscountedPrice(selectedProduct.price, selectedProduct.discount).toLocaleString()} so'm
-                    </span>
+                                            {getDiscountedPrice(selectedProduct.price, selectedProduct.discount).toLocaleString()} so'm
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -698,8 +698,8 @@ const Product = () => {
                                                 borderColor: getStatusColor(selectedProduct.status).border,
                                             }}
                                         >
-                      {getStatusLabel(selectedProduct.status)}
-                    </span>
+                                            {getStatusLabel(selectedProduct.status)}
+                                        </span>
                                     </div>
                                     <div className="flex justify-between">
                                         <span className="text-stone-600">Faol:</span>
@@ -708,16 +708,16 @@ const Product = () => {
                                     <div className="flex justify-between">
                                         <span className="text-stone-600">Yaratilgan:</span>
                                         <span className="font-medium text-stone-900">
-                      {selectedProduct.createdAt && !isNaN(new Date(selectedProduct.createdAt))
-                          ? new Date(selectedProduct.createdAt).toLocaleString("uz-UZ", {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                          })
-                          : "Nomaʼlum"}
-                    </span>
+                                            {selectedProduct.createdAt && !isNaN(new Date(selectedProduct.createdAt))
+                                                ? new Date(selectedProduct.createdAt).toLocaleString("uz-UZ", {
+                                                    day: "2-digit",
+                                                    month: "2-digit",
+                                                    year: "numeric",
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
+                                                })
+                                                : "Nomaʼlum"}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
