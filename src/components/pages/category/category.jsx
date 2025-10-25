@@ -1,7 +1,8 @@
 "use client"
 
 import React, { useState } from "react"
-import { Box, Button, Modal, Switch, TextField } from "@mui/material"
+import { TrendingUp, Close } from "@mui/icons-material"
+import { Box, Modal, Switch, TextField } from "@mui/material"
 
 // Mock data with the specified response structure
 const mockCategories = [
@@ -194,119 +195,96 @@ const Category = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-stone-50 via-stone-100 to-stone-50 p-6 md:p-8">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-600 hover:shadow-lg transition">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-stone-600 text-sm font-medium">Toifalar</p>
-                            <p className="text-3xl font-bold text-stone-900 mt-2">4</p>
-                        </div>
-                        <div className="bg-purple-100 p-3 rounded-lg">
-                            <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10"
-                                />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600 hover:shadow-lg transition">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-stone-600 text-sm font-medium">Jami Kategoriyalar</p>
-                            <p className="text-3xl font-bold text-stone-900 mt-2">{totalCategories}</p>
-                        </div>
-                        <div className="bg-blue-100 p-3 rounded-lg">
-                            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                                />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-600 hover:shadow-lg transition">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-stone-600 text-sm font-medium">Faol Kategoriyalar</p>
-                            <p className="text-3xl font-bold text-stone-900 mt-2">{activeCategories}</p>
-                        </div>
-                        <div className="bg-green-100 p-3 rounded-lg">
-                            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-600 hover:shadow-lg transition">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-stone-600 text-sm font-medium">Nofaol Kategoriyalar</p>
-                            <p className="text-3xl font-bold text-stone-900 mt-2">{inactiveCategories}</p>
-                        </div>
-                        <div className="bg-red-100 p-3 rounded-lg">
-                            <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M10 14l-2-2m0 0l-2-2m2 2l2-2m-2 2l-2 2"
-                                />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             {/* Main Content */}
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                {/* Search Bar */}
-                <div className="p-6 border-b border-stone-200 relative">
-                    <div className="flex items-center justify-center">
-                        {/* Left Buttons */}
-                        <div className="flex gap-4 absolute left-6 top-6">
-                            <Button
-                                onClick={() => handleOpenAddEditModal()}
-                                variant="outlined"
-                                className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
-                            >
+                {/* Search and Actions */}
+                <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
+                    <div className="flex items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-200 flex-wrap">
+                        {/* Total Spotlights Count*/}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-purple-100 p-2 rounded-lg">
+                                <svg className="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10"
+                                    />
+                                </svg>
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">Toifalar</p>
+                                <p className="text-lg font-bold text-purple-600">4</p>
+                            </div>
+                        </div>
+
+                        {/* Total Categories Count */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-blue-100 p-2 rounded-lg">
+                                <TrendingUp className="w-5 h-5 text-blue-600" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">Jami</p>
+                                <p className="text-lg font-bold text-blue-600">{totalCategories}</p>
+                            </div>
+                        </div>
+
+                        {/* Active Categories Count */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-green-100 p-2 rounded-lg">
+                                <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">Faol</p>
+                                <p className="text-lg font-bold text-green-600">{activeCategories}</p>
+                            </div>
+                        </div>
+
+                        {/* Inactive Categories Count */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-red-100 p-2 rounded-lg">
+                                <Close className="w-5 h-5 text-red-600" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">Nofaol</p>
+                                <p className="text-lg font-bold text-red-600">{inactiveCategories}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center justify-center relative">
+                        {/* Left buttons */}
+                        <div className="flex gap-4 absolute left-0 top-0">
+                            <button onClick={() => handleOpenAddEditModal()} className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                                 </svg>
                                 Qo'shish
-                            </Button>
-
-                            <Button
-                                onClick={handleOpenOrderModal}
-                                variant="outlined"
-                                className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
-                            >
+                            </button>
+                            <button onClick={handleExport} className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                    />
                                 </svg>
-                                Tartiblash
-                            </Button>
+                                Export
+                            </button>
                         </div>
 
-                        {/* Center Search */}
+                        {/* Center search field */}
                         <div className="flex-1 max-w-xl relative">
                             <svg
-                                className="absolute left-3 top-3 w-5 h-5 text-stone-400"
+                                className="absolute left-3 top-3 w-5 h-5 text-slate-400"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -320,16 +298,12 @@ const Category = () => {
                             </svg>
                             <input
                                 type="text"
-                                placeholder="Kategoriya yoki spotlight nomi qidirish..."
+                                placeholder="Toifa, kategoriya yoki id qidirish..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                                className="w-full pl-10 pr-10 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-stone-500"
+                                className="w-full pl-10 pr-10 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
-                            <button
-                                onClick={handleSearch}
-                                className="absolute right-2 top-2 p-1 text-stone-400 hover:text-stone-600 transition"
-                            >
+                            <button className="absolute right-2 top-2 p-1 text-slate-400 hover:text-slate-600 transition">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path
                                         strokeLinecap="round"
@@ -341,30 +315,34 @@ const Category = () => {
                             </button>
                         </div>
 
-                        {/* Right Buttons */}
-                        <div className="absolute right-6 top-6 flex items-center gap-3">
+                        {/* Right buttons */}
+                        <div className="absolute right-0 top-0 flex items-center gap-3">
                             <button
-                                onClick={handleExport}
-                                className="bg-white text-stone-800 hover:bg-stone-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition"
+                                className="text-slate-600 hover:text-slate-900 transition p-1 hover:bg-slate-100 rounded"
+                                title="Qayta yuklash"
                             >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                                    />
-                                </svg>
-                                Export
-                            </button>
-
-                            <button className="text-stone-600 hover:text-stone-900 transition p-1" title="Qayta yuklash">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                                     <path
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
                                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                                     />
+                                </svg>
+                            </button>
+
+                            <button
+                                className="text-slate-700 hover:text-slate-900 transition p-1 hover:bg-slate-100 rounded"
+                                aria-label="Fullscreen"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="w-5 h-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    strokeWidth={2}
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4h4M4 16v4h4M20 8V4h-4M20 16v4h-4" />
                                 </svg>
                             </button>
                         </div>
