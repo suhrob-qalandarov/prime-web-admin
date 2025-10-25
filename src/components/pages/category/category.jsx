@@ -374,10 +374,8 @@ const Category = () => {
                         <tr>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700"></th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">ID</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Kategoriya</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Kategoriya nomi</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Toifa</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Tartib</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Mahsulotlar</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Holati</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Amallar</th>
                         </tr>
@@ -407,8 +405,6 @@ const Category = () => {
                                     <td className="px-6 py-4 text-sm font-medium text-stone-900">{item.id}</td>
                                     <td className="px-6 py-4 text-sm text-stone-700">{item.name}</td>
                                     <td className="px-6 py-4 text-sm text-stone-600">{item.spotlightName}</td>
-                                    <td className="px-6 py-4 text-sm font-medium text-stone-900">{item.order}</td>
-                                    <td className="px-6 py-4 text-sm font-medium text-stone-900">{item.productsCount}</td>
                                     <td className="px-6 py-4">
                                         <Chip
                                             label={item.active ? "Faol" : "Nofaol"}
@@ -418,26 +414,6 @@ const Category = () => {
                                         />
                                     </td>
                                     <td className="px-6 py-4 flex gap-2">
-                                        <button
-                                            onClick={() => handleOpenViewModal(item)}
-                                            className="text-stone-600 hover:text-stone-900 transition p-1 hover:bg-stone-100 rounded"
-                                            title="Ko'rish"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                                />
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                                />
-                                            </svg>
-                                        </button>
                                         <button
                                             onClick={() => handleOpenAddEditModal(item)}
                                             className="text-stone-600 hover:text-stone-900 transition p-1 hover:bg-stone-100 rounded"
@@ -458,48 +434,20 @@ const Category = () => {
                                 {expandedRows[item.id] && (
                                     <tr className="bg-stone-50 border-b border-stone-200">
                                         <td colSpan="8" className="px-6 py-4">
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                <div>
-                                                    <h4 className="font-semibold text-stone-900 mb-4">Asosiy Ma'lumotlar</h4>
-                                                    <div className="space-y-3 text-sm">
-                                                        <div className="flex justify-between border-b border-stone-200 pb-2">
-                                                            <span className="text-stone-600">ID:</span>
-                                                            <span className="font-medium text-stone-900">{item.id}</span>
-                                                        </div>
-                                                        <div className="flex justify-between border-b border-stone-200 pb-2">
-                                                            <span className="text-stone-600">Kategoriya:</span>
-                                                            <span className="font-medium text-stone-900">{item.name}</span>
-                                                        </div>
-                                                        <div className="flex justify-between border-b border-stone-200 pb-2">
-                                                            <span className="text-stone-600">Spotlight:</span>
-                                                            <span className="font-medium text-stone-900">{item.spotlightName}</span>
-                                                        </div>
-                                                        <div className="flex justify-between">
-                                                            <span className="text-stone-600">Tartib:</span>
-                                                            <span className="font-medium text-stone-900">{item.order}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
+                                            <div className="grid grid-cols-1">
                                                 <div>
                                                     <h4 className="font-semibold text-stone-900 mb-4">Qo'shimcha Ma'lumotlar</h4>
                                                     <div className="space-y-3 text-sm">
                                                         <div className="flex justify-between border-b border-stone-200 pb-2">
-                                                            <span className="text-stone-600">Mahsulotlar:</span>
-                                                            <span className="font-medium text-stone-900">{item.productCount}</span>
+                                                            <span className="text-stone-600 ">Tartib raqami:</span>
+                                                            <span className="font-medium text-stone-900">{item.order}</span>
                                                         </div>
                                                         <div className="flex justify-between border-b border-stone-200 pb-2">
-                                                            <span className="text-stone-600">Holati:</span>
-                                                            <span
-                                                                className={`font-medium px-2 py-1 rounded text-xs ${
-                                                                    item.active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                                                                }`}
-                                                            >
-                                                                {item.active ? "Faol" : "Nofaol"}
-                                                            </span>
+                                                            <span className="text-stone-600">Mahsulotlar soni:</span>
+                                                            <span className="font-medium text-stone-900">{item.productsCount}</span>
                                                         </div>
                                                         <div className="flex justify-between">
-                                                            <span className="text-stone-600">Yaratilgan:</span>
+                                                            <span className="text-stone-600">Yaratilgan vaqti:</span>
                                                             <span className="font-medium text-stone-900">{item.createdAt}</span>
                                                         </div>
                                                     </div>
