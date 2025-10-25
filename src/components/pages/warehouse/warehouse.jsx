@@ -3,6 +3,10 @@ import { Box, Modal } from "@mui/material"
 import {
     TrendingUp,
     Close,
+    Inventory2Sharp,
+    Inventory,
+    Inventory2,
+    InventoryOutlined
 } from "@mui/icons-material"
 
 const mockClothingProducts = [
@@ -285,33 +289,13 @@ const Warehouse = () => {
     const selectedProduct = formData.product ? mockClothingProducts.find((p) => p.id == formData.product) : null
 
     return (
-        /*<div className="min-h-screen bg-gradient-to-br from-stone-50 via-stone-100 to-stone-50 p-6 md:p-8">*/
             <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
-
             {/* Main Content */}
             <div className="max-w-8xl mx-auto">
                 {/* Search and Actions */}
                 <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
 
                     <div className="flex items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-200 flex-wrap">
-                        {/* Total Stock */}
-                        <div className="flex items-center gap-3">
-                            <div className="bg-blue-100 p-2 rounded-lg">
-                                <svg className="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10"
-                                    />
-                                </svg>
-                            </div>
-                            <div>
-                                <p className="text-xs text-stone-600 font-medium">Jami stock</p>
-                                <p className="text-lg font-bold text-blue-600">1</p>
-                            </div>
-                        </div>
-
                         {/* Total Products */}
                         <div className="flex items-center gap-3">
                             <div className="bg-blue-100 p-2 rounded-lg">
@@ -325,8 +309,19 @@ const Warehouse = () => {
                                 </svg>
                             </div>
                             <div>
-                                <p className="text-xs text-stone-600 font-medium">Jami</p>
+                                <p className="text-xs text-stone-600 font-medium">Jami mahsulotlar</p>
                                 <p className="text-lg font-bold text-blue-600">1</p>
+                            </div>
+                        </div>
+
+                        {/* Total Stock */}
+                        <div className="flex items-center gap-3">
+                            <div className="bg-gray-300 p-2 rounded-lg">
+                                <InventoryOutlined className="w-7 h-7 text-black-600"/>
+                            </div>
+                            <div>
+                                <p className="text-xs text-stone-600 font-medium">Jami stock</p>
+                                <p className="text-lg font-bold text-black-600">1</p>
                             </div>
                         </div>
 
@@ -558,7 +553,7 @@ const Warehouse = () => {
                 {/* Table */}
                 <div className="overflow-x-auto bg-white">
                     <table className="w-full">
-                        <thead className="bg-white border-b border-stone-200">
+                        <thead className="bg-stone-100 border-b border-stone-200">
                         <tr>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700"></th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">ID</th>
