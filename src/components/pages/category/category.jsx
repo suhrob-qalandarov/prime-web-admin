@@ -73,7 +73,6 @@ const Category = () => {
     const [expandedRows, setExpandedRows] = useState({})
     const [selectedCategory, setSelectedCategory] = useState(null)
     const [openAddEditModal, setOpenAddEditModal] = useState(false)
-    const [openViewModal, setOpenViewModal] = useState(false)
     const [openOrderModal, setOpenOrderModal] = useState(false)
     const [orderList, setOrderList] = useState([])
 
@@ -84,8 +83,6 @@ const Category = () => {
         order: "",
         active: true,
     })
-
-    const totalProducts = mockCategories.reduce((sum, cat) => sum + cat.productCount, 0)
 
     useEffect(() => {
         loadDashboardData();
@@ -156,15 +153,6 @@ const Category = () => {
     const handleSaveCategory = () => {
         console.log("[v0] Saved category:", formData)
         handleCloseAddEditModal()
-    }
-
-    const handleOpenViewModal = (category) => {
-        setSelectedCategory(category)
-        setOpenViewModal(true)
-    }
-
-    const handleCloseViewModal = () => {
-        setOpenViewModal(false)
     }
 
     const handleOpenOrderModal = () => {
@@ -534,66 +522,6 @@ const Category = () => {
                             className="px-6 py-2 bg-stone-800 text-white rounded-lg hover:bg-stone-900 transition font-medium"
                         >
                             Saqlash
-                        </button>
-                    </div>
-                </Box>
-            </Modal>
-
-            {/* View Modal */}
-            <Modal open={openViewModal} onClose={handleCloseViewModal}>
-                <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-xl shadow-2xl w-full max-w-lg">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-2xl font-bold text-stone-900">Kategoriya Ma'lumotlari</h2>
-                        <button onClick={handleCloseViewModal} className="text-stone-500 hover:text-stone-700">
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    {selectedCategory && (
-                        <div className="space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <p className="text-sm text-stone-600 font-medium">ID</p>
-                                    <p className="text-lg font-semibold text-stone-900">{selectedCategory.id}</p>
-                                </div>
-                                <div>
-                                    <p className="text-sm text-stone-600 font-medium">Tartib</p>
-                                    <p className="text-lg font-semibold text-stone-900">{selectedCategory.order}</p>
-                                </div>
-                                <div className="col-span-2">
-                                    <p className="text-sm text-stone-600 font-medium">Kategoriya Nomi</p>
-                                    <p className="text-lg font-semibold text-stone-900">{selectedCategory.name}</p>
-                                </div>
-                                <div className="col-span-2">
-                                    <p className="text-sm text-stone-600 font-medium">Spotlight Nomi</p>
-                                    <p className="text-lg font-semibold text-stone-900">{selectedCategory.spotlightName}</p>
-                                </div>
-                                <div>
-                                    <p className="text-sm text-stone-600 font-medium">Mahsulotlar</p>
-                                    <p className="text-lg font-semibold text-stone-900">{selectedCategory.productCount}</p>
-                                </div>
-                                <div>
-                                    <p className="text-sm text-stone-600 font-medium">Holati</p>
-                                    <p
-                                        className={`text-lg font-semibold px-3 py-1 rounded inline-block ${
-                                            selectedCategory.active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                                        }`}
-                                    >
-                                        {selectedCategory.active ? "Faol" : "Nofaol"}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    <div className="flex justify-end gap-3 mt-8">
-                        <button
-                            onClick={handleCloseViewModal}
-                            className="px-6 py-2 bg-stone-800 text-white rounded-lg hover:bg-stone-900 transition font-medium"
-                        >
-                            Yopish
                         </button>
                     </div>
                 </Box>
