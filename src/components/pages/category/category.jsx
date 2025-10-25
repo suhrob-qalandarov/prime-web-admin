@@ -1,8 +1,7 @@
-"use client"
-
-import React, { useState } from "react"
+import React, {useEffect, useState} from "react"
 import { TrendingUp, Close } from "@mui/icons-material"
 import {Box, Chip, Modal, Switch, TextField} from "@mui/material"
+import CategoryService from "../../../service/category";
 
 // Mock data with the specified response structure
 const mockCategories = [
@@ -63,6 +62,12 @@ const mockCategories = [
 ]
 
 const Category = () => {
+    const [categories, setCategories] = useState([]);
+    const [countData, setCountData] = useState({
+        totalCount: 0,
+        activeCount: 0,
+        inactiveCount: 0,
+    });
     const [filteredItems, setFilteredItems] = useState(mockCategories)
     const [searchTerm, setSearchTerm] = useState("")
     const [expandedRows, setExpandedRows] = useState({})
@@ -80,10 +85,27 @@ const Category = () => {
         active: true,
     })
 
-    const totalCategories = mockCategories.length
-    const activeCategories = mockCategories.filter((c) => c.active).length
-    const inactiveCategories = mockCategories.filter((c) => !c.active).length
     const totalProducts = mockCategories.reduce((sum, cat) => sum + cat.productCount, 0)
+
+    useEffect(() => {
+        loadDashboardData();
+    }, []);
+
+    useEffect(() => {
+        setFilteredItems(categories);
+    }, [categories]);
+
+    const loadDashboardData = async () => {
+        try {
+            const categoriesData = await CategoryService.getCategoriesData();
+            const categoriesCountData = await CategoryService.getCategoriesCountData();
+            setCategories(categoriesData);
+            setCountData(categoriesCountData);
+        } catch (err) {
+            console.error('Error loading dashboard data:', err);
+            // Optionally show error to user (e.g., toast notification)
+        }
+    };
 
     const handleSearch = () => {
         const filtered = mockCategories.filter(
@@ -166,10 +188,6 @@ const Category = () => {
         setOrderList(newList)
     }
 
-    const handleToggleCategory = (id) => {
-        console.log("[v0] Toggled category:", id)
-    }
-
     const handleExport = () => {
         const csv = [
             ["ID", "Kategoriya", "Spotlight Nomi", "Tartib", "Holati", "Mahsulotlar"],
@@ -225,7 +243,7 @@ const Category = () => {
                             </div>
                             <div>
                                 <p className="text-xs text-stone-600 font-medium">Kategoriyalar</p>
-                                <p className="text-lg font-bold text-blue-600">{totalCategories}</p>
+                                <p className="text-lg font-bold text-blue-600">{countData?.totalCount}</p>
                             </div>
                         </div>
 
@@ -243,7 +261,7 @@ const Category = () => {
                             </div>
                             <div>
                                 <p className="text-xs text-stone-600 font-medium">Faol</p>
-                                <p className="text-lg font-bold text-green-600">{activeCategories}</p>
+                                <p className="text-lg font-bold text-green-600">{countData?.activeCount}</p>
                             </div>
                         </div>
 
@@ -254,7 +272,7 @@ const Category = () => {
                             </div>
                             <div>
                                 <p className="text-xs text-stone-600 font-medium">Nofaol</p>
-                                <p className="text-lg font-bold text-red-600">{inactiveCategories}</p>
+                                <p className="text-lg font-bold text-red-600">{countData?.inactiveCount}</p>
                             </div>
                         </div>
                     </div>
@@ -365,7 +383,7 @@ const Category = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        {filteredItems.map((item) => (
+                        {categories.map((item) => (
                             <React.Fragment key={item.id}>
                                 <tr className="border-b border-stone-200 hover:bg-stone-50 transition">
                                     <td className="px-6 py-4">
@@ -390,7 +408,7 @@ const Category = () => {
                                     <td className="px-6 py-4 text-sm text-stone-700">{item.name}</td>
                                     <td className="px-6 py-4 text-sm text-stone-600">{item.spotlightName}</td>
                                     <td className="px-6 py-4 text-sm font-medium text-stone-900">{item.order}</td>
-                                    <td className="px-6 py-4 text-sm font-medium text-stone-900">{item.productCount}</td>
+                                    <td className="px-6 py-4 text-sm font-medium text-stone-900">{item.productsCount}</td>
                                     <td className="px-6 py-4">
                                         <Chip
                                             label={item.active ? "Faol" : "Nofaol"}
@@ -477,8 +495,8 @@ const Category = () => {
                                                                     item.active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
                                                                 }`}
                                                             >
-                                  {item.active ? "Faol" : "Nofaol"}
-                                </span>
+                                                                {item.active ? "Faol" : "Nofaol"}
+                                                            </span>
                                                         </div>
                                                         <div className="flex justify-between">
                                                             <span className="text-stone-600">Yaratilgan:</span>
