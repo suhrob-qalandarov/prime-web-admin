@@ -27,8 +27,7 @@ const AttachmentService = {
 
             const response = await axios.post(
                 "/v1/admin/attachment/multiupload",
-                formData,
-                { withCredentials: true }
+                formData
             );
 
             if (response.status !== 200) {

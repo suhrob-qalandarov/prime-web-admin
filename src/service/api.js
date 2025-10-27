@@ -1,19 +1,26 @@
-import axios from 'axios'
+import axios from 'axios';
 import urls from '../../src/constants/urls';
 
-// Base settings
-axios.defaults.baseURL = urls.apiBaseUrl;
-axios.defaults.withCredentials = true;
-
-// Default Content-Type ni o'chirish (application/json bo'lmasin)
-delete axios.defaults.headers.post['Content-Type'];
-
-// FormData yuborilganda Content-Type ni o'chirish
-axios.interceptors.request.use((config) => {
-    if (config.data instanceof FormData) {
-        delete config.headers['Content-Type'];
-    }
-    return config;
+// Axios instance yaratamiz
+const api = axios.create({
+    baseURL: urls.apiBaseUrl,
+    withCredentials: true,
 });
 
-export default axios
+// Default Content-Type ni o'CHIRISH
+delete api.defaults.headers.common['Content-Type'];
+delete api.defaults.headers.post['Content-Type'];
+
+// Interceptor — FormData yuborilganda Content-Type ni o'chir
+api.interceptors.request.use((config) => {
+    if (config.data instanceof FormData) {
+        // Content-Type ni butunlay o'chir — browser avto qo‘shadi
+        delete config.headers['Content-Type'];
+        delete config.headers['content-type'];
+    }
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
+
+export default api;
