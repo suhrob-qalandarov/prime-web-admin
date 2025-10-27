@@ -28,12 +28,7 @@ const AttachmentService = {
             const response = await axios.post(
                 "/v1/admin/attachment/multiupload",
                 formData,
-                {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }
+                { withCredentials: true }
             );
 
             if (response.status !== 200) {
