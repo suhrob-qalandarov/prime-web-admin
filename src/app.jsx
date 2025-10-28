@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Route, Routes, useLocation } from "react-router-dom"
 import { Home, Sidebar, Navbar, Dashboard, Category, Product, Order, User, Warehouse } from "./components"
 import ToggleButton from "./components/bars/sidebar/toggle-button"
@@ -22,6 +22,13 @@ const App = () => {
                 // Check if user has admin role, get user data
                 const delay = new Promise(resolve => setTimeout(resolve, 1000));
 
+                const userData = await UserService.getOrLoadData()
+                setUser(userData)
+
+                if (userData?.isAdmin) {
+                    setIsAdminVerified(true)
+                }
+
                 // Run API call and delay concurrently
                 const isAdmin= await Promise.all([
                     AuthService.checkAdminWithCredentials(),
@@ -29,8 +36,6 @@ const App = () => {
                 ]);
                 if (isAdmin) {
                     setIsAdminVerified(true)
-                    const userData = await UserService.getOrLoadData()
-                    setUser(userData)
                 } else {
                     setIsAdminVerified(false)
                     window.location.href = '/'
@@ -48,7 +53,14 @@ const App = () => {
     }, [])
 
     if (loading) {
-        return <Loading message="Verifying access..." />;
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-stone-50 via-stone-100 to-stone-50 p-6 md:p-8 flex justify-center items-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-stone-600 mx-auto mb-4"></div>
+                    <p className="text-stone-600">Yuklanmoqda...</p>
+                </div>
+            </div>
+        )
     }
 
     // Only allow rendering of routes if admin is verified

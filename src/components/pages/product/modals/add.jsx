@@ -18,7 +18,7 @@ import { Delete as DeleteIcon } from "@mui/icons-material"
 import ProductService from "../../../../service/product"
 import AttachmentService from "../../../../service/attachment"
 
-const AddModal = ({ open, onClose, product, onProductSaved }) => {
+const AddModal = ({ open, onClose, product, onProductSaved, availableCategories }) => {
     const [productForm, setProductForm] = useState({
         id: null,
         name: "",
@@ -30,7 +30,6 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
         attachments: [],
     })
 
-    const [newCategory, setNewCategory] = useState(null)
     const [selectedFiles, setSelectedFiles] = useState([])
     const [loading, setLoading] = useState(false)
 
@@ -200,12 +199,6 @@ const AddModal = ({ open, onClose, product, onProductSaved }) => {
             attachments: "Kamida bitta rasm qo'shing!",
         })
     }
-
-    const availableCategories = [
-        { id: 1, name: "Ko'ylaklar" },
-        { id: 2, name: "Soatlar" },
-        { id: 3, name: "Jensiylar" },
-    ]
 
     return (
         <Modal open={open} onClose={onClose}>

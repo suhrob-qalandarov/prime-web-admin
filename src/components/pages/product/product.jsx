@@ -16,9 +16,11 @@ import {
     Close,
 } from "@mui/icons-material"
 import { Chip } from "@mui/material"
+import CategoryService from "../../../service/category";
 
 const Product = () => {
     const [products, setProducts] = useState([])
+    const [categories, setCategories] = useState([])
     const [totalCount, setTotalCount] = useState(0)
     const [activeCount, setActiveCount] = useState(0)
     const [inactiveCount, setInactiveCount] = useState(0)
@@ -44,6 +46,7 @@ const Product = () => {
 
     useEffect(() => {
         loadProductDashboardData()
+        loadCategories()
     }, [])
 
     const loadProductDashboardData = async () => {
@@ -66,6 +69,11 @@ const Product = () => {
         } finally {
             setIsLoading(false)
         }
+    }
+
+    const loadCategories = async () => {
+        const categoriesData = await CategoryService.getCategoriesData();
+        setCategories(categoriesData);
     }
 
     const filteredProducts = products.filter(
@@ -150,7 +158,7 @@ const Product = () => {
     }
 
     const handleProductSaved = (message, type) => {
-        loadProductDashboardData()
+        //loadProductDashboardData()
         handleCloseAddEditModal()
         if (message && type) {
             showSnackbar(message, type)
@@ -741,6 +749,7 @@ const Product = () => {
                 onClose={handleCloseAddEditModal}
                 product={selectedProduct}
                 onProductSaved={handleProductSaved}
+                availableCategories={categories}
             />
 
             <CustomSnackbar
