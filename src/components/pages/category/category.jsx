@@ -282,10 +282,9 @@ const Category = () => {
                 {/* Table */}
                 <div className="overflow-x-auto bg-white">
                     <table className="w-full">
-                        <thead className="bg-stone-100 border-b border-stone-200">
+                        <thead className="bg-transparent border-b border-stone-200 bg-gradient-to-br from-slate-50 to-slate-100 p-6">
                         <tr>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700"></th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">ID</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Kategoriya nomi</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Toifa</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold text-stone-700">Holati</th>
@@ -314,7 +313,6 @@ const Category = () => {
                                             )}
                                         </button>
                                     </td>
-                                    <td className="px-6 py-4 text-sm font-medium text-stone-900">{item.id}</td>
                                     <td className="px-6 py-4 text-sm text-stone-700">{item.name}</td>
                                     <td className="px-6 py-4 text-sm text-stone-600">{item.spotlightName}</td>
                                     <td className="px-6 py-4">
@@ -346,10 +344,15 @@ const Category = () => {
                                 {expandedRows[item.id] && (
                                     <tr className="bg-stone-50 border-b border-stone-200">
                                         <td colSpan="8" className="px-6 py-4">
-                                            <div className="grid grid-cols-1">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                                {/* Left Column - Additional Details Info */}
                                                 <div>
                                                     <h4 className="font-semibold text-stone-900 mb-4">Qo'shimcha Ma'lumotlar</h4>
                                                     <div className="space-y-3 text-sm">
+                                                        <div className="flex justify-between border-b border-stone-200 pb-2">
+                                                            <span className="text-stone-600 ">ID:</span>
+                                                            <span className="font-medium text-stone-900">{item.id}</span>
+                                                        </div>
                                                         <div className="flex justify-between border-b border-stone-200 pb-2">
                                                             <span className="text-stone-600 ">Tartib raqami:</span>
                                                             <span className="font-medium text-stone-900">{item.order}</span>
@@ -361,6 +364,19 @@ const Category = () => {
                                                         <div className="flex justify-between">
                                                             <span className="text-stone-600">Yaratilgan vaqti:</span>
                                                             <span className="font-medium text-stone-900">{item.createdAt}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Right Column - Recent Activities */}
+                                                <div>
+                                                    <h4 className="font-semibold text-stone-900 mb-4">So'nggi harakatlar:</h4>
+                                                    <div className="space-y-3 text-sm">
+                                                        <div className="flex justify-between border-b border-stone-200 pb-2">
+                                                            <span className="font-medium text-stone-900">Kategoriya nomi yangilandi</span>
+                                                        </div>
+                                                        <div className="flex justify-between border-b border-stone-200 pb-2">
+                                                            <span className="text-stone-600">Kategoriya qo'shildi</span>
                                                         </div>
                                                     </div>
                                                 </div>
