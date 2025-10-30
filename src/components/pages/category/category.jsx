@@ -1,185 +1,98 @@
-import React, {useEffect, useState} from "react"
-import { TrendingUp, Close } from "@mui/icons-material"
-import {Box, Chip, Modal, Switch, TextField} from "@mui/material"
+import React, { useEffect, useState } from "react";
+import { TrendingUp, Close } from "@mui/icons-material";
+import { Box, Chip, Modal } from "@mui/material";
 import CategoryService from "../../../service/category";
-
-// Mock data with the specified response structure
-const mockCategories = [
-    {
-        id: 1,
-        name: "Ko'ylaklar",
-        spotlightName: "Klassik Ko'ylaklar",
-        order: 1,
-        active: true,
-        productCount: 45,
-        createdAt: "2024-10-15",
-    },
-    {
-        id: 2,
-        name: "Shim",
-        spotlightName: "Qora Jeans",
-        order: 2,
-        active: true,
-        productCount: 32,
-        createdAt: "2024-10-14",
-    },
-    {
-        id: 3,
-        name: "Futbolkalar",
-        spotlightName: "Rang-barang Futbolkalar",
-        order: 3,
-        active: true,
-        productCount: 58,
-        createdAt: "2024-10-13",
-    },
-    {
-        id: 4,
-        name: "Kurtka",
-        spotlightName: "Qora Blazer",
-        order: 4,
-        active: true,
-        productCount: 28,
-        createdAt: "2024-10-12",
-    },
-    {
-        id: 5,
-        name: "Oyoq kiyim",
-        spotlightName: "Oq Sneaker",
-        order: 5,
-        active: false,
-        productCount: 15,
-        createdAt: "2024-10-11",
-    },
-    {
-        id: 6,
-        name: "Aksessuarlar",
-        spotlightName: "Shlyapalar va Qo'lqop",
-        order: 6,
-        active: true,
-        productCount: 72,
-        createdAt: "2024-10-10",
-    },
-]
+import { AddEditModal } from "./modals/index";
 
 const Category = () => {
     const [categories, setCategories] = useState([]);
-    const [countData, setCountData] = useState({
-        totalCount: 0,
-        activeCount: 0,
-        inactiveCount: 0,
-    });
-    const [filteredItems, setFilteredItems] = useState(mockCategories)
-    const [searchTerm, setSearchTerm] = useState("")
-    const [expandedRows, setExpandedRows] = useState({})
-    const [selectedCategory, setSelectedCategory] = useState(null)
-    const [openAddEditModal, setOpenAddEditModal] = useState(false)
-    const [openOrderModal, setOpenOrderModal] = useState(false)
-    const [orderList, setOrderList] = useState([])
+    const [countData, setCountData] = useState({ totalCount: 0, activeCount: 0, inactiveCount: 0 });
+    const [searchTerm, setSearchTerm] = useState("");
+    const [expandedRows, setExpandedRows] = useState({});
+    const [modalOpen, setModalOpen] = useState(false);
+    const [editingCategory, setEditingCategory] = useState(null);
+    const [orderModalOpen, setOrderModalOpen] = useState(false);
+    const [orderList, setOrderList] = useState([]);
 
-    const [formData, setFormData] = useState({
-        id: null,
-        name: "",
-        spotlightName: "",
-        order: "",
-        active: true,
-    })
-
+    // === Load categories data ===
     useEffect(() => {
         loadDashboardData();
     }, []);
 
-    useEffect(() => {
-        setFilteredItems(categories);
-    }, [categories]);
-
     const loadDashboardData = async () => {
         try {
-            const categoriesData = await CategoryService.getCategoriesData();
-            const categoriesCountData = await CategoryService.getCategoriesCountData();
+            const [categoriesData, countDataRes] = await Promise.all([
+                CategoryService.getCategoriesData(),
+                CategoryService.getCategoriesCountData(),
+            ]);
             setCategories(categoriesData);
-            setCountData(categoriesCountData);
+            setCountData(countDataRes);
         } catch (err) {
-            console.error('Error loading dashboard data:', err);
-            // Optionally show error to user (e.g., toast notification)
+            console.error("Ma'lumotlar yuklanmadi:", err);
         }
     };
 
+    // === Search ===
     const handleSearch = () => {
-        const filtered = mockCategories.filter(
+        const filtered = categories.filter(
             (item) =>
                 item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                item.spotlightName.toLowerCase().includes(searchTerm.toLowerCase()),
-        )
-        setFilteredItems(filtered)
-    }
+                item.spotlightName.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setCategories(filtered);
+    };
 
     const handleClearSearch = () => {
-        setSearchTerm("")
-        setFilteredItems(mockCategories)
-    }
+        setSearchTerm("");
+    };
 
+    // === Additional Information Table ===
     const toggleRowExpand = (id) => {
-        setExpandedRows((prev) => ({
-            ...prev,
-            [id]: !prev[id],
-        }))
-    }
+        setExpandedRows((prev) => ({ ...prev, [id]: !prev[id] }));
+    };
 
-    const handleOpenAddEditModal = (category = null) => {
-        if (category) {
-            setFormData({
-                id: category.id,
-                name: category.name,
-                spotlightName: category.spotlightName,
-                order: category.order,
-                active: category.active,
-            })
-        } else {
-            setFormData({
-                id: null,
-                name: "",
-                spotlightName: "",
-                order: "",
-                active: true,
-            })
-        }
-        setOpenAddEditModal(true)
-    }
+    // === Add/Edit Modal management ===
+    const handleOpenModal = (category = null) => {
+        setEditingCategory(category);
+        setModalOpen(true);
+    };
 
-    const handleCloseAddEditModal = () => {
-        setOpenAddEditModal(false)
-    }
+    const handleCloseModal = () => {
+        setModalOpen(false);
+        setEditingCategory(null);
+    };
 
-    const handleSaveCategory = () => {
-        console.log("[v0] Saved category:", formData)
-        handleCloseAddEditModal()
-    }
+    const handleSuccess = () => {
+        loadDashboardData();
+    };
 
     const handleOpenOrderModal = () => {
-        setOrderList([...filteredItems])
-        setOpenOrderModal(true)
-    }
+        setOrderList([...categories]);
+        setOrderModalOpen(true);
+    };
 
     const handleCloseOrderModal = () => {
-        setOpenOrderModal(false)
-    }
-
-    const handleSaveOrder = () => {
-        console.log("[v0] Saved order:", orderList)
-        handleCloseOrderModal()
-    }
+        setOrderModalOpen(false);
+    };
 
     const moveOrderItem = (fromIndex, toIndex) => {
-        const newList = [...orderList]
-        const [moved] = newList.splice(fromIndex, 1)
-        newList.splice(toIndex, 0, moved)
-        setOrderList(newList)
-    }
+        const newList = [...orderList];
+        const [moved] = newList.splice(fromIndex, 1);
+        newList.splice(toIndex, 0, moved);
+        setOrderList(newList);
+    };
 
+    const handleSaveOrder = () => {
+        console.log("[v1] Yangi tartib:", orderList);
+        // Send data to backend logic
+        handleCloseOrderModal();
+    };
+
+    // === Export CSV ===
     const handleExport = () => {
         const csv = [
             ["ID", "Kategoriya", "Spotlight Nomi", "Tartib", "Holati", "Mahsulotlar"],
-            ...filteredItems.map((item) => [
+            ...categories.map((item) => [
                 item.id,
                 item.name,
                 item.spotlightName,
@@ -189,7 +102,7 @@ const Category = () => {
             ]),
         ]
             .map((row) => row.join(","))
-            .join("\n")
+            .join("\n");
 
         const blob = new Blob([csv], { type: "text/csv" })
         const url = window.URL.createObjectURL(blob)
@@ -268,13 +181,19 @@ const Category = () => {
                     <div className="flex items-center justify-center relative">
                         {/* Left buttons */}
                         <div className="flex gap-4 absolute left-0 top-0">
-                            <button onClick={() => handleOpenAddEditModal()} className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300">
+                            <button
+                                onClick={() => handleOpenModal()}
+                                className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300"
+                            >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                                 </svg>
                                 Qo'shish
                             </button>
-                            <button onClick={handleExport} className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300">
+                            <button
+                                onClick={handleExport}
+                                className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300"
+                            >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path
                                         strokeLinecap="round"
@@ -284,6 +203,12 @@ const Category = () => {
                                     />
                                 </svg>
                                 Export
+                            </button>
+                            <button
+                                onClick={handleOpenOrderModal}
+                                className="bg-white text-slate-800 hover:bg-slate-100 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition border border-slate-300"
+                            >
+                                Tartib
                             </button>
                         </div>
 
@@ -304,21 +229,20 @@ const Category = () => {
                             </svg>
                             <input
                                 type="text"
-                                placeholder="Toifa, kategoriya yoki id qidirish..."
+                                placeholder="Kategoriya yoki toifa bo'yicha qidirish..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
+                                onKeyUp={(e) => e.key === "Enter" && handleSearch()}
                                 className="w-full pl-10 pr-10 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
-                            <button className="absolute right-2 top-2 p-1 text-slate-400 hover:text-slate-600 transition">
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                    />
-                                </svg>
-                            </button>
+                            {searchTerm && (
+                                <button
+                                    onClick={handleClearSearch}
+                                    className="absolute right-2 top-2 p-1 text-slate-400 hover:text-slate-600"
+                                >
+                                    <Close className="w-5 h-5" />
+                                </button>
+                            )}
                         </div>
 
                         {/* Right buttons */}
@@ -403,8 +327,8 @@ const Category = () => {
                                     </td>
                                     <td className="px-6 py-4 flex gap-2">
                                         <button
-                                            onClick={() => handleOpenAddEditModal(item)}
-                                            className="text-stone-600 hover:text-stone-900 transition p-1 hover:bg-stone-100 rounded"
+                                            onClick={() => handleOpenModal(item)}
+                                            className="text-stone-600 hover:text-stone-900 p-1 hover:bg-stone-100 rounded transition"
                                             title="Tahrirlash"
                                         >
                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -452,99 +376,20 @@ const Category = () => {
             </div>
 
             {/* Add/Edit Modal */}
-            <Modal open={openAddEditModal} onClose={handleCloseAddEditModal}>
-                <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-2xl font-bold text-stone-900">
-                            {formData.id ? "Kategoriyani Tahrirlash" : "Kategoriya Qo'shish"}
-                        </h2>
-                        <button onClick={handleCloseAddEditModal} className="text-stone-500 hover:text-stone-700">
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
+            <AddEditModal
+                open={modalOpen}
+                onClose={handleCloseModal}
+                category={editingCategory}
+                onSuccess={handleSuccess}
+            />
 
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-stone-700 mb-2">Kategoriya Nomi</label>
-                            <TextField
-                                fullWidth
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                placeholder="Kategoriya nomini kiriting"
-                                size="small"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-stone-700 mb-2">Spotlight Nomi</label>
-                            <TextField
-                                fullWidth
-                                value={formData.spotlightName}
-                                onChange={(e) => setFormData({ ...formData, spotlightName: e.target.value })}
-                                placeholder="Spotlight nomini kiriting"
-                                size="small"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-stone-700 mb-2">Tartib Raqami</label>
-                            <TextField
-                                fullWidth
-                                type="number"
-                                value={formData.order}
-                                onChange={(e) => setFormData({ ...formData, order: e.target.value })}
-                                placeholder="Tartib raqamini kiriting"
-                                size="small"
-                            />
-                        </div>
-
-                        <div className="flex items-center gap-3 bg-stone-50 p-4 rounded-lg">
-                            <Switch
-                                checked={formData.active}
-                                onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                                color="primary"
-                            />
-                            <label className="text-sm font-medium text-stone-700">Faol kategoriya</label>
-                        </div>
-                    </div>
-
-                    <div className="flex justify-end gap-3 mt-8">
-                        <button
-                            onClick={handleCloseAddEditModal}
-                            className="px-6 py-2 border border-stone-300 text-stone-700 rounded-lg hover:bg-stone-50 transition font-medium"
-                        >
-                            Bekor qilish
-                        </button>
-                        <button
-                            onClick={handleSaveCategory}
-                            className="px-6 py-2 bg-stone-800 text-white rounded-lg hover:bg-stone-900 transition font-medium"
-                        >
-                            Saqlash
-                        </button>
-                    </div>
-                </Box>
-            </Modal>
-
-            {/* Order Modal */}
-            <Modal open={openOrderModal} onClose={handleCloseOrderModal}>
+            {/* Tartib o'zgartirish modal (ixtiyoriy) */}
+            <Modal open={orderModalOpen} onClose={handleCloseOrderModal}>
                 <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-2xl font-bold text-stone-900">Kategoriyalar Tartibini O'zgartirish</h2>
-                        <button onClick={handleCloseOrderModal} className="text-stone-500 hover:text-stone-700">
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
-
+                    <h2 className="text-2xl font-bold text-stone-900 mb-6">Kategoriyalar Tartibini O'zgartirish</h2>
                     <div className="space-y-2 mb-6">
                         {orderList.map((cat, index) => (
-                            <div
-                                key={cat.id}
-                                className="flex justify-between items-center p-3 border border-stone-200 rounded-lg hover:bg-stone-50"
-                            >
+                            <div key={cat.id} className="flex justify-between items-center p-3 border border-stone-200 rounded-lg hover:bg-stone-50">
                                 <div>
                                     <p className="font-medium text-stone-900">{cat.name}</p>
                                     <p className="text-sm text-stone-600">{cat.spotlightName}</p>
@@ -553,7 +398,7 @@ const Category = () => {
                                     <button
                                         disabled={index === 0}
                                         onClick={() => moveOrderItem(index, index - 1)}
-                                        className="p-1 text-stone-600 hover:text-stone-900 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                                        className="p-1 text-stone-600 hover:text-stone-900 disabled:opacity-50"
                                     >
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
@@ -562,32 +407,26 @@ const Category = () => {
                                     <button
                                         disabled={index === orderList.length - 1}
                                         onClick={() => moveOrderItem(index, index + 1)}
-                                        className="p-1 text-stone-600 hover:text-stone-900 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                                        className="p-1 text-stone-600 hover:text-stone-900 disabled:opacity-50"
                                     >
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                                            />
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                                         </svg>
                                     </button>
                                 </div>
                             </div>
                         ))}
                     </div>
-
                     <div className="flex justify-end gap-3">
                         <button
                             onClick={handleCloseOrderModal}
-                            className="px-6 py-2 border border-stone-300 text-stone-700 rounded-lg hover:bg-stone-50 transition font-medium"
+                            className="px-6 py-2 border border-stone-300 text-stone-700 rounded-lg hover:bg-stone-50 font-medium"
                         >
                             Bekor qilish
                         </button>
                         <button
                             onClick={handleSaveOrder}
-                            className="px-6 py-2 bg-stone-800 text-white rounded-lg hover:bg-stone-900 transition font-medium"
+                            className="px-6 py-2 bg-stone-800 text-white rounded-lg hover:bg-stone-900 font-medium"
                         >
                             Saqlash
                         </button>
@@ -595,7 +434,7 @@ const Category = () => {
                 </Box>
             </Modal>
         </div>
-    )
-}
+    );
+};
 
-export default Category
+export default Category;
