@@ -1,27 +1,90 @@
-// src/components/modals/AddEditModal.jsx
-import React, { useState } from "react";
-import { Box, Modal, TextField, MenuItem, CircularProgress, Alert } from "@mui/material";
+import {
+    Box,
+    Button,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Modal,
+    Select,
+    TextField,
+    Typography,
+    FormHelperText,
+    CircularProgress,
+    Alert,
+} from "@mui/material";
+import { useState, useEffect } from "react";
 import { spotlights } from "../../../../constants/spotlights";
 import CategoryService from "../../../../service/category";
 
 const AddEditModal = ({ open, onClose, category = null, onSuccess }) => {
     const [formData, setFormData] = useState({
-        name: category?.name || "",
-        spotlight: category?.spotlightName || "",
+        name: "",
+        spotlight: "",
     });
+
+    const [errors, setErrors] = useState({
+        name: ""
+    });
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
+    // === Clearing Form (only when the button is pressed) ===
+    const handleClearData = () => {
+        setFormData({
+            name: "",
+            spotlight: "",
+        });
+        // Show errors — only when cleaning
+        setErrors({
+            name: "Kategoriya nomini kiriting!"
+        });
+    };
+
+    useEffect(() => {
+        if (open) {
+            if (category) {
+                setFormData({
+                    name: category.name || "",
+                    spotlight: category.spotlightName || "",
+                });
+                setErrors({ name: "" });
+            } else {
+                setFormData({ name: "", spotlight: "" });
+                setErrors({ name: "" });
+            }
+        }
+    }, [category, open]);
+
+    // === Input changes ===
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+
+        // Clear errors
+        if (value.trim()) {
+            setErrors((prev) => ({ ...prev, [name]: "" }));
+        }
     };
 
-    const handleSubmit = async () => {
-        if (!formData.name.trim() || !formData.spotlight) {
-            setError("Iltimos, barcha maydonlarni to'ldiring.");
-            return;
+    // === Validation ===
+    const validateForm = () => {
+        const newErrors = { name: "" };
+        let isValid = true;
+
+        if (!formData.name.trim()) {
+            newErrors.name = "Kategoriya nomini kiriting!";
+            isValid = false;
         }
+
+        setErrors(newErrors);
+        return isValid;
+    };
+
+    // === Save ===
+    const handleSubmit = async () => {
+        if (!validateForm()) return;
 
         setLoading(true);
         setError("");
@@ -29,22 +92,20 @@ const AddEditModal = ({ open, onClose, category = null, onSuccess }) => {
         try {
             const payload = {
                 name: formData.name.trim(),
-                spotlightName: formData.spotlight, // backendda shu nomda kutilyapti
+                spotlightName: formData.spotlight,
             };
 
             if (category?.id) {
-                // Tahrirlash
-                //await CategoryService.updateCategory(category.id, payload);
+                // Edit service
             } else {
-                // Yangi qo'shish
+                // Add new
                 await CategoryService.persistToLS(payload);
             }
 
-            // Muvaffaqiyatli bo'lsa
-            onSuccess?.(); // ota komponentga xabar berish (masalan, jadvalni yangilash)
+            onSuccess?.();
             onClose();
         } catch (err) {
-            console.error("Kategoriya saqlanmadi:", err);
+            console.error("Saqlashda xatolik:", err);
             setError(
                 err.response?.data?.message ||
                 "Kategoriyani saqlashda xatolik yuz berdi. Qayta urinib ko'ring."
@@ -56,82 +117,143 @@ const AddEditModal = ({ open, onClose, category = null, onSuccess }) => {
 
     return (
         <Modal open={open} onClose={onClose}>
-            <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-                <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold text-stone-900">
-                        {category ? "Kategoriyani Tahrirlash" : "Kategoriya Qo'shish"}
-                    </h2>
-                    <button
-                        onClick={onClose}
+            <Box
+                sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    bgcolor: "background.paper",
+                    p: 4,
+                    borderRadius: 3,
+                    boxShadow: 24,
+                    width: "100%",
+                    maxWidth: 600,
+                    maxHeight: "90vh",
+                    overflow: "hidden",
+                }}
+            >
+                {/* Title + Clear Button */}
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
+                    <Typography variant="h6" component="h2">
+                        {category ? "Tahrirlash" : "Qo'shish"}
+                    </Typography>
+                    <Button
+                        onClick={handleClearData}
+                        variant="outlined"
+                        color="error"
                         disabled={loading}
-                        className="text-stone-500 hover:text-stone-700 transition disabled:opacity-50"
+                        sx={{
+                            px: 3,
+                            py: 1,
+                            borderRadius: 3,
+                            textTransform: "none",
+                            fontWeight: 500,
+                        }}
                     >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
+                        Tozalash
+                    </Button>
+                </Box>
 
+                {/* Common error */}
                 {error && (
                     <Alert severity="error" className="mb-4" onClose={() => setError("")}>
                         {error}
                     </Alert>
                 )}
 
-                <div className="space-y-5">
-                    {/* Kategoriya nomi */}
-                    <div>
-                        <label className="block text-sm font-medium text-stone-700 mb-2">
-                            Kategoriya Nomi
-                        </label>
+                {/* Form fields */}
+                <Grid spacing={3} sx={{ mb: 2 }}>
+                    {/* Category name */}
+                    <Grid item xs={12}>
                         <TextField
                             fullWidth
+                            label="Kategoriya Nomi"
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
-                            placeholder="Masalan: Ko'ylaklar"
-                            size="small"
+                            placeholder="Masalan: Oq Ko'ylaklar"
+                            error={!!errors.name}
+                            helperText={errors.name}
                             disabled={loading}
                             required
+                            sx={{
+                                marginBottom: 2,
+                                '& .MuiOutlinedInput-root': {
+                                    borderRadius: 2,
+                                }
+                            }}
                         />
-                    </div>
+                    </Grid>
 
-                    {/* Toifa (Spotlight) - Select */}
-                    <div>
-                        <label className="block text-sm font-medium text-stone-700 mb-2">
-                            Toifa
-                        </label>
-                        <TextField
-                            select
-                            fullWidth
-                            name="spotlight"
-                            value={formData.spotlight}
-                            onChange={handleChange}
-                            size="small"
-                            disabled={loading}
-                            required
-                        >
-                            {spotlights.map((item) => (
-                                <MenuItem key={item.name} value={item.name}>
-                                    {item.name}
+                    {/* Spotlight */}
+                    <Grid item xs={12}>
+                        <FormControl fullWidth variant="outlined" error={!!errors.spotlight}>
+                            <InputLabel id="spotlight-label">Toifa</InputLabel>
+                            <Select
+                                labelId="spotlight-label"
+                                id="spotlight"
+                                name="spotlight"
+                                value={formData.spotlight}
+                                label="Toifa"
+                                onChange={handleChange}
+                                disabled={loading}
+                                required
+                                sx={{ borderRadius: 2 }}
+                            >
+                                {/* The first option is "Not selected" */}
+                                <MenuItem value={null}>
+                                    <em>Tanlanmagan</em>
                                 </MenuItem>
-                            ))}
-                        </TextField>
-                    </div>
-                </div>
 
-                <div className="flex justify-end gap-3 mt-8">
-                    <button
+                                {/* Asosiy toifalar */}
+                                {spotlights.map((item) => (
+                                    <MenuItem key={item.name} value={item.name}>
+                                        {item.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            {errors.spotlight && <FormHelperText>{errors.spotlight}</FormHelperText>}
+                        </FormControl>
+                    </Grid>
+                </Grid>
+
+                {/* Buttons */}
+                <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 3 }}>
+
+                    {/* Cancel Button */}
+                    <Button
                         onClick={onClose}
+                        variant="outlined"
+                        color="warning"
                         disabled={loading}
-                        className="px-6 py-2 border border-stone-300 text-stone-700 rounded-lg hover:bg-stone-50 transition font-medium disabled:opacity-50"
+                        sx={{
+                            px: 3,
+                            py: 1,
+                            borderRadius: 3,
+                            textTransform: "none",
+                            fontWeight: 500,
+                        }}
                     >
                         Bekor qilish
-                    </button>
-                    <button
+                    </Button>
+
+                    {/* Submit(Save) Button */}
+                    <Button
                         onClick={handleSubmit}
+                        variant="outlined"
+                        color="success"
                         disabled={loading}
-                        className="px-6 py-2 bg-stone-800 text-white rounded-lg hover:bg-stone-900 transition font-medium disabled:opacity-50 flex items-center gap-2"
+                        sx={{
+                            px: 3,
+                            py: 1,
+                            borderRadius: 3,
+                            textTransform: "none",
+                            fontWeight: 500,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                        }}
                     >
                         {loading ? (
                             <>
@@ -141,8 +263,8 @@ const AddEditModal = ({ open, onClose, category = null, onSuccess }) => {
                         ) : (
                             "Saqlash"
                         )}
-                    </button>
-                </div>
+                    </Button>
+                </Box>
             </Box>
         </Modal>
     );
