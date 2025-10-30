@@ -196,6 +196,10 @@ const Sidebar = ({ isOpen, setIsOpen, user }) => {
                         backdropFilter: isOpen ? "blur(10px)" : "none",
                         justifyContent: isOpen ? "flex-start" : "center",
                         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                        minWidth: 0,
+                        flexWrap: "wrap",
+                        rowGap: "4px",
+                        columnGap: "6px",
                     }}
                 >
                     <Avatar
@@ -224,8 +228,18 @@ const Sidebar = ({ isOpen, setIsOpen, user }) => {
                             <Typography sx={{ fontWeight: 600, fontSize: "0.9rem" }}>
                                 {user?.firstName || 'Loading...'}
                             </Typography>
-                            <Typography sx={{ fontSize: "0.75rem", color: "var(--gray-400)" }}>
-                                {user?.roles?.includes('ROLE_ADMIN') ? 'Admin' : 'Visitor'}
+                            <Typography
+                                sx={{
+                                    fontSize: "0.75rem",
+                                    color: "var(--gray-400)",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                }}
+                            >
+                                {user?.roles
+                                    ?.map(role => role.replace('ROLE_', ''))
+                                    .map(r => r.charAt(0).toUpperCase() + r.slice(1).toLowerCase())
+                                    .join(', ') || 'No Roles'}
                             </Typography>
                         </Box>
                     )}
