@@ -1,18 +1,13 @@
 import axios from './api';
 
 // Constants for localStorage key
-const STORAGE_KEY = 'categories-data';
+const STORAGE_KEY = 'category-dashboard-data';
 
 const CategoryService = {
     // Load categories from backend
     async loadData() {
         try {
-            const response = await axios.get('/v2/admin/category/dashboard', {
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+            const response = await axios.get('/v2/admin/category/dashboard' );
             return response.data; // Expected: AdminCategoryDashboardRes
         } catch (error) {
             console.error('Error fetching categories:', error);
@@ -57,6 +52,49 @@ const CategoryService = {
             inactiveCount: data?.inactiveCount || 0,
         };
     },
+
+    // Persist new category data to backend
+    async persistData(formData) {
+        try {
+            const response = await axios.post('/v2/admin/category', formData);
+
+            if (response.status !== 200 && response.status !== 201) {
+                throw new Error("Failed to create category");
+            }
+
+            return response.data;
+        } catch (error) {
+            console.error("Error creating category:", error);
+            throw error;
+        }
+    },
+
+    // Caller product persist function and save response data to local storage
+    async persistToLS(categoryData) {
+        const newCategory = await this.persistData(categoryData);
+
+        let dashboardData = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
+        if (!dashboardData) {
+            dashboardData = await this.loadData();
+        }
+
+        if (!dashboardData.categoryResList) {
+            dashboardData.categoryResList = [];
+        }
+
+        if (!dashboardData.totalCount) {
+            dashboardData.totalCount = 0;
+        }
+
+        if (dashboardData.inactiveCount) {
+            dashboardData.inactiveCount = dashboardData.inactiveCount || 0;
+        }
+
+        dashboardData.categoryResList.push(newCategory);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(dashboardData));
+    },
+
 };
 
 export default CategoryService;
